@@ -5,8 +5,9 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 import argparse
 
 from mediscan.views import app
+from mediscan import test_runner
 
-def start_app():
+def start():
     args = parse_args()
     if args.action == 'runserver':
         if args.ip_address:
@@ -15,8 +16,7 @@ def start_app():
             app.run(debug=args.debug)
 
     if args.action == 'test':
-        print('run tests')
-        #test_runner.run()
+        test_runner.run()
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -31,4 +31,4 @@ def parse_args():
     return parser.parse_args()
 
 if __name__ == '__main__':
-    start_app()
+    start()
