@@ -17,21 +17,22 @@ def allowed_files(filename):
 @app.route('/image/upload/', methods=['GET'])
 def upload_image():
     if request.method == 'GET':
-        return render_template('templates/upload.html')
+        return render_template('upload.html')
 
-@app.route('/image/', methods=['GET', 'PUT'])
+@app.route('/image/', methods=['GET', 'POST'])
 def show_images():
+    import pdb;pdb.set_trace()
     if request.method == 'GET':
-        resp = make_response(200)
-        resp.data = "Images!"
-        return render_template('templates/images.html')
-    elif request.method == 'PUT':
+        return render_template('images.html')
+    elif request.method == 'POST':
         file = request.files['file']
         
-        if file and allowed_file(file.filename):
+        if file and allowed_files(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return 'Sucessfully uploaded file'
+        else:
+            return render_template('upload.html')
 
 
 @app.route('/image/<image_id>/')
