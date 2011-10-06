@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request, make_response, render_template
+from flask import Flask, request, make_response, render_template, json
 
 from werkzeug import secure_filename
 
@@ -35,8 +35,12 @@ def show_images():
         for image in images:
             if not allowed_files(image):
                 images.remove(image)
-
-        return render_template('images.html', images=images)
+        
+        if 'Http-Accept' in request.headers:
+            if request.headers['Http-Accept'] == 'application/json':
+                return json.dumps(images)
+        else:
+            return render_template('images.html', images=images)
 
 @app.route('/image/<image_id>/')
 def image(image_id):

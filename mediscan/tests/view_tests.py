@@ -17,6 +17,11 @@ class ViewTests(unittest.TestCase):
         response = self.app.get('/image/')
         self.assertEqual(response.status_code, 200)
     
+    def test_get_images(self):
+        response = self.app.get('/image/', 
+                                headers={ 'HTTP_ACCEPT' : 'application/json' })
+        self.assertEqual(response.status_code, 200)
+    
     def test_post_image(self):
         f = open('tests/test_file_upload.txt')
         response = self.app.post('/image/upload/', 
