@@ -12,10 +12,32 @@
   </head>
   <body>
     <div id="content">
+      <div class="topbar-wrapper">
+        <div class="topbar" data-dropdown="dropdown">
+          <div class="topbar-inner">
+            <div class="container">
+              <h3>
+                <a href="#">Mediscan</a>
+              </h3>
+              <ul class="nav">
+                <li><a href="/image/">Images</a></li>
+                <li><a href="/image/upload/">Upload</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
       <header>
         <h1>Upload an Image Scan</h1>
       </header>
       <section>
+        <div class="alert-message success">
+          <a class="close" href="#">x</a>
+          <p>
+            <strong>Success!</strong>
+            The image was successfully uploaded.
+          </p>
+        </div>
         <form method="post" action="/image/" enctype="multipart/form-data">
           <fieldset>
             <legend>Image Upload</legend>
