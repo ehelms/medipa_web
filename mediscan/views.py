@@ -1,4 +1,5 @@
 import os
+import urllib2
 
 from flask import Flask, request, make_response, render_template, json
 
@@ -19,14 +20,25 @@ def upload_image():
     if request.method == 'GET':
         return render_template('upload.html')
     elif request.method == 'POST':
-        file = request.files['file']
-        
-        if file and allowed_files(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return render_template('upload.html', success=True)
-        else:
-            return render_template('upload.html', error=True)
+        if 'file' in request.files:
+            file = request.files['file']
+            
+            if file and allowed_files(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                return render_template('upload.html', success=True)
+        elif 'scan_url' in request.form:
+            file = urllib2.urlopen(request.form['scan_url'])
+
+            if allowed_files(file.url):
+                filename = file.url.split('/')
+                filename = filename[len(filename) - 1]
+                local_file = open(os.path.join(app.config['UPLOAD_FOLDER'], filename), "w")
+                local_file.write(file.read())
+                local_file.close()
+                return render_template('upload.html', success=True)
+
+        return render_template('upload.html', error=True)
 
 @app.route('/image/', methods=['GET'])
 def show_images():

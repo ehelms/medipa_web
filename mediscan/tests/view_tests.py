@@ -22,10 +22,16 @@ class ViewTests(unittest.TestCase):
                                 headers={ 'HTTP_ACCEPT' : 'application/json' })
         self.assertEqual(response.status_code, 200)
     
-    def test_post_image(self):
+    def test_post_image_upload(self):
         f = open('tests/test_file_upload.txt')
         response = self.app.post('/image/upload/', 
                                 data=dict(file = f),
+                                follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+    
+    def test_post_image_url(self):
+        response = self.app.post('/image/upload/', 
+                                data={ "scan_url" : "http://www.google.com/robots.txt" },
                                 follow_redirects=True)
         self.assertEqual(response.status_code, 200)
     
