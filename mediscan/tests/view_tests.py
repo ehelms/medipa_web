@@ -19,7 +19,7 @@ class ViewTests(unittest.TestCase):
     
     def test_post_image(self):
         f = open('tests/test_file_upload.txt')
-        response = self.app.post('/image/', 
+        response = self.app.post('/image/upload/', 
                                 data=dict(file = f),
                                 follow_redirects=True)
         self.assertEqual(response.status_code, 200)
