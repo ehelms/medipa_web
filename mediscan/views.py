@@ -21,7 +21,6 @@ def upload_image():
 
 @app.route('/image/', methods=['GET', 'POST'])
 def show_images():
-    import pdb;pdb.set_trace()
     if request.method == 'GET':
         return render_template('images.html')
     elif request.method == 'POST':
