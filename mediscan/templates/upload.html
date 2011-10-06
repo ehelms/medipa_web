@@ -21,6 +21,14 @@
       There was an error uploading your file.
     </p>
   </div>
+  {% elif warning %}
+  <div class="alert-message warning">
+    <a class="close" href="#">x</a>
+    <p>
+      <strong>Warning!</strong>
+      Upload and URL are not allowed. Please choose one or the other and re-upload.
+    </p>
+  </div>
   {% endif %}
   <form method="post" action="/image/upload/" enctype="multipart/form-data">
     <fieldset>

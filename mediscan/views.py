@@ -20,14 +20,16 @@ def upload_image():
     if request.method == 'GET':
         return render_template('upload.html')
     elif request.method == 'POST':
-        if 'file' in request.files:
-            file = request.files['file']
-            
+        file = request.files['file']
+     
+        if file and request.form['scan_url']:
+            return render_template('upload.html', warning=True)
+        elif file:
             if file and allowed_files(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 return render_template('upload.html', success=True)
-        elif 'scan_url' in request.form:
+        elif request.form['scan_url']:
             file = urllib2.urlopen(request.form['scan_url'])
 
             if allowed_files(file.url):

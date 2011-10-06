@@ -25,13 +25,20 @@ class ViewTests(unittest.TestCase):
     def test_post_image_upload(self):
         f = open('tests/test_file_upload.txt')
         response = self.app.post('/image/upload/', 
-                                data=dict(file = f),
+                                data=dict(file = f, scan_url = ''),
                                 follow_redirects=True)
         self.assertEqual(response.status_code, 200)
     
     def test_post_image_url(self):
         response = self.app.post('/image/upload/', 
-                                data={ "scan_url" : "http://www.google.com/robots.txt" },
+                   data=dict(scan_url = "http://www.google.com/robots.txt", file = ''),
+                                follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+    
+    def test_post_image_url_and_upload(self):
+        f = open('tests/test_file_upload.txt')
+        response = self.app.post('/image/upload/', 
+                   data=dict(scan_url = "http://www.google.com/robots.txt", file = f),
                                 follow_redirects=True)
         self.assertEqual(response.status_code, 200)
     
