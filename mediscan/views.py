@@ -7,7 +7,7 @@ from werkzeug import secure_filename
 
 
 UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/media/'
-ALLOWED_EXTENSIONS = set(['txt'])
+ALLOWED_EXTENSIONS = set(['mha'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER

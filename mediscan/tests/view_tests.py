@@ -23,7 +23,7 @@ class ViewTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
     
     def test_post_image_upload(self):
-        f = open('tests/test_file_upload.txt')
+        f = open('tests/test_file_upload.mha')
         response = self.app.post('/image/upload/', 
                                 data=dict(file = f, scan_url = ''),
                                 follow_redirects=True)
@@ -31,14 +31,14 @@ class ViewTests(unittest.TestCase):
     
     def test_post_image_url(self):
         response = self.app.post('/image/upload/', 
-                   data=dict(scan_url = "http://www.google.com/robots.txt", file = ''),
+                data=dict(scan_url = "http://insight-journal.org/midas/bitstream/view/376", file = ''),
                                 follow_redirects=True)
         self.assertEqual(response.status_code, 200)
     
     def test_post_image_url_and_upload(self):
-        f = open('tests/test_file_upload.txt')
+        f = open('tests/test_file_upload.mha')
         response = self.app.post('/image/upload/', 
-                   data=dict(scan_url = "http://www.google.com/robots.txt", file = f),
+                data=dict(scan_url = "http://insight-journal.org/midas/bitstream/view/376", file = f),
                                 follow_redirects=True)
         self.assertEqual(response.status_code, 200)
     
