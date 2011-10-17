@@ -1,11 +1,12 @@
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
-
 import argparse
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../lib/')
 
 from medipa.views import app
 from medipa import test_runner
+
 
 def start():
     args = parse_args()

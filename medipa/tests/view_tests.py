@@ -1,3 +1,5 @@
+import os
+
 import unittest
 
 from medipa.views import app
@@ -23,7 +25,7 @@ class ViewTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
     
     def test_post_image_upload(self):
-        f = open('tests/test_file_upload.mha')
+        f = open(os.getcwd() + '/tests/test_file_upload.mha')
         response = self.app.post('/image/upload/', 
                                 data=dict(file = f, scan_url = ''),
                                 follow_redirects=True)
@@ -36,7 +38,7 @@ class ViewTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
     
     def test_post_image_url_and_upload(self):
-        f = open('tests/test_file_upload.mha')
+        f = open(os.getcwd() + '/tests/test_file_upload.mha')
         response = self.app.post('/image/upload/', 
                 data=dict(scan_url = "http://insight-journal.org/midas/bitstream/view/376", file = f),
                                 follow_redirects=True)
