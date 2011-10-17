@@ -4,8 +4,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
 import argparse
 
-from mediscan.views import app
-from mediscan import test_runner
+from medipa.views import app
+from medipa import test_runner
 
 def start():
     args = parse_args()

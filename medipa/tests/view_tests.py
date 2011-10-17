@@ -1,6 +1,6 @@
 import unittest
 
-from mediscan.views import app
+from medipa.views import app
 
 
 class ViewTests(unittest.TestCase):
