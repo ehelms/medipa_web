@@ -45,10 +45,11 @@ def upload_image():
 @app.route('/image/', methods=['GET'])
 def show_images():
     if request.method == 'GET':
-        images = os.listdir(UPLOAD_FOLDER)
-        for image in images:
-            if not allowed_files(image):
-                images.remove(image)
+        tmp = os.listdir(UPLOAD_FOLDER)
+        images = []
+        for image in tmp:
+            if allowed_files(image):
+                images.append(image)
         
         if 'Http-Accept' in request.headers:
             if request.headers['Http-Accept'] == 'application/json':
