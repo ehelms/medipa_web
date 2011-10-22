@@ -47,7 +47,8 @@ def process_file(filename):
     image = Image(''.join([UPLOAD_FOLDER, filename]))
     image_array = image.get_image()
     image_json = json.dumps(image_array)
-    json_file = open(os.path.join(UPLOAD_FOLDER, filename.split('.mha')[0]), '.json', "w")
+    print(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json']))
+    json_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json']), "w")
     json_file.write(image_json)
     json_file.close()
 
