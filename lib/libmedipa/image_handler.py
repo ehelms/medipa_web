@@ -1,5 +1,7 @@
 import os
 import json
+import gzip
+import re
 
 from werkzeug import secure_filename
 
@@ -38,18 +40,48 @@ def save(file, upload=True):
 def get_images():
     tmp = os.listdir(UPLOAD_FOLDER)
     images = []
+
     for image in tmp:
-        if allowed_files(image):
-            images.append(image)
+        if image.find('.manifest.json') != -1:
+            images.append(image.split('.manifest.json')[0])
     return images
 
 def process_file(filename):
     image = Image(''.join([UPLOAD_FOLDER, filename]))
+    reduced_image = image.reduce()
+
     image_array = image.get_image()
     image_json = json.dumps(image_array)
-    print(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json']))
-    json_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json']), "w")
-    json_file.write(image_json)
-    json_file.close()
+    #json_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json']), "w")
+    gzip_file = gzip.open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json.gz']), 'wb')
+    gzip_file.write(image_json)
+    gzip_file.close()
+
+    image_array = reduced_image.get_image()
+    image_json = json.dumps(image_array)
+    #json_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '_x8', '.json']), "w")
+    gzip_file = gzip.open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '_x8', '.json.gz']), 'wb')
+    gzip_file.write(image_json)
+    gzip_file.close()
+
+    generate_manifest(filename)
 
     return True
+
+def generate_manifest(filename):
+    manifest_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.manifest.json']), 'w')
+
+    manifest = { 'filename' : filename, 
+                'json' : { 'complete' : ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json.gz']),
+                            'x8' : ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '_x8', '.json.gz'])}}
+
+    manifest_file.write(json.dumps(manifest))
+    manifest_file.close()
+
+def get_json(filename, size):
+    manifest_file = open(''.join([UPLOAD_FOLDER, filename, '.manifest.json']), 'r')
+    manifest = json.loads(manifest_file.read())
+
+    data_file = gzip.open(manifest['json'][size], 'rb')
+    
+    return json.dumps(data_file.read())

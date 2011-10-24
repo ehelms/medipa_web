@@ -1,12 +1,16 @@
 import os
 import urllib2
 
-from flask import Flask, request, make_response, render_template, json
+from flask import Flask, request, make_response, render_template, json, redirect
 
 from libmedipa import image_handler
 
 
 app = Flask(__name__)
+
+@app.route('/', methods=['GET'])
+def home():
+    return redirect('/image/')
 
 @app.route('/image/upload/', methods=['GET', 'POST'])
 def upload_image():
@@ -38,6 +42,11 @@ def show_images():
         else:
             return render_template('images.html', images=images)
 
-@app.route('/image/<image_id>/')
+@app.route('/image/<image_id>/', methods=['GET'])
 def image(image_id):
     return image_id
+
+@app.route('/image/<image_id>/render/', methods=['GET'])
+def render(image_id):
+    size = request.args.get('size', 'complete')
+    return image_handler.get_json(image_id, size)

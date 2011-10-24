@@ -9,12 +9,14 @@
     <thead>
       <tr>
         <th>Image Name</th>
+        <th>View Rendering</th>
       </tr>
     </thead>
     <tbody>
       {% for image in images %}
       <tr>
         <td>{{ image }}</td>
+        <td><a href="/image/{{ image }}/render/" >Render</a></td>
       </tr>
       {% endfor %}
     </tbody>
