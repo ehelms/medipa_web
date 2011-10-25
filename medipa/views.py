@@ -1,5 +1,6 @@
 import os
 import urllib2
+import cStringIO
 
 from flask import Flask, request, make_response, render_template, json, redirect
 
@@ -49,4 +50,11 @@ def image(image_id):
 @app.route('/image/<image_id>/render/', methods=['GET'])
 def render(image_id):
     size = request.args.get('size', 'complete')
-    return image_handler.get_json(image_id, size)
+
+    response = make_response()
+    response.data = image_handler.get_json(image_id, size)
+    response.headers['Content-Encoding'] = 'gzip'
+    response.headers['Content-Length'] = str(len(response.data))
+    response.mimetype = 'application/json'
+
+    return response
