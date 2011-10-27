@@ -5,5 +5,5 @@ setup(name='Medipa',
       description='Visualization of medical scans in WebGL.',
       author='Eric D Helms, David Gao, Justin Sherrill, Juhee Bae',
       url='http://www.python.org/sigs/distutils-sig/',
-      scripts=['../scripts/create-virtualenv.py']
+      install_requires=['flask', 'SimpleITK']
      )
