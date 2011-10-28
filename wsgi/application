@@ -7,11 +7,11 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../lib/')
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
 if os.path.isdir(os.path.abspath(__file__).split('/application')[0] + "/static/javascript"):
-    os.removedirs(os.path.abspath(__file__).split('/application')[0] + "/static/javascript")
+    shutil.rmtree(os.path.abspath(__file__).split('/application')[0] + "/static/javascript", ignore_errors=True)
 shutil.copytree(os.path.abspath(__file__).split('/application')[0] +  "/../medipa/static/javascript", os.path.abspath(__file__).split('/application')[0] + "/static/javascript") 
 
 if os.path.isdir(os.path.abspath(__file__).split('/application')[0] + "/static/stylesheets"):
-    os.removedirs(os.path.abspath(__file__).split('/application')[0] + "/static/stylesheets")
+    shutil.rmtree(os.path.abspath(__file__).split('/application')[0] + "/static/stylesheets", ignore_errors=True)
 shutil.copytree(os.path.abspath(__file__).split('/application')[0] +  "/../medipa/static/stylesheets", os.path.abspath(__file__).split('/application')[0] + "/static/stylesheets") 
 
 virtenv = os.environ['APPDIR'] + '/virtenv/'
