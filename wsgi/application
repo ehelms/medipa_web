@@ -8,11 +8,11 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
 if os.path.isdir(os.path.abspath(__file__).split('/application')[0] + "/static/javascript"):
     os.removedirs(os.path.abspath(__file__).split('/application')[0] + "/static/javascript")
-shutil.copytree(os.path.abspath(__file__).split('/application')[0] +  "/../static/stylesheets", os.path.abspath(__file__).split('/application')[0] + "/static/javascript") 
+shutil.copytree(os.path.abspath(__file__).split('/application')[0] +  "/../medipa/static/stylesheets", os.path.abspath(__file__).split('/application')[0] + "/static/javascript") 
 
 if os.path.isdir(os.path.abspath(__file__).split('/application')[0] + "/static/stylesheets"):
     os.removedirs(os.path.abspath(__file__).split('/application')[0] + "/static/stylesheets")
-shutil.copytree(os.path.abspath(__file__).split('/application')[0] +  "/../static/stylesheets", os.path.abspath(__file__).split('/application')[0] + "/static/stylesheets") 
+shutil.copytree(os.path.abspath(__file__).split('/application')[0] +  "/../medipa/static/stylesheets", os.path.abspath(__file__).split('/application')[0] + "/static/stylesheets") 
 
 virtenv = os.environ['APPDIR'] + '/virtenv/'
 os.environ['PYTHON_EGG_CACHE'] = os.path.join(virtenv, 'lib/python2.6/site-packages')
