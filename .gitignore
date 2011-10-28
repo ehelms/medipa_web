@@ -2,3 +2,5 @@
 *.swp
 *.mha
 virtenv
+wsgi/static/javascript
+wsgi/static/stylesheets
