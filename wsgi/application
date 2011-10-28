@@ -5,6 +5,8 @@ import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../lib/')
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
+os.symlink(os.environ['APPDIR'] + "/medipa/static/", os.path.abspath(__file__) + "/static/") 
+
 virtenv = os.environ['APPDIR'] + '/virtenv/'
 os.environ['PYTHON_EGG_CACHE'] = os.path.join(virtenv, 'lib/python2.6/site-packages')
 virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
