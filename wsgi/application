@@ -14,10 +14,6 @@ if os.path.isdir(os.path.abspath(__file__).split('/application')[0] + "/static/s
     shutil.rmtree(os.path.abspath(__file__).split('/application')[0] + "/static/stylesheets", ignore_errors=True)
 shutil.copytree(os.path.abspath(__file__).split('/application')[0] +  "/../medipa/static/stylesheets", os.path.abspath(__file__).split('/application')[0] + "/static/stylesheets") 
 
-file_obj = open(os.path.abspath(__file__).split('/application')[0] + "/static/javascript/test.txt", 'a')
-file_obj.write('test')
-file_obj.close()
-
 virtenv = os.environ['APPDIR'] + '/virtenv/'
 os.environ['PYTHON_EGG_CACHE'] = os.path.join(virtenv, 'lib/python2.6/site-packages')
 virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
