@@ -1,0 +1,4 @@
+Alias /static "../medipa/static/"
+<Location "/static">
+  SetHandler None
+</Location>
