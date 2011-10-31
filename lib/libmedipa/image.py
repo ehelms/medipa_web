@@ -6,7 +6,7 @@ class Image:
     image_array = None
 
     def __init__(self, input_arg):
-        if type(input_arg)  == type(""):
+        if type(input_arg) == type(""):
             self.image = sitk.ReadImage( input_arg )
             self.size = self.image.GetSize()
         else:

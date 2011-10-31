@@ -9,7 +9,7 @@ from werkzeug import secure_filename
 from .image import Image
 
 
-UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/../../medipa/media/'
+UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/../../data/'
 ALLOWED_EXTENSIONS = set(['mha'])
 
 def allowed_files(filename):
@@ -19,12 +19,13 @@ def save(file, upload=True):
     filename = ''
 
     if not upload:
-        if allowed_files(file.url):
-            filename = file.url.split('/')
-            filename = filename[len(filename) - 1]
-            local_file = open(UPLOAD_FOLDER + filename, "w")
-            local_file.write(file.read())
-            local_file.close()
+        filename = file.url.split('/')
+        filename = filename[len(filename) - 1]
+        if not filename.endswith(".mha"):
+            filename += ".mha"
+        local_file = open(UPLOAD_FOLDER + filename, "wb")
+        local_file.write(file.read())
+        local_file.close()
     else:
         if file and allowed_files(file.filename):
             filename = file.filename.split('/')
@@ -48,7 +49,7 @@ def get_images():
     return images
 
 def process_file(filename):
-    image = Image(''.join([UPLOAD_FOLDER, filename]))
+    image = Image(''.join([UPLOAD_FOLDER, filename]).encode('ascii'))
     reduced_image = image.reduce()
 
     image_array = image.get_image()

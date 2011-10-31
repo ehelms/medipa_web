@@ -28,7 +28,7 @@ def upload_image():
         elif request.form['scan_url']:
             file = urllib2.urlopen(request.form['scan_url'])
 
-            if image_handler.save(file, false):
+            if image_handler.save(file, False):
                 return render_template('upload.html', success=True)
         return render_template('upload.html', error=True)
 
