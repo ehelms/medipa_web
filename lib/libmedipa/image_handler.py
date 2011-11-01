@@ -34,10 +34,12 @@ def save(file, upload=True):
             file.save(UPLOAD_FOLDER + filename)
             file.close()
     
-    if process_file(filename):
-        return True
-    else:
-        return False
+    #if process_file(filename):
+    #    return True
+    #else:
+    #    return False
+
+    return True
 
 def get_images():
     tmp = os.listdir(UPLOAD_FOLDER)
