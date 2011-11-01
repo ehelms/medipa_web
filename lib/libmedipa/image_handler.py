@@ -34,12 +34,10 @@ def save(file, upload=True):
             file.save(UPLOAD_FOLDER + filename)
             file.close()
     
-    #if process_file(filename):
-    #    return True
-    #else:
-    #    return False
-
-    return True
+    if process_file(filename):
+        return True
+    else:
+        return False
 
 def get_images():
     tmp = os.listdir(UPLOAD_FOLDER)
@@ -54,11 +52,13 @@ def process_file(filename):
     image = Image(''.join([UPLOAD_FOLDER, filename]).encode('ascii'))
     reduced_image = image.reduce()
 
+    '''
     image_array = image.get_image()
     image_json = json.dumps(image_array)
     gzip_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json']), 'wb')
     gzip_file.write(image_json)
     gzip_file.close()
+    '''
 
     image_array = reduced_image.get_image()
     image_json = json.dumps(image_array)
