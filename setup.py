@@ -5,5 +5,5 @@ setup(name='Medipa',
       description='Visualization of medical scans in WebGL.',
       author='Eric D Helms, David Gao, Justin Sherrill, Juhee Bae',
       url='http://www.python.org/sigs/distutils-sig/',
-      install_requires=['flask', 'SimpleITK']
+      install_requires=['flask', 'SimpleITK', 'celery', 'kombu-sqlalchemy']
      )

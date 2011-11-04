@@ -29,6 +29,7 @@ def parse_args():
     parser_runserver.add_argument('--nodebug', action='store_false', dest='debug', help='Whether to turn debug on or off (default: true)')
 
     parser_test = subparsers.add_parser('test', help='Runs the test suite')
+    
     return parser.parse_args()
 
 if __name__ == '__main__':
