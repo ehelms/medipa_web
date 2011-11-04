@@ -1,8 +1,15 @@
 import os
 import sys
 import argparse
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
+import subprocess
+import daemon
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)) + '/../'
+
+sys.path.append(BASE_DIR)
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../lib/')
+
+from celery.bin import celeryd
 
 from medipa.views import app
 from medipa import test_runner
@@ -11,6 +18,11 @@ from medipa import test_runner
 def start():
     args = parse_args()
     if args.action == 'runserver':
+        os.environ['CELERYD_CHDIR'] = BASE_DIR + "medipa"
+        os.environ['OPENSHIFT_DATA_DIR'] = BASE_DIR + "data"
+
+        pid = subprocess.Popen(["celeryd"], env=os.environ).pid
+
         if args.ip_address:
             app.run(host=args.ip_address, debug=args.debug)
         else:
