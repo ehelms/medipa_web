@@ -32,7 +32,8 @@ except IOError:
 # 
 
 os.environ["PYTHONPATH"] = BASE_DIR
-pid = subprocess.Popen(["celeryd"], env=os.environ).pid
+os.environ["CELERYD"] = virtenv + 'bin/'
+pid = subprocess.Popen([virtenv, 'bin/', "celeryd"], env=os.environ).pid
 
 from medipa.views import app as application
 
