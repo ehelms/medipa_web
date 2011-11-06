@@ -548,10 +548,16 @@ onmessage = function(e) {
       fn = new Function('x,y,z, sample,  debug, t', data.fn),
       isolevel = data.isolevel,
       time = +new Date,
-      curfn = function(x, y, z ) {
-        return fn(x, y, z, sample, debug, time);
+      curfn;
+      
+      importScripts(filename);
+      curfn = function(x, y, z ) {          
+            x = Math.floor(x);
+            y = Math.floor(y);
+            z = Math.floor(z);
+            return sample[x][y][z];          
       };
-    importScripts(filename);
+
     postMessage({type:"data", data:MarchingCubes.compute(grid, curfn, isolevel)});
   } catch(e) {
     postMessage({type:"data", data:{

@@ -38,7 +38,6 @@ function getFormData() {
     rotate: $('auto-rotate').checked,
     time: $('enable-time').checked,
     isolevel: +$('isolevel').value,
-    fn: $('fn').value
   };
 }
 
@@ -91,20 +90,6 @@ this.load = function() {
     return false;
   }, false);
 
-  //add predefined function menu listeners
-  var lis = document.querySelectorAll('ul.predefined-fn li');
-  for (var i = 0, l = lis.length; i < l; i++) {
-    var li = lis[i];
-    (function (elem) {
-      elem.addEventListener('click', function() {
-        var isolevel = $('isolevel'),
-            ta = $('fn'),
-            ans = elem.querySelectorAll('code')[0];
-        isolevel.value = elem.getAttribute('data-isolevel');
-        ta.value = ans.innerText || ans.textContent;
-      }, false);
-    })(li);
-  }
   
   //get form data
   formData = getFormData();
@@ -113,12 +98,7 @@ this.load = function() {
 };
 
 function mapReduce() {
-  try {
-    var f = new Function('x,y,z,t', formData.fn);
-    $('fn').className = '';
-  } catch(e) {
-    $('fn').className = 'error';
-  }
+
   var x = Grid.x,
       xfrom = x.from,
       xto = x.to,
@@ -158,7 +138,6 @@ function mapReduce() {
         }
       },
       isolevel: formData.isolevel,
-      fn: formData.fn,
       filename: "sample2.js",
       time: formData.time
     };
