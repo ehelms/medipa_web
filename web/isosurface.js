@@ -159,6 +159,7 @@ function mapReduce() {
       },
       isolevel: formData.isolevel,
       fn: formData.fn,
+      filename: "sample2.js",
       time: formData.time
     };
   });
