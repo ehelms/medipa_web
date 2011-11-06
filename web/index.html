@@ -136,7 +136,7 @@
         <tr>
           <td>Isolevel</td>
           <td>
-            <input type="number" id="isolevel" value="0.05" />
+            <input type="number" id="isolevel" value="120" />
           </td>
         </tr>
         <tr>
@@ -153,51 +153,15 @@
                 return sample[x][y][z];
               </code>
               </li>
-              <li data-isolevel="0">Gyroid
-              <code>
-                var cos = Math.cos,
-                    sin = Math.sin,
-                    abs = Math.abs,
-                    r = x * x + y * y + z * z,
-                    ti = abs(sin(t / 100000)) / 10 + 0.06,
-                    v = ti * r;
-                
-                return (cos(x / v) * sin(y / v) + cos(y / v) * sin(z / v) + cos(z / v) * sin(x / v) + 1.0) - 0.1 * (1 - 0.016 * (r - 10 / r));
-              </code>
-              </li>
-              <li data-isolevel="7">Metaballs
-              <code>
-                var cos = Math.cos,
-                    sin = Math.sin,
-                    abs = Math.abs,
-                    ti = abs(sin(t / 2000)) / 1.5,
-                    idx = [[1, 1, 1], [1, -1, 1], [-1, -1, 1], [-1, 1, 1], [1, 1, -1], [1, -1, -1], [-1, -1, -1]],
-                    acum = 0;
-                for (var i = 0, l = idx.length; l > i; i++) {
-                  var id = idx[i],
-                    x0 = id[0] * ti,
-                    y0 = id[1] * ti,
-                    z0 = id[2] * ti;
-
-                  acum += 1 / (((x - x0) * (x - x0) + (y - y0) * (y - y0) + (z - z0) * (z - z0)) || 1);
-                }
-
-                return acum;
-              </code>
-              </li>
             </ul>
             <br /><br />
             <h4>fn (x, y, z, t?)</h4>
             <textarea id="fn" rows="20" cols="25">
-                var cos = Math.cos, 
-                  sin = Math.sin,
-                  sqrt = Math.sqrt,
-                  r = 0.2,
-                  R = 0.8,
-                  val = sqrt( x * x + y * y + z * z );
-
-                return (R - val) * (R - val) + z * z;
-          </textarea>
+                x = Math.floor(x);
+                y = Math.floor(y);
+                z = Math.floor(z);
+                return sample[x][y][z];
+            </textarea>
           </td>
         </tr>
       </table>
