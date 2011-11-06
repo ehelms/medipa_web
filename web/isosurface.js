@@ -54,7 +54,7 @@ this.load = function() {
   gl = glData.ctx;
   
   scene = {
-    camera: new THREE.Camera(75, gl.viewportWidth / gl.viewportHeight, 0.001, 30),
+    camera: new THREE.Camera(75, gl.viewportWidth / gl.viewportHeight, 0.001, 500),
     lighting: {
       enable: true,
       ambient: [0.6, 0.6, 0.6],
@@ -223,7 +223,7 @@ function render(data) {
   //elMatrix.multiplySelf(THREE.Matrix4.rotationXMatrix(rx))
   //elMatrix.multiplySelf(THREE.Matrix4.rotationYMatrix(ry)) 
   elMatrix.multiply(THREE.Matrix4.rotationXMatrix(rx), THREE.Matrix4.rotationYMatrix(ry));
-elMatrix.multiplySelf(THREE.Matrix4.translationMatrix(Trans.x,Trans.y,Trans.z));
+  elMatrix.multiplySelf(THREE.Matrix4.translationMatrix(Trans.x,Trans.y,Trans.z));
   viewMatrix.multiply(camera.matrix, elMatrix);
   
   //send matrices
