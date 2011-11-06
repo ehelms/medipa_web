@@ -545,13 +545,15 @@ onmessage = function(e) {
     var data = e.data,
       filename = data.filename,
       grid = data.grid,
-      fn = new Function('x,y,z, sample,  debug, t', data.fn),
       isolevel = data.isolevel,
-      time = +new Date,
+      cutlevel = data.cutlevel,
       curfn;
       
       importScripts(filename);
-      curfn = function(x, y, z ) {          
+      curfn = function(x, y, z ) {
+            if(z < cutlevel){
+                return 0;
+            }          
             x = Math.floor(x);
             y = Math.floor(y);
             z = Math.floor(z);

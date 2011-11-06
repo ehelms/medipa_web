@@ -2,28 +2,20 @@
 
 //paralelization index
 var n = 1,
-//number of workers
-    nWorkers = Math.pow(8, n), 
-//ratio to divide the grid
-    den = n + 1,
-//worker group
-    workerGroup,
-//options
-    formData,
-//3D context object
-    gl,
+    nWorkers = Math.pow(8, n),  //number of workers
+    den = n + 1, //ratio to divide the grid
+    workerGroup, //worker group
+    formData, //options
+    gl, //3D context object
     scene,
     glData,
-//rotation
-    rx = 0,
+    rx = 0, //rotation
     ry = 0,
     rdx = 0.005,
     rdy = 0.001,
-//mouse position
-    mouseX = 0,
+    mouseX = 0, //mouse position
     mouseY = 0,
-//firefix
-    ff;
+    ff; //firefix    
 
 var $ = (function() {
   var cache = {};
@@ -36,8 +28,8 @@ var $ = (function() {
 function getFormData() {
   return {
     rotate: $('auto-rotate').checked,
-    time: $('enable-time').checked,
     isolevel: +$('isolevel').value,
+    cutlevel: $("cutlevel").value
   };
 }
 
@@ -138,8 +130,8 @@ function mapReduce() {
         }
       },
       isolevel: formData.isolevel,
-      filename: "sample2.js",
-      time: formData.time
+      cutlevel: formData.cutlevel,
+      filename: "sample2.js"
     };
   });
   var indexAcum = 0, initialValue = {
@@ -181,7 +173,8 @@ function render(data) {
       gl = glData.ctx,
       lighting = scene.lighting,
       fn = formData.fn,
-      isolevel = formData.isolevel;
+      isolevel = formData.isolevel,
+      cutlevel = formData.cutlevel;
   
   
   //draw scene
@@ -254,7 +247,7 @@ function render(data) {
   
   //call the mapReduce to recalculate vertices and re-render the scene
   formData = getFormData();
-  if (formData.time || fn != formData.fn || isolevel != formData.isolevel) {
+  if (isolevel != formData.isolevel || cutlevel != formData.cutlevel) {
     setTimeout(mapReduce, 1000/30);
   } else {
     setTimeout(function() {
