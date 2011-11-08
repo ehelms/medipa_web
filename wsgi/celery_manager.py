@@ -1,0 +1,1 @@
+../medipa/celery_manager.py
