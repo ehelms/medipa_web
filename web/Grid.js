@@ -1,17 +1,35 @@
+
+
+var range = (function(){
+    //var sample = sample;   
+    return {
+        XRange: function(){
+            return sample.length
+        },
+        YRange: function(){
+          return sample[0].length
+        },
+        ZRange: function(){
+          return sample[0][0].length
+        }
+    }
+})();
+
+
 var Grid = {
   x: {
     from: 1,
-    to: 60,
+    to: range.XRange() - 2,
     step: 2
   },
   y: {
     from: 1,
-    to: 60,
+    to: range.YRange() -2 ,
     step: 2
   },
   z: {
     from: 1,
-    to: 42,
+    to: range.ZRange() -2,
     step: 2
   },
   
@@ -34,8 +52,9 @@ Rot = {
 
 //Manual translation
 Trans = {
-    x: -30,
-    y: -30,
-    z: -21
+    x: -(range.XRange()/2),
+    y: -(range.YRange()/2),
+    z: -(range.ZRange()/2)
     
 }
+

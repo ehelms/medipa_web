@@ -2,28 +2,20 @@
 
 //paralelization index
 var n = 1,
-//number of workers
-    nWorkers = Math.pow(8, n), 
-//ratio to divide the grid
-    den = n + 1,
-//worker group
-    workerGroup,
-//options
-    formData,
-//3D context object
-    gl,
+    nWorkers = Math.pow(8, n),  //number of workers
+    den = n + 1, //ratio to divide the grid
+    workerGroup, //worker group
+    formData, //options
+    gl, //3D context object
     scene,
     glData,
-//rotation
-    rx = 0,
+    rx = 0, //rotation
     ry = 0,
     rdx = 0.005,
     rdy = 0.001,
-//mouse position
-    mouseX = 0,
+    mouseX = 0, //mouse position
     mouseY = 0,
-//firefix
-    ff;
+    ff; //firefix    
 
 var $ = (function() {
   var cache = {};
@@ -36,9 +28,8 @@ var $ = (function() {
 function getFormData() {
   return {
     rotate: $('auto-rotate').checked,
-    time: $('enable-time').checked,
     isolevel: +$('isolevel').value,
-    fn: $('fn').value
+    cutlevel: $("cutlevel").value
   };
 }
 
@@ -54,7 +45,7 @@ this.load = function() {
   gl = glData.ctx;
   
   scene = {
-    camera: new THREE.Camera(75, gl.viewportWidth / gl.viewportHeight, 0.001, 30),
+    camera: new THREE.Camera(75, gl.viewportWidth / gl.viewportHeight, 0.001, 500),
     lighting: {
       enable: true,
       ambient: [0.6, 0.6, 0.6],
@@ -91,20 +82,6 @@ this.load = function() {
     return false;
   }, false);
 
-  //add predefined function menu listeners
-  var lis = document.querySelectorAll('ul.predefined-fn li');
-  for (var i = 0, l = lis.length; i < l; i++) {
-    var li = lis[i];
-    (function (elem) {
-      elem.addEventListener('click', function() {
-        var isolevel = $('isolevel'),
-            ta = $('fn'),
-            ans = elem.querySelectorAll('code')[0];
-        isolevel.value = elem.getAttribute('data-isolevel');
-        ta.value = ans.innerText || ans.textContent;
-      }, false);
-    })(li);
-  }
   
   //get form data
   formData = getFormData();
@@ -113,12 +90,7 @@ this.load = function() {
 };
 
 function mapReduce() {
-  try {
-    var f = new Function('x,y,z,t', formData.fn);
-    $('fn').className = '';
-  } catch(e) {
-    $('fn').className = 'error';
-  }
+
   var x = Grid.x,
       xfrom = x.from,
       xto = x.to,
@@ -158,8 +130,8 @@ function mapReduce() {
         }
       },
       isolevel: formData.isolevel,
-      fn: formData.fn,
-      time: formData.time
+      cutlevel: formData.cutlevel,
+      filename: "sample2.js"
     };
   });
   var indexAcum = 0, initialValue = {
@@ -201,7 +173,8 @@ function render(data) {
       gl = glData.ctx,
       lighting = scene.lighting,
       fn = formData.fn,
-      isolevel = formData.isolevel;
+      isolevel = formData.isolevel,
+      cutlevel = formData.cutlevel;
   
   
   //draw scene
@@ -223,7 +196,7 @@ function render(data) {
   //elMatrix.multiplySelf(THREE.Matrix4.rotationXMatrix(rx))
   //elMatrix.multiplySelf(THREE.Matrix4.rotationYMatrix(ry)) 
   elMatrix.multiply(THREE.Matrix4.rotationXMatrix(rx), THREE.Matrix4.rotationYMatrix(ry));
-elMatrix.multiplySelf(THREE.Matrix4.translationMatrix(Trans.x,Trans.y,Trans.z));
+  elMatrix.multiplySelf(THREE.Matrix4.translationMatrix(Trans.x,Trans.y,Trans.z));
   viewMatrix.multiply(camera.matrix, elMatrix);
   
   //send matrices
@@ -274,7 +247,7 @@ elMatrix.multiplySelf(THREE.Matrix4.translationMatrix(Trans.x,Trans.y,Trans.z));
   
   //call the mapReduce to recalculate vertices and re-render the scene
   formData = getFormData();
-  if (formData.time || fn != formData.fn || isolevel != formData.isolevel) {
+  if (isolevel != formData.isolevel || cutlevel != formData.cutlevel) {
     setTimeout(mapReduce, 1000/30);
   } else {
     setTimeout(function() {
