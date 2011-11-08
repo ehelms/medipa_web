@@ -22,6 +22,7 @@ shutil.copytree(os.path.abspath(__file__).split('/application')[0] +  "/../medip
 virtenv = os.environ['APPDIR'] + '/virtenv/'
 os.environ['PYTHON_EGG_CACHE'] = os.path.join(virtenv, 'lib/python2.6/site-packages')
 virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
+
 try:
     execfile(virtualenv, dict(__file__=virtualenv))
 except IOError:
@@ -31,9 +32,24 @@ except IOError:
 # line, it's possible required libraries won't be in your searchable path
 # 
 
-os.environ["PYTHONPATH"] = BASE_DIR
-os.environ["CELERYD"] = virtenv + 'bin/'
-pid = subprocess.Popen([virtenv, 'bin/', "celeryd"], env=os.environ).pid
+processname = 'celeryd'
+for line in os.popen("ps xa"):
+    fields = line.split()
+    pid = fields[0]
+    stat = fields[2]
+    process = fields[4]
+    
+    if stat == "Sl":
+        
+        try:
+            line.index(processname)
+            # Kill the Process. Change signal.SIGHUP to signal.SIGKILL if you like
+            os.kill(int(pid), signal.SIGKILL)
+            break
+        except ValueError:
+            pass
+
+subprocess.Popen(["python", "../medipa/celery_manager.py", "celeryd"], env=os.environ).pid
 
 from medipa.views import app as application
 
@@ -45,4 +61,3 @@ if __name__ == '__main__':
     httpd = make_server('localhost', 8051, application)
     # Wait for a single request, serve it and quit.
     httpd.handle_request()
-    os.kill(pid, signal.SIGKILL)
