@@ -49,7 +49,7 @@ for line in os.popen("ps xa"):
         except ValueError:
             pass
 
-subprocess.Popen(["python", "celery_manager.py", "celeryd"], env=os.environ).pid
+subprocess.Popen(["python", os.environ['APPDIR'] + "/repo/medipa/wsgi/" + "celery_manager.py", "celeryd"], env=os.environ).pid
 
 from medipa.views import app as application
 
