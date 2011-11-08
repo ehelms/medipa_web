@@ -1,6 +1,15 @@
 import os
 import sys
 
+virtenv = os.environ['APPDIR'] + '/virtenv/'
+os.environ['PYTHON_EGG_CACHE'] = os.path.join(virtenv, 'lib/python2.6/site-packages')
+virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
+
+try:
+    execfile(virtualenv, dict(__file__=virtualenv))
+except IOError:
+    pass
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__)) + '/../'
 
 sys.path.append(BASE_DIR)
