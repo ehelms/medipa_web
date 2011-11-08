@@ -4,14 +4,32 @@ import cStringIO
 
 from flask import Flask, request, make_response, render_template, json, redirect
 
+from flask.ext.celery import Celery
+
 from libmedipa import image_handler
 
 
 app = Flask(__name__)
+app.config.from_pyfile('celeryconfig.py')
+celery = Celery(app)
+
+@celery.task(name="medipa.add")
+def add(x, y):
+    return x + y
 
 @app.route('/', methods=['GET'])
 def home():
-    return redirect('/image/')
+    res = add.apply_async([4, 4])
+    response = make_response()
+    response.data = res.task_id
+    return response
+
+@app.route('/result/<task_id>/', methods=['GET'])
+def result(task_id):
+    retval = add.AsyncResult(task_id).get(timeout=1.0)
+    response = make_response()
+    response.data = str(retval)
+    return response
 
 @app.route('/image/upload/', methods=['GET', 'POST'])
 def upload_image():

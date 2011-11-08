@@ -1,0 +1,20 @@
+import os
+import sys
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)) + '/../'
+
+sys.path.append(BASE_DIR)
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../lib/')
+
+from flask.ext.script import Manager
+from flask.ext.celery import install_commands as install_celery_commands
+
+from medipa.views import app
+
+
+manager = Manager(app)
+install_celery_commands(manager)
+
+
+if __name__ == '__main__':
+    manager.run()

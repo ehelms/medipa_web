@@ -2,14 +2,13 @@ import os
 import sys
 import argparse
 import subprocess
-import daemon
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__)) + '/../'
 
 sys.path.append(BASE_DIR)
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../lib/')
 
-from celery.bin import celeryd
+os.environ['OPENSHIFT_DATA_DIR'] = BASE_DIR + "data"
 
 from medipa.views import app
 from medipa import test_runner
@@ -17,11 +16,10 @@ from medipa import test_runner
 
 def start():
     args = parse_args()
-    if args.action == 'runserver':
-        os.environ['CELERYD_CHDIR'] = BASE_DIR + "medipa"
-        os.environ['OPENSHIFT_DATA_DIR'] = BASE_DIR + "data"
 
-        pid = subprocess.Popen(["celeryd"], env=os.environ).pid
+    if args.action == 'startserver':
+
+        subprocess.Popen(["python", "celery_manager.py", "celeryd"], env=os.environ)
 
         if args.ip_address:
             app.run(host=args.ip_address, debug=args.debug)
@@ -35,7 +33,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='action')
 
-    parser_runserver = subparsers.add_parser('runserver', help='Starts the development server')
+    parser_runserver = subparsers.add_parser('startserver', help='Starts the development server')
     parser_runserver.add_argument('ip_address', metavar='IP', nargs='?',
                         help='IP address to serve from (default: 127.0.0.1:5000)')
     parser_runserver.add_argument('--nodebug', action='store_false', dest='debug', help='Whether to turn debug on or off (default: true)')

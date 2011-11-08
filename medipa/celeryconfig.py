@@ -5,5 +5,3 @@ BROKER_HOST = "sqlite:///" + os.environ['OPENSHIFT_DATA_DIR'] + "/db/celerydb.sq
 
 CELERY_RESULT_BACKEND = "database"
 CELERY_RESULT_DBURI = "sqlite:///" + os.environ['OPENSHIFT_DATA_DIR'] + "/db/celerydb.sqlite"
-
-CELERY_IMPORTS = ("tasks", )
