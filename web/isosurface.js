@@ -1,3 +1,6 @@
+var MD = {};
+
+
 (function () {
 
 //paralelization index
@@ -90,7 +93,7 @@ this.load = function() {
 };
 
 function mapReduce() {
-
+  var Grid = MD.grid;
   var x = Grid.x,
       xfrom = x.from,
       xto = x.to,
@@ -196,7 +199,7 @@ function render(data) {
   //elMatrix.multiplySelf(THREE.Matrix4.rotationXMatrix(rx))
   //elMatrix.multiplySelf(THREE.Matrix4.rotationYMatrix(ry)) 
   elMatrix.multiply(THREE.Matrix4.rotationXMatrix(rx), THREE.Matrix4.rotationYMatrix(ry));
-  elMatrix.multiplySelf(THREE.Matrix4.translationMatrix(Trans.x,Trans.y,Trans.z));
+  elMatrix.multiplySelf(THREE.Matrix4.translationMatrix(MD.translation.x, MD.translation.y, MD.translation.z));
   viewMatrix.multiply(camera.matrix, elMatrix);
   
   //send matrices
