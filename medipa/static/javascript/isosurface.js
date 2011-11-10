@@ -25,11 +25,11 @@
     }
 
     //called when HMTL page is loaded
-    this.load = function() {
+    $(document).ready(function(){
       //Firefox?
       ff = !document.body.innerText;
       //initialize workers
-      workerGroup = new WorkerGroup('WorkerMarchingCube.js', nWorkers);
+      workerGroup = new WorkerGroup('/static/javascript/WorkerMarchingCube.js', nWorkers);
       //initialize WebGL stuff
       glData = initWebGL();
       
@@ -78,7 +78,7 @@
       formData = getFormData();
       //
       mapReduce();
-    };
+    });
 
     function mapReduce() {
 
@@ -122,7 +122,7 @@
           },
           isolevel: formData.isolevel,
           cutlevel: formData.cutlevel,
-          filename: "sample2.js"
+          filename: "/static/javascript/sample2.js"
         };
       });
       var indexAcum = 0, initialValue = {
