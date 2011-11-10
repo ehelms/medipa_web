@@ -18,7 +18,7 @@ from medipa import test_runner
 def start():
     args = parse_args()
 
-    if args.action == 'startserver':
+    if args.action == 'runserver':
 
         subprocess.Popen(["python", "celery_manager.py", "celeryd"], env=os.environ)
 
@@ -34,7 +34,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='action')
 
-    parser_runserver = subparsers.add_parser('startserver', help='Starts the development server')
+    parser_runserver = subparsers.add_parser('runserver', help='Starts the development server')
     parser_runserver.add_argument('ip_address', metavar='IP', nargs='?',
                         help='IP address to serve from (default: 127.0.0.1:5000)')
     parser_runserver.add_argument('--nodebug', action='store_false', dest='debug', help='Whether to turn debug on or off (default: true)')

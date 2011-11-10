@@ -68,11 +68,11 @@ def image(image_id):
 @app.route('/image/<image_id>/render/', methods=['GET'])
 def render(image_id):
     size = request.args.get('size', 'complete')
-
+    '''
     response = make_response()
     response.data = image_handler.get_json(image_id, size)
     response.headers['Content-Encoding'] = 'gzip'
     response.headers['Content-Length'] = str(len(response.data))
     response.mimetype = 'application/json'
-
-    return response
+    '''
+    return render_template('render.html')
