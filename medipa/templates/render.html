@@ -127,11 +127,13 @@
     <script type="text/javascript" src="/static/javascript/isosurface.js"></script>
 
     <script>
+      var MD = MD || {};
+
       MD.dimensions = {
         'x' : {{ dimensions.x }},
         'y' : {{ dimensions.y }},
         'z' : {{ dimensions.z }}
-      }
+      };
     </script>
 {% endblock javascript %}
 
