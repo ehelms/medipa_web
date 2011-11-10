@@ -10,7 +10,7 @@ from .image import Image
 
 
 UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/../../data/'
-ALLOWED_EXTENSIONS = set(['mha'])
+ALLOWED_EXTENSIONS = set(['mha', '.zip'])
 
 def allowed_files(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS

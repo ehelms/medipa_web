@@ -9,6 +9,7 @@ sys.path.append(BASE_DIR)
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../lib/')
 
 os.environ['OPENSHIFT_DATA_DIR'] = BASE_DIR + "data"
+os.environ['APPDIR'] = BASE_DIR
 
 from medipa.views import app
 from medipa import test_runner
