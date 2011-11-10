@@ -543,13 +543,12 @@ var debug = function(msg){
 onmessage = function(e) {
   try {
     var data = e.data,
-      filename = data.filename,
+      sample = data.data_array,
       grid = data.grid,
       isolevel = data.isolevel,
       cutlevel = data.cutlevel,
       curfn;
       
-      importScripts(filename);
       curfn = function(x, y, z ) {
             if(z < cutlevel){
                 return 0;
@@ -569,8 +568,4 @@ onmessage = function(e) {
   }
 };
 
-
-
-
-
-
+postMessage({ type : "state", data : { ready : true }});

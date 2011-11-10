@@ -57,22 +57,36 @@ def process_file(filename):
         'json' : {}
     }
 
-    '''
-    image_array = image.get_image()
-    image_json = json.dumps(image_array)
-    gzip_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json']), 'wb')
-    gzip_file.write(image_json)
-    gzip_file.close()
-    'complete' : ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json']),
-    '''
-
-    manifest = reduce_by_eight(filename, manifest, reduced_image)
+    manifest = complete_image(filename, manifest, image)
+    manifest = reduce_by_eight(filename, manifest, image)
+    manifest = reduce_by_sixtyfour(filename, manifest, image)
 
     save_manifest(filename, manifest)
     
     return True
 
-def reduce_by_eight(filename, manifest, reduced_image):
+def complete_image(filename, manifest, image):
+    image_array = image.get_image()
+    image_json = json.dumps(image_array)
+    gzip_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json']), 'wb')
+    gzip_file.write(image_json)
+    gzip_file.close()
+ 
+    dimensions = {
+        'x' : len(image_array),
+        'y' : len(image_array[0]),
+        'z' : len(image_array[0][0])
+    }
+   
+    manifest['json']['complete'] = { 
+        'filename' : ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json']),
+        'dimensions' : dimensions
+    }
+
+    return manifest
+
+def reduce_by_eight(filename, manifest, image):
+    reduced_image = image.reduce()
     image_array = reduced_image.get_image()
     image_json = json.dumps(image_array)
     gzip_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '_x8', '.json']), 'wb')
@@ -87,6 +101,28 @@ def reduce_by_eight(filename, manifest, reduced_image):
    
     manifest['json']['x8'] = { 
         'filename' : ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '_x8', '.json']),
+        'dimensions' : dimensions
+    }
+
+    return manifest
+
+def reduce_by_sixtyfour(filename, manifest, image):
+    reduced_image = image.reduce()
+    reduced_image = reduced_image.reduce()
+    image_array = reduced_image.get_image()
+    image_json = json.dumps(image_array)
+    gzip_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '_x64', '.json']), 'wb')
+    gzip_file.write(image_json)
+    gzip_file.close()
+ 
+    dimensions = {
+        'x' : len(image_array),
+        'y' : len(image_array[0]),
+        'z' : len(image_array[0][0])
+    }
+   
+    manifest['json']['x64'] = { 
+        'filename' : ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '_x64', '.json']),
         'dimensions' : dimensions
     }
 

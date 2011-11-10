@@ -2,7 +2,7 @@
 
 {% block title %}Viewer{% endblock title %}
 
-{% block header %}Viewer{% endblock header %}
+{% block header %}Viewer - {{ image_name }}{% endblock header %}
 
 {% block stylesheets %}
 <style type="text/css">
@@ -138,28 +138,28 @@
 {% endblock javascript %}
 
 {% block content %}
-    <div class="container">
-      <div class="controls">
-    <h4>Options</h4>
-    <table>
-      <tr>
-        <td>Auto rotate</td>
-        <td><input type="checkbox" id="auto-rotate" checked="checked" /></td>
-      </tr>
-      <tr>
-        <td>Isolevel</td>
-        <td>
-          <input type="number" id="isolevel" value="120" />
-        </td>
-      </tr>
-      <tr>
-        <td>Cut Level</td>
-        <td>
-          <input type="number" id="cutlevel" value="0" />
-        </td>
-      </tr>        
-    </table>
-   </div>
-  <canvas id="viz" width="800" height="600"></canvas> 
+  <div class="container" data-url="/image/{{ image_name }}/" id="viewerContainer">
+    <div class="controls">
+      <h4>Options</h4>
+      <table>
+        <tr>
+          <td>Auto rotate</td>
+          <td><input type="checkbox" id="auto-rotate" checked="checked" /></td>
+        </tr>
+        <tr>
+          <td>Isolevel</td>
+          <td>
+            <input type="number" id="isolevel" value="120" />
+          </td>
+        </tr>
+        <tr>
+          <td>Cut Level</td>
+          <td>
+            <input type="number" id="cutlevel" value="0" />
+          </td>
+        </tr>        
+      </table>
+     </div>
+    <canvas id="viz" width="800" height="600"></canvas> 
   </div>
 {% endblock content %}

@@ -21,30 +21,37 @@ WorkerGroup.prototype = {
         configs = this.configs,
         l = workers.length,
         acum = opt.initialValue,
-        message = function (e) {
-         if (e.data.type === "data"){
+        worker_count = 0,
 
-           l--;
-           if (acum === undefined) {
-            acum = e.data.data;
-           } else {
-            acum = fn(acum, e.data.data);
-           }
-           if (l == 0) {
-            opt.onComplete(acum);
-           }
-         }
-         else if (e.data.type==="log") {
-           msg_num +=1;
-           if (msg_num % 1 === 0) {
-             console.log(e.data.data);
-	   }
-         }
+        message = function (e) {
+             if (e.data.type === "data"){
+
+               l--;
+               if (acum === undefined) {
+                acum = e.data.data;
+               } else {
+                acum = fn(acum, e.data.data);
+               }
+               if (l == 0) {
+                opt.onComplete(acum);
+               }
+             }
+            else if (e.data.type==="log") {
+               msg_num +=1;
+                if (msg_num % 1 === 0) {
+                    console.log(e.data.data);
+                }
+            } else if( e.data.type === "state" ){
+                if( e.data.data['ready'] ){
+                    worker_count += 1;
+                    w.postMessage(configs[worker_count - 1], [configs[worker_count - 1]['data_array']]);
+                    //workers[e.data.id].postMessage({ 'start' : true, 'id' : e.data.id, data_array : configs[i]['data_array'] }, [configs[i]['data_array']]);
+                }
+            }
         };
     for (var i = 0, ln = l; i < ln; i++) {
       var w = workers[i];
       w.onmessage = message;
-      w.postMessage(configs[i]);
     }
   }
 };

@@ -29,7 +29,6 @@
       //Firefox?
       ff = !document.body.innerText;
       //initialize workers
-      workerGroup = new WorkerGroup('/static/javascript/WorkerMarchingCube.js', nWorkers);
       //initialize WebGL stuff
       glData = initWebGL();
       
@@ -76,11 +75,14 @@
       
       //get form data
       formData = getFormData();
-      //
-      mapReduce();
+      
+        $.getJSON($('#viewerContainer').data('url') + window.location.search, function(data){
+            workerGroup = new WorkerGroup('/static/javascript/WorkerMarchingCube.js', nWorkers);
+            mapReduce(data);
+        });
     });
 
-    function mapReduce() {
+    function mapReduce(data_array) {
 
       var x = Grid.x,
           xfrom = x.from,
@@ -102,6 +104,7 @@
         var idx = nb % den,
             idy = ((nb / den) >> 0) % den,
             idz = ((nb / den / den) >> 0) % den;
+        
         return {
           grid: {
             x: {
@@ -122,7 +125,7 @@
           },
           isolevel: formData.isolevel,
           cutlevel: formData.cutlevel,
-          filename: "/static/javascript/sample2.js"
+          data_array: data_array
         };
       });
       var indexAcum = 0, initialValue = {
