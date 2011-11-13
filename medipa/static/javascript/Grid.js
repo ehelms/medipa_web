@@ -4,13 +4,13 @@ MD.range = (function(){
     //var sample = sample;   
     return {
         XRange: function(){
-            return sample.length
+            return MD.dimensions.x;
         },
         YRange: function(){
-          return sample[0].length
+          return MD.dimensions.y;
         },
         ZRange: function(){
-          return sample[0][0].length
+          return MD.dimensions.z;
         }
     }
 })();

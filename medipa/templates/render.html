@@ -65,6 +65,15 @@
 {% endblock stylesheets %}
 
 {% block javascript %}
+    <script>
+      var MD = MD || {};
+
+      MD.dimensions = {
+        'x' : {{ dimensions.x }},
+        'y' : {{ dimensions.y }},
+        'z' : {{ dimensions.z }}
+      };
+    </script>
 		<script id="shader-fs" type="x-shader/x-fragment">
           #ifdef GL_ES
           precision highp float;
@@ -113,8 +122,9 @@
         }
 		</script>
         <!-- Stuff pulled from ThreeJS -->
-    <script type="text/javascript" src="/static/javascript/three.js/Three.js"></script>
-    <script type="text/javascript" src="/static/javascript/sample2.js"> </script>
+        <script type="text/javascript" src="/static/javascript/jquery.repeatedclick.js"></script>
+         
+        <script type="text/javascript" src="/static/javascript/three.js/Three.js"></script>
 		<script type="text/javascript" src="/static/javascript/three.js/core/Vector3.js"></script>
 		<script type="text/javascript" src="/static/javascript/three.js/core/Vector4.js"></script>
 		<script type="text/javascript" src="/static/javascript/three.js/core/Matrix4.js"></script>
@@ -127,15 +137,6 @@
 		<script type="text/javascript" src="/static/javascript/WorkerGroup.js"></script>
         <!-- The Example -->
 
-    <script>
-      var MD = MD || {};
-
-      MD.dimensions = {
-        'x' : {{ dimensions.x }},
-        'y' : {{ dimensions.y }},
-        'z' : {{ dimensions.z }}
-      };
-    </script>
 {% endblock javascript %}
 
 {% block content %}

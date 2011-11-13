@@ -1,12 +1,12 @@
 
-var MD = {};
-
+var MD = MD || {};
 
 MD.set_actions = function(){
-    var rdx = 0.005,
-        rdy = 0.001;
-        
-    $(".rotation").click(function(){
+    var rdx = 0.01,
+        rdy = 0.01,
+        clickfun;
+
+    clickfun = function(){
        var val = $(this).val(); 
        if (val === "up"){
            MD.rotation.x -= rdx;           
@@ -16,8 +16,16 @@ MD.set_actions = function(){
           MD.rotation.y -= rdy;
        }else if (val === "right"){
            MD.rotation.y += rdy;           
-       }
-    });
+       }        
+    };
+
+    $('.rotation').repeatedclick(clickfun, {
+        duration  : 200, // starting duration
+        speed     : 0.2, // duration multiplier
+        min       : 100  // minimum duration
+    });        
+            
+
 };
 
 
@@ -87,7 +95,7 @@ MD.set_actions = function(){
 
         var delta = e.wheelDelta? e.wheelDelta / 120 : -(e.detail || 0) / 3,
             camera = scene.camera;
-        camera.position.z += ff? -delta/12 : -delta/2;
+        camera.position.z += ff? -delta/2 : -delta/2;
 
         return false;
       }, false);
