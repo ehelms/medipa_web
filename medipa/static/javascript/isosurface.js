@@ -1,3 +1,6 @@
+var MD = {};
+
+
 (function () {
     //paralelization index
     var n = 1,
@@ -84,17 +87,17 @@
 
     function mapReduce(data_array) {
 
-      var x = Grid.x,
+      var x = MD.grid.x,
           xfrom = x.from,
           xto = x.to,
           xstep = x.step,
           nx = ((xto - xfrom) / den),
-          y = Grid.y,
+          y = MD.grid.y,
           yfrom = y.from,
           yto = y.to,
           ystep = y.step,
           ny = ((yto - yfrom) / den),
-          z = Grid.z,
+          z = MD.grid.z,
           zfrom = z.from,
           zto = z.to,
           zstep = z.step,
@@ -190,7 +193,7 @@
       //elMatrix.multiplySelf(THREE.Matrix4.rotationXMatrix(rx))
       //elMatrix.multiplySelf(THREE.Matrix4.rotationYMatrix(ry)) 
       elMatrix.multiply(THREE.Matrix4.rotationXMatrix(rx), THREE.Matrix4.rotationYMatrix(ry));
-      elMatrix.multiplySelf(THREE.Matrix4.translationMatrix(Trans.x,Trans.y,Trans.z));
+      elMatrix.multiplySelf(THREE.Matrix4.translationMatrix(MD.translation.x,MD.translation.y,MD.translation.z));
       viewMatrix.multiply(camera.matrix, elMatrix);
       
       //send matrices

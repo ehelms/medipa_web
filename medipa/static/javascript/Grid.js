@@ -1,6 +1,6 @@
 
 
-var range = (function(){
+MD.range = (function(){
     //var sample = sample;   
     return {
         XRange: function(){
@@ -16,20 +16,20 @@ var range = (function(){
 })();
 
 
-var Grid = {
+MD.grid = {
   x: {
     from: 1,
-    to: range.XRange() - 2,
+    to: MD.range.XRange() - 2,
     step: 2
   },
   y: {
     from: 1,
-    to: range.YRange() -2 ,
+    to: MD.range.YRange() -2 ,
     step: 2
   },
   z: {
     from: 1,
-    to: range.ZRange() -2,
+    to: MD.range.ZRange() -2,
     step: 2
   },
   
@@ -44,17 +44,17 @@ var Grid = {
 //Grid.set_low();
 
 //manual rotation
-Rot = {
+MD.rotation = {
     x: 4.2,
     y: 6.1,
     z: 0
 }
 
 //Manual translation
-Trans = {
-    x: -(range.XRange()/2),
-    y: -(range.YRange()/2),
-    z: -(range.ZRange()/2)
+MD.translation = {
+    x: -(MD.range.XRange()/2),
+    y: -(MD.range.YRange()/2),
+    z: -(MD.range.ZRange()/2)
     
 }
 
