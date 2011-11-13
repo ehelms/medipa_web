@@ -18,19 +18,19 @@ MD.range = (function(){
 
 MD.grid = {
   x: {
-    from: 1,
+    from: 0,
     to: MD.range.XRange() - 2,
-    step: 2
+    step: 1
   },
   y: {
-    from: 1,
+    from: 0,
     to: MD.range.YRange() -2 ,
-    step: 2
+    step: 1
   },
   z: {
-    from: 1,
+    from: 0,
     to: MD.range.ZRange() -2,
-    step: 2
+    step: 1
   },
   
   set_low : function(){

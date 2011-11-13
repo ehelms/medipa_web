@@ -58,6 +58,7 @@ MD.set_actions = function(){
         glData,
         mouseX = 0, //mouse position
         mouseY = 0,
+        recentData,
         ff; //firefix    
 
     function getFormData() {
@@ -123,12 +124,12 @@ MD.set_actions = function(){
       
         $.getJSON($('#viewerContainer').data('url') + window.location.search, function(data){
             workerGroup = new WorkerGroup('/static/javascript/WorkerMarchingCube.js', nWorkers);
-            mapReduce(data);
+            recentData = data;
+            mapReduce(recentData);
         });
     });
 
     function mapReduce(data_array) {
-
       var x = MD.grid.x,
           xfrom = x.from,
           xto = x.to,
@@ -287,7 +288,7 @@ MD.set_actions = function(){
       //call the mapReduce to recalculate vertices and re-render the scene
       formData = getFormData();
       if (isolevel != formData.isolevel || cutlevel != formData.cutlevel) {
-        setTimeout(mapReduce, 1000/30);
+        setTimeout(function(){mapReduce(recentData)}, 1000/30);
       } else {
         setTimeout(function() {
           render(data);

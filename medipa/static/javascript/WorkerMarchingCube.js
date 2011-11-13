@@ -438,74 +438,56 @@ var MarchingCubes;
           zfrom = z.from,
           zto = z.to,
           zstep = z.step,
-          xstep2 = xstep/2,
-          ystep2 = ystep/2,
-          zstep2 = zstep/2,
           vertices = [],
           normals = [],
           val, grid, isolevel,
           polygonise = this.polygonise;
 
-     for (var xcur = xfrom; xcur <= xto; xcur += xstep) {
-        for (var ycur = yfrom; ycur <= yto; ycur += ystep) {
-          for (var zcur = zfrom; zcur <= zto; zcur += zstep) {
+     for (var xcur = xfrom; xcur < xto ; xcur += xstep) {
+        for (var ycur = yfrom; ycur < yto  ; ycur += ystep) {
+          for (var zcur = zfrom ; zcur < zto  ; zcur += zstep) {
             val = [];
             var p1 = {
-                x: xcur - xstep2,
-                y: ycur - ystep2,
-                z: zcur - zstep2
+                x: xcur,
+                y: ycur,
+                z: zcur
               }, 
               p2 = {
-                x: xcur + xstep2,
-                y: ycur - ystep2,
-                z: zcur - zstep2
+                x: xcur + xstep,
+                y: ycur,
+                z: zcur
               }, 
               p3 = {
-                x: xcur + xstep2,
-                y: ycur + ystep2,
-                z: zcur - zstep2
+                x: xcur + xstep,
+                y: ycur + ystep,
+                z: zcur
               }, 
               p4 = {
-                x: xcur - xstep2,
-                y: ycur + ystep2,
-                z: zcur - zstep2
+                x: xcur,
+                y: ycur + ystep,
+                z: zcur
               }, 
               p5 = {
-                x: xcur - xstep2,
-                y: ycur - ystep2,
-                z: zcur + zstep2
+                x: xcur,
+                y: ycur,
+                z: zcur + zstep
               }, 
               p6 = {
-                x: xcur + xstep2,
-                y: ycur - ystep2,
-                z: zcur + zstep2
+                x: xcur + xstep,
+                y: ycur,
+                z: zcur + zstep
               }, 
               p7 = {
-                x: xcur + xstep2,
-                y: ycur + ystep2,
-                z: zcur + zstep2
+                x: xcur + xstep,
+                y: ycur + ystep,
+                z: zcur + zstep
               }, 
               p8 = {
-                x: xcur - xstep2,
-                y: ycur + ystep2,
-                z: zcur + zstep2
+                x: xcur,
+                y: ycur + ystep,
+                z: zcur + zstep
             };
-
-            var test = function(p){  
-//              if (p.x < 0 || p.y < 0 || p.z < 0)
-//               debug(sample[p.x]);
-            }
-            test(p1);
-            test(p2);
-            test(p3);
-            test(p4);
-            test(p5);
-            test(p6);
-            test(p7);
-            test(p8);
-            
-
-
+     
             val.push(fn(p1.x, p1.y, p1.z),
                      fn(p2.x, p2.y, p2.z),
                      fn(p3.x, p3.y, p3.z),
@@ -548,7 +530,6 @@ onmessage = function(e) {
       isolevel = data.isolevel,
       cutlevel = data.cutlevel,
       curfn;
-      debug("FOOO: " + cutlevel);
       curfn = function(x, y, z ) {
             if(z < cutlevel){
                 return 0;
@@ -561,7 +542,7 @@ onmessage = function(e) {
 
     postMessage({type:"data", data:MarchingCubes.compute(grid, curfn, isolevel)});
   } catch(e) {
-    debug(e);
+
     postMessage({type:"data", data:{
       vertices: [],
       normals: []

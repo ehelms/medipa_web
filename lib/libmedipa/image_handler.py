@@ -3,7 +3,7 @@ import json
 import gzip
 import re
 import StringIO
-
+import math
 from werkzeug import secure_filename
 
 from .image import Image
@@ -57,75 +57,38 @@ def process_file(filename):
         'json' : {}
     }
 
-    manifest = complete_image(filename, manifest, image)
-    manifest = reduce_by_eight(filename, manifest, image)
-    manifest = reduce_by_sixtyfour(filename, manifest, image)
+    manifest = reduce(filename, manifest, 3, image)
 
     save_manifest(filename, manifest)
     
     return True
 
-def complete_image(filename, manifest, image):
-    image_array = image.get_image()
-    image_json = json.dumps(image_array)
-    gzip_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json']), 'wb')
+
+
+def reduce(filename, manifest, times, image):
+    complete_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json'])
+    write(complete_filename, manifest, "complete", image.get_image())
+    for i in  range(times):
+        name = "x%s" % ( int(math.pow(8, i+1)) )
+        out_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], "_",  name, '.json'])
+        image = image.reduce();
+        manifest = write(out_filename, manifest, name, image.get_image())
+    return manifest     
+
+def write(out_filename, manifest, name, array):
+    image_json = json.dumps(array)
+    gzip_file = open(out_filename, 'wb')
     gzip_file.write(image_json)
     gzip_file.close()
- 
     dimensions = {
-        'x' : len(image_array),
-        'y' : len(image_array[0]),
-        'z' : len(image_array[0][0])
+        'x' : len(array),
+        'y' : len(array[0]),
+        'z' : len(array[0][0])
     }
-   
-    manifest['json']['complete'] = { 
-        'filename' : ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json']),
+    manifest['json'][name] = {
+        'filename' : out_filename,
         'dimensions' : dimensions
     }
-
-    return manifest
-
-def reduce_by_eight(filename, manifest, image):
-    reduced_image = image.reduce()
-    image_array = reduced_image.get_image()
-    image_json = json.dumps(image_array)
-    gzip_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '_x8', '.json']), 'wb')
-    gzip_file.write(image_json)
-    gzip_file.close()
- 
-    dimensions = {
-        'x' : len(image_array),
-        'y' : len(image_array[0]),
-        'z' : len(image_array[0][0])
-    }
-   
-    manifest['json']['x8'] = { 
-        'filename' : ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '_x8', '.json']),
-        'dimensions' : dimensions
-    }
-
-    return manifest
-
-def reduce_by_sixtyfour(filename, manifest, image):
-    reduced_image = image.reduce()
-    reduced_image = reduced_image.reduce()
-    image_array = reduced_image.get_image()
-    image_json = json.dumps(image_array)
-    gzip_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '_x64', '.json']), 'wb')
-    gzip_file.write(image_json)
-    gzip_file.close()
- 
-    dimensions = {
-        'x' : len(image_array),
-        'y' : len(image_array[0]),
-        'z' : len(image_array[0][0])
-    }
-   
-    manifest['json']['x64'] = { 
-        'filename' : ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '_x64', '.json']),
-        'dimensions' : dimensions
-    }
-
     return manifest
 
 def save_manifest(filename, manifest):
