@@ -1,4 +1,24 @@
+
 var MD = {};
+
+
+MD.set_actions = function(){
+    var rdx = 0.005,
+        rdy = 0.001;
+        
+    $(".rotation").click(function(){
+       var val = $(this).val(); 
+       if (val === "up"){
+           MD.rotation.x -= rdx;           
+       }else if (val === "down"){
+           MD.rotation.x += rdx;
+       }else if (val === "left"){
+          MD.rotation.y -= rdy;
+       }else if (val === "right"){
+           MD.rotation.y += rdy;           
+       }
+    });
+};
 
 
 (function () {
@@ -11,10 +31,6 @@ var MD = {};
         gl, //3D context object
         scene,
         glData,
-        rx = 0, //rotation
-        ry = 0,
-        rdx = 0.005,
-        rdy = 0.001,
         mouseX = 0, //mouse position
         mouseY = 0,
         ff; //firefix    
@@ -29,6 +45,7 @@ var MD = {};
 
     //called when HMTL page is loaded
     $(document).ready(function(){
+      MD.set_actions();
       //Firefox?
       ff = !document.body.innerText;
       //initialize workers
@@ -181,18 +198,18 @@ var MD = {};
       //update camera position
       camera.updateMatrix();
       
-      if (formData.rotate) {
-        rx += rdx;
-        ry += rdy;
-        //rx = Rot.x;
-        //ry = Rot.y;
-      }
+      // if (formData.rotate) {
+        // rx += rdx;
+        // ry += rdy;
+        // //rx = Rot.x;
+        // //ry = Rot.y;
+      // }
 
      // elMatrix.multiplySelf(THREE.Matrix4.translationMatrix(Rot.x,Rot.y,Rot.z));
 
       //elMatrix.multiplySelf(THREE.Matrix4.rotationXMatrix(rx))
       //elMatrix.multiplySelf(THREE.Matrix4.rotationYMatrix(ry)) 
-      elMatrix.multiply(THREE.Matrix4.rotationXMatrix(rx), THREE.Matrix4.rotationYMatrix(ry));
+      elMatrix.multiply(THREE.Matrix4.rotationXMatrix(MD.rotation.x), THREE.Matrix4.rotationYMatrix(MD.rotation.y));
       elMatrix.multiplySelf(THREE.Matrix4.translationMatrix(MD.translation.x,MD.translation.y,MD.translation.z));
       viewMatrix.multiply(camera.matrix, elMatrix);
       

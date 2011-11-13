@@ -45,16 +45,15 @@ MD.grid = {
 
 //manual rotation
 MD.rotation = {
-    x: 4.2,
-    y: 6.1,
+    x: 0,
+    y: 0,
     z: 0
-}
+};
 
 //Manual translation
 MD.translation = {
     x: -(MD.range.XRange()/2),
     y: -(MD.range.YRange()/2),
-    z: -(MD.range.ZRange()/2)
-    
-}
+    z: -(MD.range.ZRange()/2)  
+};
 
