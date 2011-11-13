@@ -548,7 +548,7 @@ onmessage = function(e) {
       isolevel = data.isolevel,
       cutlevel = data.cutlevel,
       curfn;
-      
+      debug("FOOO: " + cutlevel);
       curfn = function(x, y, z ) {
             if(z < cutlevel){
                 return 0;
@@ -561,6 +561,7 @@ onmessage = function(e) {
 
     postMessage({type:"data", data:MarchingCubes.compute(grid, curfn, isolevel)});
   } catch(e) {
+    debug(e);
     postMessage({type:"data", data:{
       vertices: [],
       normals: []

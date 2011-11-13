@@ -20,7 +20,6 @@ MD.set_actions = function(){
     
     $(document).keydown( function(e){
         var key = e.keyCode;
-        console.error(e.keyCode)
         if (key === 65){ //A
             clickfun("left");
         }

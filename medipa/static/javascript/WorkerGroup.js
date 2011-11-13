@@ -44,7 +44,7 @@ WorkerGroup.prototype = {
             } else if( e.data.type === "state" ){
                 if( e.data.data['ready'] ){
                     worker_count += 1;
-                    w.postMessage(configs[worker_count - 1], [configs[worker_count - 1]['data_array']]);
+                    w.postMessage(configs[worker_count - 1]);
                     //workers[e.data.id].postMessage({ 'start' : true, 'id' : e.data.id, data_array : configs[i]['data_array'] }, [configs[i]['data_array']]);
                 }
             }
