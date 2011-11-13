@@ -6,8 +6,7 @@ MD.set_actions = function(){
         rdy = 0.01,
         clickfun;
 
-    clickfun = function(){
-       var val = $(this).val(); 
+    clickfun = function(val){       
        if (val === "up"){
            MD.rotation.x -= rdx;           
        }else if (val === "down"){
@@ -18,8 +17,27 @@ MD.set_actions = function(){
            MD.rotation.y += rdy;           
        }        
     };
+    
+    $(document).keydown( function(e){
+        var key = e.keyCode;
+        console.error(e.keyCode)
+        if (key === 65){ //A
+            clickfun("left");
+        }
+        else if (key === 87){ ///W
+            clickfun("up");
+        }else if (key ===83){
+            clickfun("down");
+        }else if (key === 68){
+            clickfun("right");
+        }   
+        return true; 
+    });    
+    
 
-    $('.rotation').repeatedclick(clickfun, {
+    $('.rotation').repeatedclick(function(){
+           clickfun($(this).val());
+        }, {
         duration  : 200, // starting duration
         speed     : 0.2, // duration multiplier
         min       : 100  // minimum duration
