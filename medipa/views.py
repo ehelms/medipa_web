@@ -13,23 +13,24 @@ app = Flask(__name__)
 app.config.from_pyfile('celeryconfig.py')
 celery = Celery(app)
 
-@celery.task(name="medipa.add")
-def add(x, y):
-    return x + y
+@celery.task(name="medipa.process_upload")
+def process_file(filename):
+    image_handler.process_file(filename)
 
-@app.route('/', methods=['GET'])
-def home():
-    res = add.apply_async([4, 4])
-    response = make_response()
-    response.data = res.task_id
-    return response
+def process_upload(file, upload=True):
+    if file and upload:
+        success, filename = image_handler.save(file, upload)
 
-@app.route('/result/<task_id>/', methods=['GET'])
-def result(task_id):
-    retval = add.AsyncResult(task_id).get(timeout=1.0)
-    response = make_response()
-    response.data = str(retval)
-    return response
+        if success:
+            process_file.apply_async([filename])
+    elif file and not upload:
+        file = urllib2.urlopen(request.form['scan_url'])
+        success, filename = image_handler.save(file, upload)
+
+        if success:
+            process_file.apply_async([filename])
+    else:
+        return False
 
 @app.route('/image/upload/', methods=['GET', 'POST'])
 def upload_image():
@@ -41,14 +42,13 @@ def upload_image():
         if file and request.form['scan_url']:
             return render_template('upload.html', warning=True)
         elif file:
-            if image_handler.save(file):
-                return render_template('upload.html', success=True)
+            pass
+            process_upload(file)
         elif request.form['scan_url']:
             file = urllib2.urlopen(request.form['scan_url'])
+            process_upload(file, False)
 
-            if image_handler.save(file, False):
-                return render_template('upload.html', success=True)
-        return render_template('upload.html', error=True)
+    return render_template('upload.html', success=True)
 
 @app.route('/image/', methods=['GET'])
 def show_images():

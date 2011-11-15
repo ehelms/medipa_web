@@ -18,28 +18,28 @@ def allowed_files(filename):
 
 def save(file, upload=True):
     filename = ''
-
-    if not upload:
-        filename = file.url.split('/')
-        filename = filename[len(filename) - 1]
-        if not filename.endswith(".mha"):
-            filename += ".mha"
-        local_file = open(UPLOAD_FOLDER + filename, "wb")
-        local_file.write(file.read())
-        local_file.close()
-    else:
-        if file and allowed_files(file.filename):
-            filename = file.filename.split('/')
-            filename = filename[len(filename) - 1]
-            filename = secure_filename(filename)
-            file.save(UPLOAD_FOLDER + filename)
-            file.close()
     
-    if process_file(filename):
-        return True
-    else:
-        return False
-
+    try:
+        if not upload:
+            filename = file.url.split('/')
+            filename = filename[len(filename) - 1]
+            if not filename.endswith(".mha"):
+                filename += ".mha"
+            local_file = open(UPLOAD_FOLDER + filename, "wb")
+            local_file.write(file.read())
+            local_file.close()
+            return True, filename
+        else:
+            if file and allowed_files(file.filename):
+                filename = file.filename.split('/')
+                filename = filename[len(filename) - 1]
+                filename = secure_filename(filename)
+                file.save(UPLOAD_FOLDER + filename)
+                file.close()
+                return True, filename
+    except:
+        return False, ''
+   
 def get_images():
     tmp = os.listdir(UPLOAD_FOLDER)
     images = []

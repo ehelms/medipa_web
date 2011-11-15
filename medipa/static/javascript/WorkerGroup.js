@@ -25,6 +25,8 @@ WorkerGroup.prototype = {
 
         message = function (e) {
              if (e.data.type === "data"){
+                console.log('data received');
+                console.log('Worker: ' + l);
 
                l--;
                if (acum === undefined) {
