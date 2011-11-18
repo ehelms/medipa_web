@@ -17,6 +17,7 @@ class Image:
             raise "Image is %s dimensions, but can only handle 3." % (len(self.size))
 
 
+
     #layer - 0 based index of the Z index layer you are requesting
     def get_slice(self, layer):
         if layer  > self.size[2] -1:
@@ -93,6 +94,18 @@ class Image:
         #    plane = self.__slice_to_array(self.get_slice(z + offset[2]), dims[0:2], offset[0:2])
         #    stack.append(plane)
         #return stack 
+
+    def convert_image(self):
+        size = self.size
+        array = self.get_image()
+        x_size = size[0]*size[1]*size[2]       
+        list = [None]*x_size
+        for x in range(size[0]):
+            for y in range(size[1]):
+                for z in range(size[2]):
+                    #Y*len(X)*len(Z) + Z*len(X) + X
+                    list[y*size[1]*size[2] + z*size[0] + x] = array[x][y][z]
+        return list
 
 
     def __slice_to_array(self, slice, dims, offset):

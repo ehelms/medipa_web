@@ -4,6 +4,7 @@ import gzip
 import re
 import StringIO
 import math
+from PIL import Image as PilImage
 from werkzeug import secure_filename
 
 from .image import Image
@@ -66,24 +67,30 @@ def process_file(filename):
 
 
 def reduce(filename, manifest, times, image):
-    complete_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.json'])
-    write(complete_filename, manifest, "complete", image.get_image())
+    complete_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.bmp'])
+    write(complete_filename, manifest, "complete", image.convert_image(), image.size)
     for i in  range(times):
         name = "x%s" % ( int(math.pow(8, i+1)) )
-        out_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], "_",  name, '.json'])
+        out_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], "_",  name, '.bmp'])
         image = image.reduce();
-        manifest = write(out_filename, manifest, name, image.get_image())
+        manifest = write(out_filename, manifest, name, image.convert_image(), image.size)
     return manifest     
 
-def write(out_filename, manifest, name, array):
-    image_json = json.dumps(array)
-    gzip_file = open(out_filename, 'wb')
-    gzip_file.write(image_json)
-    gzip_file.close()
+def write(out_filename, manifest, name, array, size):
+    
+#    image_json = json.dumps(array)
+#    gzip_file = open(out_filename, 'wb')
+#    gzip_file.write(image_json)
+#    gzip_file.close()
+    
+    img = PilImage.new("L", (size[0]*size[2], size[1]))
+    img.putdata(array)
+    
+    img.save(out_filename)    
     dimensions = {
-        'x' : len(array),
-        'y' : len(array[0]),
-        'z' : len(array[0][0])
+        'x' : size[0],
+        'y' : size[1],
+        'z' : size[2]
     }
     manifest['json'][name] = {
         'filename' : out_filename,
@@ -102,7 +109,6 @@ def get_json(filename, size):
     manifest = json.loads(manifest_file.read())
 
     temp_file = open(manifest['json'][size]['filename'])
-
     gzip_buffer = StringIO.StringIO()
     gzip_file = gzip.GzipFile(mode='wb', fileobj=gzip_buffer, compresslevel=6)
     gzip_file.write(temp_file.read())

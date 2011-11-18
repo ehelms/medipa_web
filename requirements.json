@@ -1,3 +1,3 @@
-{"pip" : ["Flask", "kombu-sqlalchemy", "Flask-Script", "Flask-Celery", "celery"],
+{"pip" : ["Flask", "PIL",  "kombu-sqlalchemy", "Flask-Script", "Flask-Celery", "celery"],
  "easy_install" : ["SimpleITK"]
 }
