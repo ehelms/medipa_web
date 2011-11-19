@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Viewer{% endblock title %}
+
+{% block header %}Viewer - {{ image_name }}{% endblock header %}
+
+{% block stylesheets %}
+<style type="text/css">
+  html, body {
+          margin:0;
+          padding:0;
+        }
+        h4 {
+          margin: 0;
+          font-size: 1.1em;
+          text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+          text-align: left;
+          margin-bottom: 3px;
+          margin-top: 3px;
+          border-bottom: 1px solid #ddd;
+        }
+        div.container {
+            position: relative;
+            width: 1000px;
+        }
+        canvas {
+          position: absolute;
+    background: black;
+          top: 0;
+          left: 300px;
+    width: 800px;
+    height: 600px;
+          -webkit-box-shadow: 0 0 10px #000;
+          -moz-box-shadow: 0 0 10px #000;
+        }
+        .controls {
+          position: absolute;
+          top:0;
+          left:0;
+          width: 200px;
+          height: 600px;
+          font-size: 0.8em;
+        }
+        ul.predefined-fn {
+          margin: 0;
+          padding: 0;
+        }
+        ul.predefined-fn code {
+          display: none;
+        }
+        ul.predefined-fn li {
+          display: block;
+          cursor: pointer;
+          margin: 1px;
+          background: #ccc;
+          border 1px solid #555;
+          font-weight: bold;
+          color: #fff;
+          padding: 3px;
+        }
+        .error {
+          background-color: #fcc;
+        }
+</style>
+{% endblock stylesheets %}
+
+{% block javascript %}
+    <script>
+      var MD = MD || {};
+
+      MD.dimensions = {
+        'x' : {{ dimensions.x }},
+        'y' : {{ dimensions.y }},
+        'z' : {{ dimensions.z }}
+      };
+    </script>
+		<script id="shader-fs" type="x-shader/x-fragment">
+          #ifdef GL_ES
+          precision highp float;
+          #endif
+          
+          varying vec4 vcolor;
+          varying vec3 lightWeighting;
+          
+          void main(){
+          
+            gl_FragColor = vec4(vcolor.rgb * lightWeighting, vcolor.a);
+          
+          }
+        </script>
+        
+        <script id="shader-vs" type="x-shader/x-vertex">
+        attribute vec3 position;
+        attribute vec3 normal;
+        uniform vec4 color;
+        
+        uniform mat4 viewMatrix;
+        uniform mat4 projectionMatrix;
+        uniform mat4 normalMatrix;
+
+        uniform bool enableLighting;
+        uniform vec3 ambientColor;
+        uniform vec3 directionalColor;
+        uniform vec3 lightingDirection;
+        
+        varying vec4 vcolor;
+        varying vec3 lightWeighting;
+        
+        void main(void) {
+        
+          if(!enableLighting) {
+            lightWeighting = vec3(1.0, 1.0, 1.0);
+          } else {
+            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);
+            float directionalLightWeighting = max(dot(transformedNormal.xyz, lightingDirection), 0.0);
+            lightWeighting = ambientColor + directionalColor * directionalLightWeighting;
+          }
+          
+          vcolor = color;
+          gl_Position = projectionMatrix * viewMatrix * vec4( position, 1.0 );
+        
+        }
+		</script>
+        <!-- Stuff pulled from ThreeJS -->
+        <script type="text/javascript" src="/static/marchingcubes/marchingcubes/javascript/jquery.repeatedclick.js"></script>
+
+        <script type="text/javascript" src="/static/marchingcubes/javascript/three.js/Three.js"></script>
+		<script type="text/javascript" src="/static/marchingcubes/javascript/three.js/core/Vector3.js"></script>
+		<script type="text/javascript" src="/static/marchingcubes/javascript/three.js/core/Vector4.js"></script>
+		<script type="text/javascript" src="/static/marchingcubes/javascript/three.js/core/Matrix4.js"></script>
+		<script type="text/javascript" src="/static/marchingcubes/javascript/three.js/cameras/Camera.js"></script>
+        <!-- Model (Grid, Balls) Workers and WebGL methods -->
+        <script type="text/javascript" src="/static/marchingcubes/javascript/isosurface.js"></script>
+        
+		<script type="text/javascript" src="/static/marchingcubes/javascript/Grid.js"></script>
+		<script type="text/javascript" src="/static/marchingcubes/javascript/WebGLUtils.js"></script>
+		<script type="text/javascript" src="/static/marchingcubes/javascript/WorkerGroup.js"></script>
+        <!-- The Example -->
+
+{% endblock javascript %}
+
+{% block content %}
+  <div class="container" data-url="/image/{{ image_name }}/" id="viewerContainer">
+    <div class="controls">
+      <h4>Options</h4>
+      <table>
+        <tr>
+          <td>Isolevel</td>
+          <td>
+            <input type="number" id="isolevel" value="120" />
+          </td>
+        </tr>
+        <tr>
+          <td>Cut Level</td>
+          <td>
+            <input type="number" id="cutlevel" value="0" />
+          </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" value="left" class="rotation">
+                <input type="button" value="up" class="rotation">
+                <input type="button" value="down" class="rotation">
+                <input type="button" value="right" class="rotation">
+            </td>
+        </tr>        
+      </table>
+     </div>
+    <canvas id="viz" width="800" height="600"></canvas> 
+  </div>
+{% endblock content %}

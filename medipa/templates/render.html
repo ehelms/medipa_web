@@ -5,167 +5,72 @@
 {% block header %}Viewer - {{ image_name }}{% endblock header %}
 
 {% block stylesheets %}
-<style type="text/css">
-  html, body {
-          margin:0;
-          padding:0;
-        }
-        h4 {
-          margin: 0;
-          font-size: 1.1em;
-          text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-          text-align: left;
-          margin-bottom: 3px;
-          margin-top: 3px;
-          border-bottom: 1px solid #ddd;
-        }
-        div.container {
-            position: relative;
-            width: 1000px;
-        }
-        canvas {
-          position: absolute;
-    background: black;
-          top: 0;
-          left: 300px;
-    width: 800px;
-    height: 600px;
-          -webkit-box-shadow: 0 0 10px #000;
-          -moz-box-shadow: 0 0 10px #000;
-        }
-        .controls {
-          position: absolute;
-          top:0;
-          left:0;
-          width: 200px;
-          height: 600px;
-          font-size: 0.8em;
-        }
-        ul.predefined-fn {
-          margin: 0;
-          padding: 0;
-        }
-        ul.predefined-fn code {
-          display: none;
-        }
-        ul.predefined-fn li {
-          display: block;
-          cursor: pointer;
-          margin: 1px;
-          background: #ccc;
-          border 1px solid #555;
-          font-weight: bold;
-          color: #fff;
-          padding: 3px;
-        }
-        .error {
-          background-color: #fcc;
-        }
-</style>
+	<link rel="stylesheet" href="/static/javascript/raytrace/style.css" type="text/css" media="screen" />
 {% endblock stylesheets %}
 
 {% block javascript %}
-    <script>
-      var MD = MD || {};
-
-      MD.dimensions = {
-        'x' : {{ dimensions.x }},
-        'y' : {{ dimensions.y }},
-        'z' : {{ dimensions.z }}
-      };
-    </script>
-		<script id="shader-fs" type="x-shader/x-fragment">
-          #ifdef GL_ES
-          precision highp float;
-          #endif
-          
-          varying vec4 vcolor;
-          varying vec3 lightWeighting;
-          
-          void main(){
-          
-            gl_FragColor = vec4(vcolor.rgb * lightWeighting, vcolor.a);
-          
-          }
-        </script>
-        
-        <script id="shader-vs" type="x-shader/x-vertex">
-        attribute vec3 position;
-        attribute vec3 normal;
-        uniform vec4 color;
-        
-        uniform mat4 viewMatrix;
-        uniform mat4 projectionMatrix;
-        uniform mat4 normalMatrix;
-
-        uniform bool enableLighting;
-        uniform vec3 ambientColor;
-        uniform vec3 directionalColor;
-        uniform vec3 lightingDirection;
-        
-        varying vec4 vcolor;
-        varying vec3 lightWeighting;
-        
-        void main(void) {
-        
-          if(!enableLighting) {
-            lightWeighting = vec3(1.0, 1.0, 1.0);
-          } else {
-            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);
-            float directionalLightWeighting = max(dot(transformedNormal.xyz, lightingDirection), 0.0);
-            lightWeighting = ambientColor + directionalColor * directionalLightWeighting;
-          }
-          
-          vcolor = color;
-          gl_Position = projectionMatrix * viewMatrix * vec4( position, 1.0 );
-        
-        }
+	<script type='text/javascript' src='/static/javascript/raytrace/atvtdemo.js'></script>
+	<script type='text/javascript' src='/static/javascript/raytrace/atvoltex.js'></script>
+	<script type='text/javascript' src='/static/javascript/raytrace/J3DI.js'></script>
+	<script type='text/javascript' src='/static/javascript/raytrace/J3DIMath.js'></script>
+	<script type='text/javascript' src='/static/javascript/raytrace/webgl-utils.js'></script>
+		
+    <script id="vshader" type="x-shader/x-vertex">// <![CDATA[
+			attribute vec3 vPosition;
+			varying vec3 v_Color;
+			void main()
+			{	    
+				v_Color = vPosition;
+				gl_Position = vec4(vPosition, 1.0);
+			}
+			// ]]&gt;
 		</script>
-        <!-- Stuff pulled from ThreeJS -->
-        <script type="text/javascript" src="/static/javascript/jquery.repeatedclick.js"></script>
-
-        <script type="text/javascript" src="/static/javascript/three.js/Three.js"></script>
-		<script type="text/javascript" src="/static/javascript/three.js/core/Vector3.js"></script>
-		<script type="text/javascript" src="/static/javascript/three.js/core/Vector4.js"></script>
-		<script type="text/javascript" src="/static/javascript/three.js/core/Matrix4.js"></script>
-		<script type="text/javascript" src="/static/javascript/three.js/cameras/Camera.js"></script>
-        <!-- Model (Grid, Balls) Workers and WebGL methods -->
-        <script type="text/javascript" src="/static/javascript/isosurface.js"></script>
-        
-		<script type="text/javascript" src="/static/javascript/Grid.js"></script>
-		<script type="text/javascript" src="/static/javascript/WebGLUtils.js"></script>
-		<script type="text/javascript" src="/static/javascript/WorkerGroup.js"></script>
-        <!-- The Example -->
-
+		<script id="fshader" type="x-shader/x-fragment">
+			#ifdef GL_ES
+			precision mediump float;
+			#endif
+			varying vec3 v_Color;
+			void main()
+			{
+				gl_FragColor = vec4(v_Color, 1.0);
+			}
+		</script>
 {% endblock javascript %}
 
 {% block content %}
-  <div class="container" data-url="/image/{{ image_name }}/" id="viewerContainer">
-    <div class="controls">
-      <h4>Options</h4>
-      <table>
-        <tr>
-          <td>Isolevel</td>
-          <td>
-            <input type="number" id="isolevel" value="120" />
-          </td>
-        </tr>
-        <tr>
-          <td>Cut Level</td>
-          <td>
-            <input type="number" id="cutlevel" value="0" />
-          </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="button" value="left" class="rotation">
-                <input type="button" value="up" class="rotation">
-                <input type="button" value="down" class="rotation">
-                <input type="button" value="right" class="rotation">
-            </td>
-        </tr>        
-      </table>
-     </div>
-    <canvas id="viz" width="800" height="600"></canvas> 
-  </div>
+<div class="container" data-url="/image/{{ image_name }}/" id="viewerContainer">
+	<div style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">
+		<canvas id="webgl_canvas" style="border: 1px solid #202020; margin-top: 5px; margin-bottom: 5px; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" width="630" height="360"><br />
+Your browser does not support the HTML 5 &lt;canvas&gt; element.<br />
+    </canvas>
+    <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="loadHead();">Head</button>
+    <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="loadChameleon();">Chameleon</button>
+    <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="decreaseBrightness();">-</button>
+    <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="increaseBrightness();">+</button>
+    <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="decreaseSize();">s</button>
+    <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="increaseSize();">S</button>
+    <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="toggleLinearFiltering();">HiQ</button> <span id="hiq" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;"></span> 
+    <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="decreaseNumberOfSteps();">.</button>
+    <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="increaseNumberOfSteps();">&#8230;</button> <span id="steps" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;"></span> | <span id="framerate" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Select a dataset to start</span><br />
+    <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Red</span> 
+    <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_red" width="522" height="42">
+    </canvas> 
+    <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(0);">Reset</button><br />
+    <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Green</span> 
+    <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_green" width="522" height="42">
+    </canvas>
+    <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(1);">Reset</button><br />
+    <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Blue</span> 
+    <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_blue" width="522" height="42">
+    </canvas> 
+    <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(2);">Reset</button><br />
+    <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Alpha</span> <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_alpha" width="522" height="42"></canvas> <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(3);">Reset</button>
+	</div>
+  <p>
+    <script type="text/javascript">// <![CDATA[
+      initCanvases();
+      // ]]&gt;
+    </script>
+  </p>
+</div>
 {% endblock content %}

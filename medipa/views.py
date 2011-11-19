@@ -66,10 +66,8 @@ def image(image_id):
     size = request.args.get('size', 'x512')
 
     response = make_response()
-    response.data = image_handler.get_json(image_id, size)
-    response.headers['Content-Encoding'] = 'gzip'
-    response.headers['Content-Length'] = str(len(response.data))
-    response.mimetype = 'text/json'
+    response.data = image_handler.get_image(image_id, size)
+    response.mimetype = 'image/png'
 
     return response
 

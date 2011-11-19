@@ -67,11 +67,11 @@ def process_file(filename):
 
 
 def reduce(filename, manifest, times, image):
-    complete_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.bmp'])
+    complete_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.png'])
     write(complete_filename, manifest, "complete", image.convert_image(), image.size)
     for i in  range(times):
         name = "x%s" % ( int(math.pow(8, i+1)) )
-        out_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], "_",  name, '.bmp'])
+        out_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], "_",  name, '.png'])
         image = image.reduce();
         manifest = write(out_filename, manifest, name, image.convert_image(), image.size)
     return manifest     
@@ -104,17 +104,13 @@ def save_manifest(filename, manifest):
     manifest_file.write(json.dumps(manifest))
     manifest_file.close()
 
-def get_json(filename, size):
+def get_image(filename, size):
     manifest_file = open(''.join([UPLOAD_FOLDER, filename, '.manifest.json']), 'r')
     manifest = json.loads(manifest_file.read())
 
     temp_file = open(manifest['json'][size]['filename'])
-    gzip_buffer = StringIO.StringIO()
-    gzip_file = gzip.GzipFile(mode='wb', fileobj=gzip_buffer, compresslevel=6)
-    gzip_file.write(temp_file.read())
-    gzip_file.close()
 
-    return gzip_buffer.getvalue()
+    return temp_file.read()
 
 def get_dimensions(filename, size):
     manifest_file = open(''.join([UPLOAD_FOLDER, filename, '.manifest.json']), 'r')
