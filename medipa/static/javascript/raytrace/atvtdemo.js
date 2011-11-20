@@ -464,17 +464,25 @@ function loadHead()
 	scaleY = 0.995861;
 	scaleZ = 1.00797;
 
-	if (!volumeTexture)
-		start("/static/javascript/raytrace/uploads/head.jpg", 128, 256, 256, 32, 8);
-	else
-		setVolumeTexture(gl, volumeTexture, "/static/javascript/raytrace/uploads/head.jpg", 128, 256, 256, 32, 8);
+    $.getJSON($('#viewerContainer').data('url'), function(data){
+        var x = data.dimensions.x,
+            y = data.dimensions.y,
+            z = data.dimensions.z,
+            url = data.url;
 
-	if (rotationMatrix)
-	{
-		rotationMatrix.makeIdentity();
-		rotationMatrix.rotate(90.0, 0.0, 1.0, 0.0);
-		rotationMatrix.rotate(90.0, 1.0, 0.0, 0.0);
-	}
+        if (!volumeTexture)
+            start(url, z, x, y, z, 1);
+        else
+            setVolumeTexture(gl, volumeTexture, url, z, x, y, z, 1);
+
+        if (rotationMatrix)
+        {
+            rotationMatrix.makeIdentity();
+            rotationMatrix.rotate(90.0, 0.0, 1.0, 0.0);
+            rotationMatrix.rotate(90.0, 1.0, 0.0, 0.0);
+        }
+    });
+
 }
 
 function loadChameleon()

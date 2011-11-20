@@ -64,6 +64,20 @@ def show_images():
 @app.route('/image/<image_id>/', methods=['GET'])
 def image(image_id):
     size = request.args.get('size', 'x512')
+    dimensions = image_handler.get_dimensions(image_id, size)
+
+    to_return = { "url" : "/image/" + image_id + "/png/?size=" + size,
+                "dimensions" : dimensions }
+
+    response = make_response()
+    response.data = json.dumps(to_return)
+    response.mimetype = 'application/json'
+
+    return response
+
+@app.route('/image/<image_id>/png/', methods=['GET'])
+def image_png(image_id):
+    size = request.args.get('size', 'x512')
 
     response = make_response()
     response.data = image_handler.get_image(image_id, size)
@@ -76,4 +90,4 @@ def render(image_id):
     size = request.args.get('size', 'x512')
     dimensions = image_handler.get_dimensions(image_id, size)
     
-    return render_template('render.html', dimensions=dimensions, image_name=image_id)
+    return render_template('render.html', dimensions=dimensions, image_name=image_id, size=size)
