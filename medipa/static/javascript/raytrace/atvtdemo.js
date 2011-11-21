@@ -458,13 +458,20 @@ function handleMouseMove(event)
 	}
 }
 
+//allows for a fake image
+var loadData = loadData || function(url, callback){
+    $.getJSON(url, function(data){
+        callback(data);
+    });
+}
+
 function loadHead()
 {
 	scaleX = 0.78887;
 	scaleY = 0.995861;
 	scaleZ = 1.00797;
 
-    $.getJSON($('#viewerContainer').data('url'), function(data){
+    loadData($('#viewerContainer').data('url'), function(data){
         var x = data.dimensions.x,
             y = data.dimensions.y,
             z = data.dimensions.z,
