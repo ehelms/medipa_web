@@ -478,9 +478,9 @@ function loadHead()
             url = data.url;
 
         if (!volumeTexture)
-            start(url, z, x, y, z, 1);
+            start(url,  x, y, z, z,  1);
         else
-            setVolumeTexture(gl, volumeTexture, url, z, x, y, z, 1);
+            setVolumeTexture(gl, volumeTexture, url,  x, y, z, z, 1);
 
         if (rotationMatrix)
         {
