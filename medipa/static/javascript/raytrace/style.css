@@ -116,7 +116,6 @@ body
 	background-position: top left;
 	background-color: #535353;
 	font: normal 13px "Trebuchet MS", "Lucida Grande", Verdana, Georgia, Sans-Serif;
-	background-image: url(images/bg.gif);
 	background-repeat: repeat-x;
 }
 
@@ -263,7 +262,6 @@ float: left;
 	padding-top:8px;
 	height: 29px;
 	margin-top: 15px;
-	background-image: url(images/nav-bg.gif);
 	font-weight: bold;
 }
 
