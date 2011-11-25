@@ -77,12 +77,6 @@ def reduce(filename, manifest, times, image):
     return manifest     
 
 def write(out_filename, manifest, name, array, size):
-    
-#    image_json = json.dumps(array)
-#    gzip_file = open(out_filename, 'wb')
-#    gzip_file.write(image_json)
-#    gzip_file.close()
-    
     img = PilImage.new("L", (size[0]*size[2], size[1]))
     img.putdata(array)
     
@@ -94,7 +88,8 @@ def write(out_filename, manifest, name, array, size):
     }
     manifest['json'][name] = {
         'filename' : out_filename,
-        'dimensions' : dimensions
+        'dimensions' : dimensions,
+        'configurations' : []
     }
     return manifest
 
@@ -103,6 +98,11 @@ def save_manifest(filename, manifest):
 
     manifest_file.write(json.dumps(manifest))
     manifest_file.close()
+
+def load_manifest(filename):
+    manifest_file = open(''.join([UPLOAD_FOLDER, filename, '.manifest.json']), 'r')
+    manifest = json.loads(manifest_file.read())
+    return manifest
 
 def get_image(filename, size):
     manifest_file = open(''.join([UPLOAD_FOLDER, filename, '.manifest.json']), 'r')
@@ -113,7 +113,20 @@ def get_image(filename, size):
     return temp_file.read()
 
 def get_dimensions(filename, size):
-    manifest_file = open(''.join([UPLOAD_FOLDER, filename, '.manifest.json']), 'r')
-    manifest = json.loads(manifest_file.read())
-
+    manifest = load_manifest(filename)
     return manifest['json'][size]['dimensions']
+
+def get_configurations(image_id):
+    manifest = load_manifest(image_id)
+    return manifest['configurations']
+
+def get_configuration(image_id, config_id):
+    manifest = load_manifest(image_id)
+    return manifest['configurations'][config_id]
+
+def save_configuration(image_id, configuration):
+    manifest = load_manifest(image_id)
+    manifest['configurations'].append(configuration)
+    save_manifest(image_id, manifest)
+
+    return True

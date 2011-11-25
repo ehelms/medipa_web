@@ -89,5 +89,27 @@ def image_png(image_id):
 def render(image_id):
     size = request.args.get('size', 'x512')
     dimensions = image_handler.get_dimensions(image_id, size)
+    configurations = image_handler.get_configurations(image_id)
     
-    return render_template('render.html', dimensions=dimensions, image_name=image_id, size=size)
+    return render_template('render.html', 
+                            dimensions=dimensions, 
+                            image_name=image_id, 
+                            size=size,
+                            configurations=configurations)
+
+@app.route('/image/<image_id>/configuration/<config_id>/', methods=['GET', 'POST'])
+def image(image_id, config_id):
+    if request.method == 'GET':
+        to_return = image_handler.get_configuration(image_id, config_id)
+    elif request.method == 'POST':
+        configuration = request.args.get('config')
+        if image_handler.save_configuration(image_id, configuration):
+            to_return = { "saved" : True }
+        else:
+            to_return = { "saved" : False }
+
+    response = make_response()
+    response.data = json.dumps(to_return)
+    response.mimetype = 'application/json'
+
+    return response

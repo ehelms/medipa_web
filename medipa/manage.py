@@ -2,6 +2,7 @@ import os
 import sys
 import argparse
 import subprocess
+import signal
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__)) + '/../'
 
@@ -19,6 +20,22 @@ def start():
     args = parse_args()
 
     if args.action == 'runserver':
+        processname = 'celeryd'
+        for line in os.popen("ps xa"):
+            fields = line.split()
+            pid = fields[0]
+            stat = fields[2]
+            process = fields[4]
+            
+            if stat == "Sl":
+                
+                try:
+                    line.index(processname)
+                    # Kill the Process. Change signal.SIGHUP to signal.SIGKILL if you like
+                    os.kill(int(pid), signal.SIGKILL)
+                    break
+                except ValueError:
+                    pass
 
         subprocess.Popen(["python", "celery_manager.py", "celeryd"], env=os.environ)
 

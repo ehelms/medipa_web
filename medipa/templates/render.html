@@ -9,6 +9,7 @@
 {% endblock stylesheets %}
 
 {% block javascript %}
+	<script type='text/javascript' src='/static/javascript/configuration.js'></script>
 	<script type='text/javascript' src='/static/javascript/raytrace/atvtdemo.js'></script>
 	<script type='text/javascript' src='/static/javascript/raytrace/atvoltex.js'></script>
 	<script type='text/javascript' src='/static/javascript/raytrace/J3DI.js'></script>
@@ -77,5 +78,27 @@ Your browser does not support the HTML 5 &lt;canvas&gt; element.<br />
       // ]]&gt;
     </script>
   </p>
+
+  <div id="configurationContainer">
+    <div class="actions well">
+      <button id="save_configuration" class="btn primary" data-url="/image/{{ image_name }}/configuration/">Save Current Configuration</button>
+    </div>
+    <table class="zebra-striped">
+      <thead>
+        <tr>
+          <th>Configuration</th>
+          <th>Select Configuration</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for configuration in configurations %}
+        <tr>
+          <td>{{ configuration }}</td>
+          <td><button class="config_link btn" data-url="/image/{{ image_name }}/configuration/{{ configuration }}/{{ loop.counter0 }}/" >Load Configuration</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock content %}
