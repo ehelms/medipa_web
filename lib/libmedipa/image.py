@@ -104,7 +104,7 @@ class Image:
             for y in range(size[1]):
                 for z in range(size[2]):
                     #Y*len(X)*len(Z) + Z*len(X) + X
-                    list[y*size[1]*size[2] + z*size[0] + x] = array[x][y][z]
+                    list[y*size[1]*size[2] + z*size[0] + x] = round(array[x][y][z]/8.0)
         return list
 
 
