@@ -55,7 +55,8 @@ def process_file(filename):
     
     manifest = { 
         'filename' : filename,
-        'json' : {}
+        'json' : {},
+        'configurations' : []
     }
 
     manifest = reduce(filename, manifest, 3, image)
@@ -89,8 +90,8 @@ def write(out_filename, manifest, name, array, size):
     manifest['json'][name] = {
         'filename' : out_filename,
         'dimensions' : dimensions,
-        'configurations' : []
     }
+
     return manifest
 
 def save_manifest(filename, manifest):

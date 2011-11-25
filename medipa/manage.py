@@ -36,6 +36,19 @@ def start():
                     break
                 except ValueError:
                     pass
+        for line in os.popen("ps xa"):
+            fields = line.split()
+            pid = fields[0]
+            stat = fields[2]
+            process = fields[4]
+        
+            try:
+                line.index(processname)
+                # Kill the Process. Change signal.SIGHUP to signal.SIGKILL if you like
+                os.kill(int(pid), signal.SIGKILL)
+                break
+            except ValueError:
+                pass
 
         subprocess.Popen(["python", "celery_manager.py", "celeryd"], env=os.environ)
 

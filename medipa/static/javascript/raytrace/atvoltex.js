@@ -1023,9 +1023,12 @@ function loadVolumeTexture(glcontext, url)
 	texture.image = new Image();
 	texture.image.onload = function()
 	{
+        console.log('texture load callback');
 		handleVolumeTexture(glcontext, texture.image, texture)
 	}
+    console.log('setting src url');
 	texture.image.src = url;
+    console.log('source url set');
 	return texture;
 }
 
