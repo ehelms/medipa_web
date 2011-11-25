@@ -98,7 +98,7 @@ def render(image_id):
                             configurations=configurations)
 
 @app.route('/image/<image_id>/configuration/<config_id>/', methods=['GET', 'POST'])
-def image(image_id, config_id):
+def configuration(image_id, config_id):
     if request.method == 'GET':
         to_return = image_handler.get_configuration(image_id, config_id)
     elif request.method == 'POST':
