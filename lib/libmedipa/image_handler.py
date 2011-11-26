@@ -65,20 +65,38 @@ def process_file(filename):
     
     return True
 
+def process_local_file(filename):
+    image = Image(filename)
+    reduced_image = image.reduce()
+    
+    manifest = { 
+        'filename' : filename,
+        'json' : {},
+        'configurations' : []
+    }
+
+    manifest = reduce(filename, manifest, 3, image)
+
+    save_manifest(filename, manifest)
+    
+    return True    
 
 
 def reduce(filename, manifest, times, image):
+    image_array, rows, cols = image.convert_image()
     complete_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.png'])
-    write(complete_filename, manifest, "complete", image.convert_image(), image.size)
+    write(complete_filename, manifest, "complete", image_array, image.size, rows, cols)
     for i in  range(times):
         name = "x%s" % ( int(math.pow(8, i+1)) )
         out_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], "_",  name, '.png'])
         image = image.reduce();
-        manifest = write(out_filename, manifest, name, image.convert_image(), image.size)
+        image_array, rows, cols = image.convert_image()
+        manifest = write(out_filename, manifest, name, image_array, image.size, rows, cols)
     return manifest     
 
-def write(out_filename, manifest, name, array, size):
-    img = PilImage.new("L", (size[0]*size[2], size[1]))
+def write(out_filename, manifest, name, array, size, rows, cols):
+
+    img = PilImage.new("L", (size[0]*cols, size[1]*rows))
     img.putdata(array)
     
     img.save(out_filename)    
@@ -90,6 +108,8 @@ def write(out_filename, manifest, name, array, size):
     manifest['json'][name] = {
         'filename' : out_filename,
         'dimensions' : dimensions,
+        'rows': rows,
+        'cols': cols
     }
 
     return manifest
@@ -116,6 +136,10 @@ def get_image(filename, size):
 def get_dimensions(filename, size):
     manifest = load_manifest(filename)
     return manifest['json'][size]['dimensions']
+
+def get_rows_cols(filename,size):
+    manifest = load_manifest(filename)
+    return (manifest['json'][size]['rows'], manifest['json'][size]['cols'])
 
 def get_configurations(image_id):
     manifest = load_manifest(image_id)

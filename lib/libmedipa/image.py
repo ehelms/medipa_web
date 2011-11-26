@@ -1,3 +1,5 @@
+import math
+
 import SimpleITK as sitk
 
 class Image:
@@ -47,7 +49,6 @@ class Image:
             iterations.append(size[i]/2)
             if size[i]%2 > 0:
                 iterations[i] += 1
-        print iterations
         reduced = []
         for x in range(iterations[0]):           
             y_array = [] 
@@ -95,17 +96,34 @@ class Image:
         #    stack.append(plane)
         #return stack 
 
+    def get_converted_dims(self):
+        size = self.size
+        
+        rows = int(math.ceil(math.sqrt(size[2])))
+        cols = rows
+        
+        
+#        if size[0]*size[2] > 3000:
+#            cols = 3000/size[0] + 1
+#            rows = size[2]/cols + 1
+        return (rows, cols)
+    
+    
     def convert_image(self):
         size = self.size
+        rows, cols = self.get_converted_dims()
+        area = size[0] * size[1]
         array = self.get_image()
-        x_size = size[0]*size[1]*size[2]       
-        list = [None]*x_size
+        x_size = size[0]*size[1]*rows*cols      
+        list_a = [0]*x_size
         for x in range(size[0]):
             for y in range(size[1]):
                 for z in range(size[2]):
-                    #Y*len(X)*len(Z) + Z*len(X) + X
-                    list[y*size[1]*size[2] + z*size[0] + x] = round(array[x][y][z]/8.0)
-        return list
+                    curr_col = z%cols
+                    curr_row = z/cols                           #render left to right
+                    loc = cols*curr_row*area + y*cols*size[0] + (cols-1-curr_col)*size[0] + x
+                    list_a[loc] = round(array[x][y][z]/8.0)
+        return (list_a, rows, cols)
 
 
     def __slice_to_array(self, slice, dims, offset):

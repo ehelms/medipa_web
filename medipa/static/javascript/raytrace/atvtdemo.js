@@ -475,12 +475,15 @@ function loadHead()
         var x = data.dimensions.x,
             y = data.dimensions.y,
             z = data.dimensions.z,
-            url = data.url;
+            url = data.url,
+            rows = data.rows
+            cols = data.cols;
 
+        console.log(data);
         if (!volumeTexture)
-            start(url,  x, y, z, z,  1);
+            start(url,  x, y, cols*rows, cols,  rows);
         else
-            setVolumeTexture(gl, volumeTexture, url,  x, y, z, z, 1);
+            setVolumeTexture(gl, volumeTexture, url,  x, y, cols*rows, cols, rows);
 
         if (rotationMatrix)
         {

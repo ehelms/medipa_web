@@ -65,9 +65,10 @@ def show_images():
 def image(image_id):
     size = request.args.get('size', 'x512')
     dimensions = image_handler.get_dimensions(image_id, size)
+    rows,cols = image_handler.get_rows_cols(image_id, size)
 
     to_return = { "url" : "/image/" + image_id + "/png/?size=" + size,
-                "dimensions" : dimensions }
+                "dimensions" : dimensions, "rows":rows, "cols":cols }
 
     response = make_response()
     response.data = json.dumps(to_return)
