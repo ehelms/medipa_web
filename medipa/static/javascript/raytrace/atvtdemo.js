@@ -467,9 +467,9 @@ var loadData = loadData || function(url, callback){
 
 function loadHead()
 {
-	scaleX = 0.78887;
-	scaleY = 0.995861;
-	scaleZ = 1.00797;
+	// scaleX = 0.78887;
+	// scaleY = 0.995861;
+	// scaleZ = 1.00797;
 
     loadData($('#viewerContainer').data('url'), function(data){
         var x = data.dimensions.x,
