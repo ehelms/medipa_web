@@ -6,7 +6,9 @@ var loadData = function(url, callback) {
       y: 64,
       z: 43
     },
-    url:"x64.png"
+    url:"x64.png",
+    rows: 7,
+    cols: 7
  };
  var x512 = {
     dimensions:{
@@ -14,9 +16,10 @@ var loadData = function(url, callback) {
       y: 32,
       z: 22
     },
-    url:"x512.png"
-
+    url:"x512.png",
+    cols: 5,
+    rows: 5
   }
-  callback(x512);
+  callback(x64);
 
 };
