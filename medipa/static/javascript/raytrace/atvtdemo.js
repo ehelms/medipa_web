@@ -79,6 +79,24 @@ var transferFunctionLastIndexGreen = -1;
 var transferFunctionLastIndexBlue = -1;
 var transferFunctionLastIndexAlpha = -1;
 
+
+$(document).ready(function(){
+    console.log("FOO")
+    $("#size-slider").slider({
+        orientation: "vertical",
+        min: 0,
+        max: MW.manifest.length - 1,
+        change: function(){
+           loadHead($("#size-slider").slider("value"));
+        }
+    })
+
+    MW.init_configuration();
+    initCanvases();
+    loadHead(0); //load 'worst' quality
+
+});
+
 function initCanvases()
 {
 	canvasRed = document.getElementById("canvas_red");
@@ -465,33 +483,36 @@ var loadData = loadData || function(url, callback){
     });
 }
 
-function loadHead()
+function loadHead(num)
 {
 	// scaleX = 0.78887;
 	// scaleY = 0.995861;
 	// scaleZ = 1.00797;
 
-    loadData($('#viewerContainer').data('url'), function(data){
-        var x = data.dimensions.x,
-            y = data.dimensions.y,
-            z = data.dimensions.z,
-            url = data.url,
-            rows = data.rows
-            cols = data.cols;
+    var data = MW.manifest[num]; 
 
-        console.log(data);
-        if (!volumeTexture)
-            start(url,  x, y, cols*rows, cols,  rows);
-        else
-            setVolumeTexture(gl, volumeTexture, url,  x, y, cols*rows, cols, rows);
 
-        if (rotationMatrix)
-        {
-            rotationMatrix.makeIdentity();
-            rotationMatrix.rotate(90.0, 0.0, 1.0, 0.0);
-            rotationMatrix.rotate(90.0, 1.0, 0.0, 0.0);
-        }
-    });
+    var x = data.dimensions.x,
+        y = data.dimensions.y,
+        z = data.dimensions.z,
+        url = data.url,
+        rows = data.rows
+        cols = data.cols;
+
+    if (!volumeTexture){
+        start(url,  x, y, cols*rows, cols,  rows);
+    }
+    else {
+        setVolumeTexture(gl, volumeTexture, url,  x, y, cols*rows, cols, rows);
+    }
+
+    if (rotationMatrix)
+    {
+        rotationMatrix.makeIdentity();
+        rotationMatrix.rotate(90.0, 0.0, 1.0, 0.0);
+        rotationMatrix.rotate(90.0, 1.0, 0.0, 0.0);
+    }
+
 
 }
 

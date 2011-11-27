@@ -630,7 +630,6 @@ function initVolumeTexture(glcontext, canvas, texFile, texWidth, texHeight, texD
 function setVolumeTexture(glcontext, volumeTexture, texFile, texWidth, texHeight, texDepth, texCols, texRows)
 {
     
-    console.log(texDepth + "," + texCols);
 	if (!glcontext || !volumeTexture || !texFile || !texWidth || !texHeight || !texDepth || !texCols || !texRows || 
 			texWidth <= 0 || texHeight <= 0 || texDepth <= 0 || texCols <= 0 || texRows <= 0)
 		return;

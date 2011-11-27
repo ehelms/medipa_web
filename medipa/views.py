@@ -1,6 +1,7 @@
 import os
 import urllib2
 import cStringIO
+import json
 
 from flask import Flask, request, make_response, render_template, json, redirect
 
@@ -66,9 +67,7 @@ def image(image_id):
     size = request.args.get('size', 'x512')
     dimensions = image_handler.get_dimensions(image_id, size)
     rows,cols = image_handler.get_rows_cols(image_id, size)
-
-    to_return = { "url" : "/image/" + image_id + "/png/?size=" + size,
-                "dimensions" : dimensions, "rows":rows, "cols":cols }
+    to_return = get_image_obj(image_id, size, dimensions, rows, cols)
 
     response = make_response()
     response.data = json.dumps(to_return)
@@ -91,8 +90,9 @@ def render(image_id):
     size = request.args.get('size', 'x512')
     dimensions = image_handler.get_dimensions(image_id, size)
     configurations = image_handler.get_configurations(image_id)
-    
-    return render_template('render.html', 
+    manifest = convert_manifest(image_id, image_handler.load_manifest(image_id))
+    return render_template('render.html',
+                            manifest=json.dumps(manifest), 
                             dimensions=dimensions, 
                             image_name=image_id, 
                             size=size,
@@ -114,3 +114,16 @@ def configuration(image_id, config_id):
     response.mimetype = 'application/json'
 
     return response
+
+
+def convert_manifest(image_id, manifest):
+    to_ret = []
+    for size in ["x512", "x64", "x8", "complete"]:
+        obj = manifest["json"][size]
+        to_ret.append(get_image_obj(image_id, size, obj['dimensions'], obj['rows'], obj['cols']))
+    return to_ret
+
+def get_image_obj(image_id, size, dimensions, rows, cols):
+    return { "url" : "/image/" + image_id + "/png/?size=" + size,
+            "dimensions" : dimensions, "rows":rows, "cols":cols }
+    

@@ -20,7 +20,8 @@ MW.configuration = (function(){
     };
 })(jQuery);
 
-$(document).ready(function(){
+
+MW.init_configuration = function(){
     $('#save_configuration').click(function(){
         MW.configuration.save($(this).data('url'));
     });
@@ -29,4 +30,4 @@ $(document).ready(function(){
         MW.configuration.load($(this).data('url'));
     });
 
-});
+};
