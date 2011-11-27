@@ -1,6 +1,7 @@
 
-var loadData = function(url, callback) {
- var x64 = {
+var MW = MW || {};
+
+MW.manifest = [ {
     dimensions:{
       x: 64,
       y: 64,
@@ -9,8 +10,8 @@ var loadData = function(url, callback) {
     url:"x64.png",
     rows: 7,
     cols: 7
- };
- var x512 = {
+ },
+ {
     dimensions:{
       x: 32,
       y: 32,
@@ -20,6 +21,4 @@ var loadData = function(url, callback) {
     cols: 5,
     rows: 5
   }
-  callback(x64);
-
-};
+];

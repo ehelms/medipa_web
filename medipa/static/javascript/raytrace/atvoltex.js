@@ -609,7 +609,7 @@ function initVolumeTexture(glcontext, canvas, texFile, texWidth, texHeight, texD
 	}
 
 	// load volume texture
-	volumeTexture.mainTexture = loadVolumeTexture(glcontext, texFile);
+	volumeTexture.mainTexture = loadVolumeTexture(glcontext, texFile, function(){});
 	if (!volumeTexture.mainTexture)
 		return null;
 
@@ -634,43 +634,50 @@ function setVolumeTexture(glcontext, volumeTexture, texFile, texWidth, texHeight
 			texWidth <= 0 || texHeight <= 0 || texDepth <= 0 || texCols <= 0 || texRows <= 0)
 		return;
 
-	if (volumeTexture.mainTexture)
-		glcontext.deleteTexture(volumeTexture.mainTexture);
 
-	volumeTexture.mainTexture = loadVolumeTexture(glcontext, texFile);
-	if (!volumeTexture.mainTexture)
-		return;
 
-	if (volumeTexture.singleIntermediateTexture)
-	{
-		glcontext.useProgram(volumeTexture.shadersFront);
-		glcontext.uniform3f(glcontext.getUniformLocation(volumeTexture.shadersFront, "texdim"), texWidth, texHeight, texDepth);
-		glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFront, "texcols"), texCols);
-		glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFront, "texrows"), texRows);
-		glcontext.useProgram(volumeTexture.shadersFrontLinear);
-		glcontext.uniform3f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinear, "texdim"), texWidth, texHeight, texDepth);
-		glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinear, "texcols"), texCols);
-		glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinear, "texrows"), texRows);
-	}
-	else
-	{
-		glcontext.useProgram(volumeTexture.shadersFrontHigh);
-		glcontext.uniform3f(glcontext.getUniformLocation(volumeTexture.shadersFrontHigh, "texdim"), texWidth, texHeight, texDepth);
-		glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontHigh, "texcols"), texCols);
-		glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontHigh, "texrows"), texRows);
-		glcontext.useProgram(volumeTexture.shadersFrontLinearHigh);
-		glcontext.uniform3f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearHigh, "texdim"), texWidth, texHeight, texDepth);
-		glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearHigh, "texcols"), texCols);
-		glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearHigh, "texrows"), texRows);
-		glcontext.useProgram(volumeTexture.shadersFrontLow);
-		glcontext.uniform3f(glcontext.getUniformLocation(volumeTexture.shadersFrontLow, "texdim"), texWidth, texHeight, texDepth);
-		glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLow, "texcols"), texCols);
-		glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLow, "texrows"), texRows);
-		glcontext.useProgram(volumeTexture.shadersFrontLinearLow);
-		glcontext.uniform3f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearLow, "texdim"), texWidth, texHeight, texDepth);
-		glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearLow, "texcols"), texCols);
-		glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearLow, "texrows"), texRows);
-	}
+    var callback = function(texture){
+        if (volumeTexture.mainTexture)
+            glcontext.deleteTexture(volumeTexture.mainTexture);
+        
+        if (!volumeTexture.mainTexture)
+            return;
+    
+        if (volumeTexture.singleIntermediateTexture)
+        {
+            glcontext.useProgram(volumeTexture.shadersFront);
+            glcontext.uniform3f(glcontext.getUniformLocation(volumeTexture.shadersFront, "texdim"), texWidth, texHeight, texDepth);
+            glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFront, "texcols"), texCols);
+            glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFront, "texrows"), texRows);
+            glcontext.useProgram(volumeTexture.shadersFrontLinear);
+            glcontext.uniform3f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinear, "texdim"), texWidth, texHeight, texDepth);
+            glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinear, "texcols"), texCols);
+            glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinear, "texrows"), texRows);
+        }
+        else
+        {
+            glcontext.useProgram(volumeTexture.shadersFrontHigh);
+            glcontext.uniform3f(glcontext.getUniformLocation(volumeTexture.shadersFrontHigh, "texdim"), texWidth, texHeight, texDepth);
+            glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontHigh, "texcols"), texCols);
+            glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontHigh, "texrows"), texRows);
+            glcontext.useProgram(volumeTexture.shadersFrontLinearHigh);
+            glcontext.uniform3f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearHigh, "texdim"), texWidth, texHeight, texDepth);
+            glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearHigh, "texcols"), texCols);
+            glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearHigh, "texrows"), texRows);
+            glcontext.useProgram(volumeTexture.shadersFrontLow);
+            glcontext.uniform3f(glcontext.getUniformLocation(volumeTexture.shadersFrontLow, "texdim"), texWidth, texHeight, texDepth);
+            glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLow, "texcols"), texCols);
+            glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLow, "texrows"), texRows);
+            glcontext.useProgram(volumeTexture.shadersFrontLinearLow);
+            glcontext.uniform3f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearLow, "texdim"), texWidth, texHeight, texDepth);
+            glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearLow, "texcols"), texCols);
+            glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearLow, "texrows"), texRows);
+        }        
+        volumeTexture.mainTexture = texture;
+    };
+
+	loadVolumeTexture(glcontext, texFile, callback);
+
 }
 
 function setVolumeTextureRaySteps(glcontext, volumeTexture, raySteps)
@@ -1013,21 +1020,40 @@ function loadVolumeTextureShader(glcontext, shaderString, shaderType)
 	return shader;
 }
 
-function loadVolumeTexture(glcontext, url)
+var jls = 0;
+
+
+function testLoad(){
+    var a = new Image();
+    a.onload = function() {console.log("DONE")};
+    a.src = "http://hodagri.com/MediaGallery/gallery/7/MMSposter-large.jpg";    
+}
+function loadVolumeTexture(glcontext, url, callback)
 {
 	if (!glcontext || !url)
 		return null;
+
 
 	var texture = glcontext.createTexture();
 	texture.image = new Image();
 	texture.image.onload = function()
 	{
-        console.log('texture load callback');
+	    
+	    
+        if (jls === 1){
+            return;
+        }
+                console.log('texture load callback');
+
+	    callback(texture);
 		handleVolumeTexture(glcontext, texture.image, texture)
 	}
     console.log('setting src url');
+    
+    
 	texture.image.src = url;
     console.log('source url set');
+    //$("#hidden").html(texture.image);
 	return texture;
 }
 

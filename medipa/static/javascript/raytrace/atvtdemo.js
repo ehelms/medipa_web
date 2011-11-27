@@ -82,6 +82,7 @@ var transferFunctionLastIndexAlpha = -1;
 
 $(document).ready(function(){
     console.log("FOO")
+    if ($("#size-slider").length > 0) {
     $("#size-slider").slider({
         orientation: "vertical",
         min: 0,
@@ -89,7 +90,8 @@ $(document).ready(function(){
         change: function(){
            loadHead($("#size-slider").slider("value"));
         }
-    })
+    });
+    }
 
     MW.init_configuration();
     initCanvases();
@@ -504,13 +506,6 @@ function loadHead(num)
     }
     else {
         setVolumeTexture(gl, volumeTexture, url,  x, y, cols*rows, cols, rows);
-    }
-
-    if (rotationMatrix)
-    {
-        rotationMatrix.makeIdentity();
-        rotationMatrix.rotate(90.0, 0.0, 1.0, 0.0);
-        rotationMatrix.rotate(90.0, 1.0, 0.0, 0.0);
     }
 
 
