@@ -627,7 +627,7 @@ function initVolumeTexture(glcontext, canvas, texFile, texWidth, texHeight, texD
 	return volumeTexture;
 }
 
-function setVolumeTexture(glcontext, volumeTexture, texFile, texWidth, texHeight, texDepth, texCols, texRows)
+function setVolumeTexture(glcontext, volumeTexture, texFile, texWidth, texHeight, texDepth, texCols, texRows, callback)
 {
     
 	if (!glcontext || !volumeTexture || !texFile || !texWidth || !texHeight || !texDepth || !texCols || !texRows || 
@@ -636,7 +636,7 @@ function setVolumeTexture(glcontext, volumeTexture, texFile, texWidth, texHeight
 
 
 
-    var callback = function(texture){
+    var my_callback = function(texture){
         if (volumeTexture.mainTexture)
             glcontext.deleteTexture(volumeTexture.mainTexture);
         
@@ -674,9 +674,11 @@ function setVolumeTexture(glcontext, volumeTexture, texFile, texWidth, texHeight
             glcontext.uniform1f(glcontext.getUniformLocation(volumeTexture.shadersFrontLinearLow, "texrows"), texRows);
         }        
         volumeTexture.mainTexture = texture;
+        //if (callback)
+            callback();
     };
 
-	loadVolumeTexture(glcontext, texFile, callback);
+	loadVolumeTexture(glcontext, texFile, my_callback);
 
 }
 

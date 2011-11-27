@@ -81,23 +81,71 @@ var transferFunctionLastIndexAlpha = -1;
 
 
 $(document).ready(function(){
-    console.log("FOO")
-    if ($("#size-slider").length > 0) {
-    $("#size-slider").slider({
-        orientation: "vertical",
-        min: 0,
-        max: MW.manifest.length - 1,
-        change: function(){
-           loadHead($("#size-slider").slider("value"));
-        }
-    });
-    }
-
+    MW.initControls();
     MW.init_configuration();
     initCanvases();
     loadHead(0); //load 'worst' quality
 
 });
+
+MW.current_framerate = 0;
+MW.min_framerate_for_advance = 10;
+
+MW.initControls = function(){
+    var slider = $("#size-slider");
+    if (slider.length > 0) {
+        slider.slider({
+            orientation: "vertical",
+            min: 0,
+            max: MW.manifest.length - 1,
+            change: function(){
+               loadHead(slider.slider("value"));
+            }
+        });
+        slider.slider("disable");
+    }
+    
+    $("#auto_checkbox").change(function(){
+       if($(this).attr("checked")){
+           slider.slider("disable");
+           if (MW.current_schedule == undefined){
+               MW.schedule_advance();
+           }
+       }
+       else {
+           slider.slider("enable");
+       };
+    });
+    
+};
+
+MW.current_schedule = undefined;
+MW.schedule_advance = function(){
+    //time = time || 2000;   
+    if ($("#auto_checkbox").attr("checked") && !MW.current_schedule){
+        MW.current_schedule = setTimeout(MW.advance, 500);
+    }    
+};
+
+MW.advance = function() {
+    var slider = $("#size-slider");
+    var current = slider.slider("value");
+    MW.current_schedule = undefined;
+    
+    if ($("#auto_checkbox").attr("checked") ){
+        if (MW.min_framerate_for_advance >= MW.current_framerate){
+            console.log(MW.current_framerate);
+            console.log("DISABLING");
+            $("#auto_checkbox").click();
+        }
+        else {
+            if (current + 1 < MW.manifest.length){
+                slider.slider("value", current + 1);
+            }   
+        }                        
+    }        
+};
+
 
 function initCanvases()
 {
@@ -362,7 +410,7 @@ function handleMouseMove2D(event, canvas, indexOffset, lastIndex)
 	return index;
 }
 
-function start(texFile, texWidth, texHeight, texDepth, texCols, texRows)
+function start(texFile, texWidth, texHeight, texDepth, texCols, texRows, callback)
 {
 	if (volumeTexture)
 		return;
@@ -425,6 +473,8 @@ function start(texFile, texWidth, texHeight, texDepth, texCols, texRows)
 		framerate.snapshot();
 	};
 	f();
+	callback();
+	
 }
 
 function resize(gl, update)
@@ -478,12 +528,6 @@ function handleMouseMove(event)
 	}
 }
 
-//allows for a fake image
-var loadData = loadData || function(url, callback){
-    $.getJSON(url, function(data){
-        callback(data);
-    });
-}
 
 function loadHead(num)
 {
@@ -501,11 +545,13 @@ function loadHead(num)
         rows = data.rows
         cols = data.cols;
 
+    var callback = MW.schedule_advance;
+
     if (!volumeTexture){
-        start(url,  x, y, cols*rows, cols,  rows);
+        start(url,  x, y, cols*rows, cols,  rows, callback);
     }
     else {
-        setVolumeTexture(gl, volumeTexture, url,  x, y, cols*rows, cols, rows);
+        setVolumeTexture(gl, volumeTexture, url,  x, y, cols*rows, cols, rows, callback);
     }
 
 
