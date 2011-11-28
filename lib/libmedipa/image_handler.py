@@ -98,8 +98,8 @@ def write(out_filename, manifest, name, array, size, rows, cols):
 
     img = PilImage.new("L", (size[0]*cols, size[1]*rows))
     img.putdata(array)
-    
     img.save(out_filename)    
+
     dimensions = {
         'x' : size[0],
         'y' : size[1],

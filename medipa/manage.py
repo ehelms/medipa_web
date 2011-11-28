@@ -15,6 +15,7 @@ os.environ['APPDIR'] = BASE_DIR
 from medipa.views import app
 from medipa import test_runner
 
+from libmedipa import image_handler
 
 def start():
     args = parse_args()
@@ -60,6 +61,9 @@ def start():
     if args.action == 'test':
         test_runner.run()
 
+    if args.action == "generate-test-data":
+        image_handler.process_file("test_file_upload.mha")
+
 def parse_args():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='action')
@@ -70,6 +74,7 @@ def parse_args():
     parser_runserver.add_argument('--nodebug', action='store_false', dest='debug', help='Whether to turn debug on or off (default: true)')
 
     parser_test = subparsers.add_parser('test', help='Runs the test suite')
+    parser_test = subparsers.add_parser('generate-test-data', help='Runs the test suite')
     
     return parser.parse_args()
 
