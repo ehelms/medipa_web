@@ -117,6 +117,23 @@ MW.initControls = function(){
        };
     });
     
+
+    var ff = !document.body.innerText;
+    $("#webgl_canvas")[0].addEventListener(!ff? 'mousewheel' : 'DOMMouseScroll', function(e) {
+        e.preventDefault && e.preventDefault();
+        e.stopPropagation && e.stopPropagation();
+    
+        var amount = e.wheelDelta || e.detail;
+        if (amount > 0){
+            decreaseSize();
+        }
+        else {
+            increaseSize();
+        }
+        return false;
+    }, false);    
+
+    
 };
 
 MW.current_schedule = undefined;
@@ -607,7 +624,7 @@ function decreaseSize()
 
 function increaseSize()
 {
-	distance = Math.max(4.0, distance - 1.0);
+	distance = Math.max(3.0, distance - 1.0);
 	resize(gl, true);
 }
 
