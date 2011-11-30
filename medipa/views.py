@@ -8,15 +8,12 @@ from flask import Flask, request, make_response, render_template, json, redirect
 from flask.ext.celery import Celery
 
 from libmedipa import image_handler
+from libmedipa.tasks import process_file
 
 
 app = Flask(__name__)
 app.config.from_pyfile(os.environ['MEDIPA_CELERY_CONFIG'])
 celery = Celery(app)
-
-@celery.task(name="medipa.process_upload")
-def process_file(filename):
-    image_handler.process_file(filename)
 
 def process_upload(file, upload=True):
     if file and upload:
