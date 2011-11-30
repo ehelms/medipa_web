@@ -89,9 +89,14 @@ def reduce(filename, manifest, times, image):
     for i in  range(times):
         name = "x%s" % ( int(math.pow(8, i+1)) )
         out_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], "_",  name, '.png'])
-        image = image.reduce();
+        print("Processing: " + out_filename)
+        print("Reducing...")
+        image = image.reduce()
+        print("Converting...")
         image_array, rows, cols = image.convert_image()
+        print("Writing to manifest...")
         manifest = write(out_filename, manifest, name, image_array, image.size, rows, cols)
+        print("Finished: " + out_filename)
     return manifest     
 
 def write(out_filename, manifest, name, array, size, rows, cols):
