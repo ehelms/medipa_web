@@ -53,12 +53,23 @@
                 Your browser does not support the HTML 5 &lt;canvas&gt; element.<br />
             </canvas>
         </span>
+        <span>
+            <span class="slider_wrapper" id="slider_first">
+                Quality:
+                Auto:
+                <input type="checkbox" id="auto_checkbox" checked/>
+                <div id="size-slider"></div>
+            </span>
+            <span class="slider_wrapper">
+                Opacity:
+                <div id="opacity-slider"></div>
+
                 
-        <span id="slider_wrapper">
-            Quality:
-            Auto:
-            <input type="checkbox" id="auto_checkbox" checked/>    
-            <div id="size-slider"></div>
+            </span>
+            <span class="slider_wrapper">
+                Brightness:
+                <div id="bright-slider"></div>
+            </span>
         </span>
     </div>
 
@@ -67,8 +78,6 @@
     		<button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="loadHead();">Head</button>
     		<button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="decreaseBrightness();">-</button>
     		<button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="increaseBrightness();">+</button>
-    		<button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="decreaseSize();">s</button>
-    		<button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="increaseSize();">S</button>
     		<button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="toggleLinearFiltering();">HiQ</button> <span id="hiq" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;"></span> 
     		<button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="decreaseNumberOfSteps();">.</button>
     		<button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="increaseNumberOfSteps();">&#8230;</button>

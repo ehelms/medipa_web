@@ -105,6 +105,33 @@ MW.initControls = function(){
         slider.slider("disable");
     }
     
+    var o_slider = $("#opacity-slider");
+    if (o_slider.length > 0) {
+        o_slider.slider({
+            orientation: "vertical",
+            min: 2,
+            max: 15,
+            value: opacity,
+            change: function(){
+               setOpacity(parseInt(o_slider.slider("value")));
+            }
+        });
+    }
+
+    var bright_slider = $("#bright-slider");
+    if (bright_slider.length > 0) {
+        bright_slider.slider({
+            orientation: "vertical",
+            min: 2,
+            max: 32,
+            value: brightness,
+            change: function(){
+               setBrightness(parseInt(bright_slider.slider("value")));
+            }
+        });
+    }
+
+
     $("#auto_checkbox").change(function(){
        if($(this).attr("checked")){
            slider.slider("disable");
@@ -595,25 +622,34 @@ function loadChameleon()
 function decreaseOpacity()
 {
 	opacity = Math.max(1.0, opacity - 1.0);
-	setVolumeTextureOpacity(gl, volumeTexture, opacity);
+    setOpacity(opacity);
 }
 
 function increaseOpacity()
 {
 	opacity += 1.0;
-	setVolumeTextureOpacity(gl, volumeTexture, opacity);
+	setOpacity(opacity);
+}
+
+function setOpacity(op){
+   setVolumeTextureOpacity(gl, volumeTexture, op);
 }
 
 function decreaseBrightness()
 {
 	brightness = Math.max(1.0, brightness - 1.0);
-	setVolumeTextureBrightness(gl, volumeTexture, brightness);
+    setBrightness(brightness);
 }
 
 function increaseBrightness()
 {
 	brightness = Math.min(32.0, brightness + 1.0);
-	setVolumeTextureBrightness(gl, volumeTexture, brightness);
+	setBrightness(brightness);
+}
+
+function setBrightness(bright){
+    setVolumeTextureBrightness(gl, volumeTexture, bright);
+
 }
 
 function decreaseSize()
