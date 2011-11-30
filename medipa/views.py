@@ -11,7 +11,7 @@ from libmedipa import image_handler
 
 
 app = Flask(__name__)
-app.config.from_pyfile('celeryconfig.py')
+app.config.from_pyfile(os.environ['MEDIPA_CELERY_CONFIG'])
 celery = Celery(app)
 
 @celery.task(name="medipa.process_upload")
@@ -33,6 +33,18 @@ def process_upload(file, upload=True):
     else:
         return False
 
+@app.route('/', methods=['GET'])
+@app.route('/image/', methods=['GET'])
+def show_images():
+    if request.method == 'GET':
+        images = image_handler.get_images()
+        
+        if 'Http-Accept' in request.headers:
+            if request.headers['Http-Accept'] == 'application/json':
+                return json.dumps(images)
+        else:
+            return render_template('images.html', images=images)
+
 @app.route('/image/upload/', methods=['GET', 'POST'])
 def upload_image():
     if request.method == 'GET':
@@ -50,17 +62,6 @@ def upload_image():
             process_upload(file, False)
 
     return render_template('upload.html', success=True)
-
-@app.route('/image/', methods=['GET'])
-def show_images():
-    if request.method == 'GET':
-        images = image_handler.get_images()
-        
-        if 'Http-Accept' in request.headers:
-            if request.headers['Http-Accept'] == 'application/json':
-                return json.dumps(images)
-        else:
-            return render_template('images.html', images=images)
 
 @app.route('/image/<image_id>/', methods=['GET'])
 def image(image_id):

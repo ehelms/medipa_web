@@ -23,6 +23,7 @@ shutil.copytree(os.path.abspath(__file__).split('/application')[0] +  "/../medip
 
 virtenv = BASE_DIR + '/virtenv/'
 os.environ['MEDIPA_DATA_DIR'] = BASE_DIR + '/data/'
+os.environ['MEDIPA_CELERY_CONFIG'] = "celeryconfig_production.py"
 os.environ['PYTHON_EGG_CACHE'] = os.path.join(virtenv, 'lib/python2.6/site-packages')
 virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
 
