@@ -52,7 +52,7 @@ def start():
             except ValueError:
                 pass
 
-        subprocess.Popen(["python", "celery_manager.py", "celeryd"], env=os.environ)
+        subprocess.Popen(["python", "celery_manage.py", "celeryd"], env=os.environ)
 
         if args.ip_address:
             app.run(host=args.ip_address, debug=args.debug)
