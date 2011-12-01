@@ -107,18 +107,6 @@ ins { text-decoration: none; color: #009977; }
 
 /* Structure */
 
-body
-{
-	margin: 0;
-	padding: 0;
-	color: #B2B2B2;
-	background-repeat: repeat-x;
-	background-position: top left;
-	background-color: #535353;
-	font: normal 13px "Trebuchet MS", "Lucida Grande", Verdana, Georgia, Sans-Serif;
-	background-repeat: repeat-x;
-}
-
 #wrapper2 {
 width: 950px;
 margin-left: auto;
@@ -278,18 +266,6 @@ float: left;
 #wrapper a:visited { font-weight: bold; }
 
 #wrapper a:hover, #wrapper a:active { }
-
-/* Content */
-
-
-
-#content .post-title a { border-bottom-width: 0;}
-#content h3.post-title  {margin-top:10px; margin-bottom:10px;}
-
-#content .post p.img { float: left; margin: 0 15px 0 0; }
-
-#content .post p.img img { padding: 8px; border: 1px solid #d0d0d0; background-color: #eeeeee; }
-
 
 /* Sidebar */
 

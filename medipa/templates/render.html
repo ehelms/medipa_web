@@ -46,30 +46,30 @@
 {% endblock javascript %}
 
 {% block content %}
-<div class="container" data-url="/image/{{ image_name }}/?size={{ size }}" id="viewerContainer">
+<div data-url="/image/{{ image_name }}/?size={{ size }}" id="viewerContainer">
 	<div>
-	    <span>
-    		<canvas id="webgl_canvas"><br />
-                Your browser does not support the HTML 5 &lt;canvas&gt; element.<br />
-            </canvas>
-        </span>
-        <span>
-            <div class="slider_wrapper" id="slider_first">
-                Quality:
-                Auto:
-                <input type="checkbox" id="auto_checkbox" checked/>
-                <div id="size-slider" class="slider"></div>
-            </div>
-            <div class="slider_wrapper">
-                Opacity:
-                <div id="opacity-slider"  class="slider"></div>
-            </div>
-            <div class="slider_wrapper">
-                Brightness:
-                <div id="bright-slider" class="slider"></div>
-            </div>
-        </span>
-    </div>
+    <span>
+      <canvas id="webgl_canvas"><br />
+        Your browser does not support the HTML 5 &lt;canvas&gt; element.<br />
+      </canvas>
+    </span>
+    <span>
+        <div class="slider_wrapper" id="slider_first">
+            Quality:
+            Auto:
+            <input type="checkbox" id="auto_checkbox" checked/>
+            <div id="size-slider" class="slider"></div>
+        </div>
+        <div class="slider_wrapper">
+            Opacity:
+            <div id="opacity-slider"  class="slider"></div>
+        </div>
+        <div class="slider_wrapper">
+            Brightness:
+            <div id="bright-slider" class="slider"></div>
+        </div>
+    </span>
+  </div>
 
     <div>
     	<div id="control">
