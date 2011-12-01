@@ -10,7 +10,7 @@ from flask.ext.celery import Celery
 from libmedipa import image_handler
 
 def create_app():
-    return Flask("views")
+    return Flask("medipa.views")
 
 app = create_app()
 app.config.from_pyfile(os.environ['MEDIPA_CELERY_CONFIG'])
@@ -19,6 +19,7 @@ celery = Celery(app)
 
 @celery.task(name="medipa_app.process_upload")
 def process_file(filename):
+    print("Starting to process file")
     image_handler.process_file(filename)
 
 def process_upload(file, upload=True):
