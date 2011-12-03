@@ -30,6 +30,8 @@ MW.histogram = (function(){
                                   $.extend(true, {}, options, {
                                       xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
                                   }));
+
+                console.log(ranges);
             });
 
             placeholder.bind("plotunselected", function (event) {
