@@ -2,7 +2,10 @@
 
 {% block title %}Viewer{% endblock title %}
 
-{% block header %}Viewer - {{ image_name }}{% endblock header %}
+{% block header %}
+Viewer - {{ image_name }}
+<button id="view_fullscreen" class="btn primary fr">View Fullscreen</button>
+{% endblock header %}
 
 {% block stylesheets %}
 	<link rel="stylesheet" href="/static/javascript/raytrace/style.css" type="text/css" media="screen" />
@@ -15,12 +18,16 @@
        MW.manifest = $.parseJSON('{{ manifest }}');
        {% endautoescape %}   
     </script>        
-	<script type='text/javascript' src='/static/javascript/configuration.js'></script>
 	<script type='text/javascript' src='/static/javascript/raytrace/atvtdemo.js'></script>
 	<script type='text/javascript' src='/static/javascript/raytrace/atvoltex.js'></script>
 	<script type='text/javascript' src='/static/javascript/raytrace/J3DI.js'></script>
 	<script type='text/javascript' src='/static/javascript/raytrace/J3DIMath.js'></script>
 	<script type='text/javascript' src='/static/javascript/raytrace/webgl-utils.js'></script>
+	<script type='text/javascript' src='/static/javascript/flot/jquery.flot.js'></script>
+	<script type='text/javascript' src='/static/javascript/flot/jquery.flot.selection.js'></script>
+	<script type='text/javascript' src='/static/javascript/medipa.js'></script>
+	<script type='text/javascript' src='/static/javascript/configuration.js'></script>
+	<script type='text/javascript' src='/static/javascript/graphs.js'></script>
 
 		
     <script id="vshader" type="x-shader/x-vertex">// <![CDATA[
@@ -48,7 +55,12 @@
 {% block content %}
 <div data-url="/image/{{ image_name }}/?size={{ size }}" id="viewerContainer">
 	<div>
-    <div class="controls-container">
+    <span class="fl">
+      <canvas id="webgl_canvas"><br />
+        Your browser does not support the HTML 5 &lt;canvas&gt; element.<br />
+      </canvas>
+    </span>
+    <div id="controls-container">
       <div class="slider-container">
         <div class="slider_wrapper" id="slider_first">
             Quality:
@@ -65,41 +77,38 @@
             <div id="bright-slider" class="slider"></div>
         </div>
       </div>
-        <div id="control">
-          <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="loadHead();">Head</button>
-          <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="decreaseBrightness();">-</button>
-          <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="increaseBrightness();">+</button>
-          <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="toggleLinearFiltering();">HiQ</button> <span id="hiq" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;"></span> 
-          <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="decreaseNumberOfSteps();">.</button>
-          <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="increaseNumberOfSteps();">&#8230;</button>
-        </div>
-        <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Red</span> 
-        <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_red" width="522" height="42">
-        </canvas> 
-        <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(0);">Reset</button><br />
-        <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Green</span> 
-        <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_green" width="522" height="42">
-        </canvas>
-        <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(1);">Reset</button><br />
-        <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Blue</span> 
-        <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_blue" width="522" height="42">
-        </canvas> 
-        <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(2);">Reset</button><br />
-        <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Alpha
-        </span> 
-        <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_alpha" width="522" height="42">
-        </canvas> 
-        <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(3);">Reset
-        </button>
-      <div id="fps"></div>
-    </div>
-    <span>
-      <canvas id="webgl_canvas"><br />
-        Your browser does not support the HTML 5 &lt;canvas&gt; element.<br />
+      <div id="control">
+        <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="loadHead();">Head</button>
+        <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="decreaseBrightness();">-</button>
+        <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="increaseBrightness();">+</button>
+        <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="toggleLinearFiltering();">HiQ</button> <span id="hiq" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;"></span> 
+        <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="decreaseNumberOfSteps();">.</button>
+        <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="increaseNumberOfSteps();">&#8230;</button>
+      </div>
+      <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Red</span> 
+      <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_red" width="522" height="42">
+      </canvas> 
+      <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(0);">Reset</button><br />
+      <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Green</span> 
+      <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_green" width="522" height="42">
       </canvas>
-    </span>
+      <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(1);">Reset</button><br />
+      <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Blue</span> 
+      <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_blue" width="522" height="42">
+      </canvas> 
+      <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(2);">Reset</button><br />
+      <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Alpha
+      </span> 
+      <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_alpha" width="522" height="42">
+      </canvas> 
+      <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(3);">Reset
+      </button>
+    <div id="fps"></div>
+    <div id="placeholder" style="width:600px;height:450px;">
+    </div>
+  </div>
 
-  <div id="configurationContainer">
+  <div id="configurationContainer" class="clear hide">
     <div class="actions well">
       <button id="save_configuration" class="btn primary" data-url="/image/{{ image_name }}/configuration/">Save Current Configuration</button>
     </div>
