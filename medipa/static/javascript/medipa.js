@@ -55,4 +55,13 @@ $(document).ready(function(){
             $('#controls-container').hide();
         }
     });
+
+    $('#view_configurations').on('click', function(){
+        if( $('#view_configurations').html() === 'Open Configurations' ){
+            $('#view_configurations').html('Close Configurations');
+        } else {
+            $('#view_configurations').html('Open Configurations');
+        }
+        $('#configurationContainer').slideToggle('fast');
+    });
 });

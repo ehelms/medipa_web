@@ -1,7 +1,12 @@
+body {
+  min-width: 1000px;
+  min-height: 800px;
+}
+
 .fr { float: right; }
 .fl { float: left; }
 .clear { clear: both; }
-
+.btn { margin-left: 5px; margin-right: 5px }
 
 .content {
   position: relative;
@@ -65,4 +70,17 @@
   #hidden {
     display: none;
   }
+}
+
+#configurationContainer {
+  position: absolute;
+  top: 46px;
+  width: 89.8%;
+  margin: 0 auto 0 75px;
+  background: white;
+  border: 2px solid #CCC;
+  border-top: none;
+  border-radius-bottom-left: 4px;
+  border-radius-bottom-right: 4px;
+  z-index: 100;
 }

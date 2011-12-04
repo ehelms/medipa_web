@@ -3,8 +3,11 @@
 {% block title %}Viewer{% endblock title %}
 
 {% block header %}
-Viewer - {{ image_name }}
+<span>
+  Viewer - {{ image_name }}
+</span>
 <button id="view_fullscreen" class="btn primary fr">View Fullscreen</button>
+<button id="view_configurations" class="btn primary fr">Open Configurations</button>
 {% endblock header %}
 
 {% block stylesheets %}
@@ -109,25 +112,27 @@ Viewer - {{ image_name }}
   </div>
 
   <div id="configurationContainer" class="clear hide">
-    <div class="actions well">
-      <button id="save_configuration" class="btn primary" data-url="/image/{{ image_name }}/configuration/">Save Current Configuration</button>
+    <div class="container-fluid">
+      <div class="actions well">
+        <button id="save_configuration" class="btn primary" data-url="/image/{{ image_name }}/configuration/">Save Current Configuration</button>
+      </div>
+      <table class="zebra-striped">
+        <thead>
+          <tr>
+            <th>Configuration</th>
+            <th>Select Configuration</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for configuration in configurations %}
+          <tr>
+            <td>{{ configuration }}</td>
+            <td><button class="config_link btn" data-url="/image/{{ image_name }}/configuration/{{ configuration }}/{{ loop.counter0 }}/" >Load Configuration</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    <table class="zebra-striped">
-      <thead>
-        <tr>
-          <th>Configuration</th>
-          <th>Select Configuration</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for configuration in configurations %}
-        <tr>
-          <td>{{ configuration }}</td>
-          <td><button class="config_link btn" data-url="/image/{{ image_name }}/configuration/{{ configuration }}/{{ loop.counter0 }}/" >Load Configuration</a></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
   </div>
 </div>
 <div id="hidden"></div>
