@@ -90,6 +90,14 @@ def image_png(image_id):
 
     return response
 
+@app.route('/image/<image_id>/histogram/', methods=['GET'])
+def image_png(image_id):
+    response = make_response()
+    response.data = json.dumps(image_handler.get_histogram_data(image_id))
+    response.mimetype = 'application/json'
+
+    return response
+
 @app.route('/image/<image_id>/render/', methods=['GET'])
 def render(image_id):
     size = request.args.get('size', 'x512')

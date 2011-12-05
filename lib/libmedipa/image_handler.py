@@ -51,7 +51,6 @@ def get_images():
 
 def process_file(filename):
     image = Image(''.join([UPLOAD_FOLDER, filename]).encode('ascii'))
-    reduced_image = image.reduce()
     
     manifest = { 
         'filename' : filename,
@@ -67,7 +66,6 @@ def process_file(filename):
 
 def process_local_file(filename):
     image = Image(filename)
-    reduced_image = image.reduce()
     
     manifest = { 
         'filename' : filename,
@@ -83,9 +81,15 @@ def process_local_file(filename):
 
 
 def reduce(filename, manifest, times, image):
+    print("Processing: " + filename)
     image_array, rows, cols = image.convert_image()
+    print("Converting...")
     complete_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.png'])
-    write(complete_filename, manifest, "complete", image_array, image.size, rows, cols)
+    print("Processing histogram data....")
+    histogram_data = generate_histogram_data(image_array)
+    print("Writing to manifest...")
+    manifest = write(complete_filename, manifest, "complete", image_array, image.size, rows, cols, histogram_data)
+
     for i in  range(times):
         name = "x%s" % ( int(math.pow(8, i+1)) )
         out_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], "_",  name, '.png'])
@@ -95,15 +99,18 @@ def reduce(filename, manifest, times, image):
         print("Converting...")
         image_array, rows, cols = image.convert_image()
         print("Writing to manifest...")
-        manifest = write(out_filename, manifest, name, image_array, image.size, rows, cols)
+        manifest = write(out_filename, manifest, name, image_array, image.size, rows, cols, histogram_data)
         print("Finished: " + out_filename)
+
     return manifest     
 
-def write(out_filename, manifest, name, array, size, rows, cols):
+def write(out_filename, manifest, name, array, size, rows, cols, histogram_data):
 
     img = PilImage.new("L", (size[0]*cols, size[1]*rows))
     img.putdata(array)
     img.save(out_filename)    
+
+    manifest['histogram_data'] = histogram_data
 
     dimensions = {
         'x' : size[0],
@@ -118,6 +125,16 @@ def write(out_filename, manifest, name, array, size, rows, cols):
     }
 
     return manifest
+
+def generate_histogram_data(image_array):
+    data = [ [i, 0] for i in range(0, int(max(image_array))+1) ]
+    
+    for index in range(len(image_array)):
+        pixel = int(image_array[index])
+        if pixel > 0:
+            data[pixel][1] = data[pixel][1] + 1
+
+    return data
 
 def save_manifest(filename, manifest):
     manifest_file = open(''.join([UPLOAD_FOLDER, filename.split('.mha')[0], '.manifest.json']), 'w')
@@ -160,3 +177,7 @@ def save_configuration(image_id, configuration):
     save_manifest(image_id, manifest)
 
     return True
+
+def get_histogram_data(image_id):
+    manifest = load_manifest(image_id)
+    return manifest['histogram_data']
