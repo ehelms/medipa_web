@@ -107,7 +107,10 @@
       <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(3);">Reset
       </button>
     <div id="fps"></div>
-    <div id="placeholder" data-url="/image/{{ image_name }}/histogram/" style="width:600px;height:450px;">
+    <div id="graphsContainer">
+      <div id="placeholder" data-url="/image/{{ image_name }}/histogram/" style="width:600px;height:400px;"></div>
+      <button id="zoom_histogram" class="btn primary fl">Zoom to Selection</button>
+      <button id="zoom_reset" class="btn default fr">Reset Zoom</button>
     </div>
   </div>
 
