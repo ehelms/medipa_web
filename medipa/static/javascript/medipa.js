@@ -69,6 +69,7 @@ $(document).ready(function(){
     });
 
     $('#view_configurations').on('click', function(){
+        $('.alert-message').hide();
         if( $('#view_configurations').html() === 'Open Configurations' ){
             $('#view_configurations').html('Close Configurations');
         } else {

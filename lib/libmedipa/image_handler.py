@@ -55,7 +55,7 @@ def process_file(filename):
     manifest = { 
         'filename' : filename,
         'json' : {},
-        'configurations' : []
+        'configurations' : {}
     }
 
     manifest = reduce(filename, manifest, 3, image)
@@ -63,22 +63,6 @@ def process_file(filename):
     save_manifest(filename, manifest)
     
     return True
-
-def process_local_file(filename):
-    image = Image(filename)
-    
-    manifest = { 
-        'filename' : filename,
-        'json' : {},
-        'configurations' : []
-    }
-
-    manifest = reduce(filename, manifest, 3, image)
-
-    save_manifest(filename, manifest)
-    
-    return True    
-
 
 def reduce(filename, manifest, times, image):
     print("Processing: " + filename)
@@ -171,12 +155,15 @@ def get_configuration(image_id, config_id):
     manifest = load_manifest(image_id)
     return manifest['configurations'][config_id]
 
-def save_configuration(image_id, configuration):
+def save_configuration(image_id, configuration, name):
     manifest = load_manifest(image_id)
-    manifest['configurations'].append(configuration)
-    save_manifest(image_id, manifest)
 
-    return True
+    if name in manifest['configurations']:
+        return False, "Configuration with that name already exists"
+    else:
+        manifest['configurations'][name] = configuration
+        save_manifest(image_id, manifest)
+        return True, ""
 
 def get_histogram_data(image_id):
     manifest = load_manifest(image_id)
