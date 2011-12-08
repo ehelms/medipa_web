@@ -103,6 +103,7 @@ def render(image_id):
     size = request.args.get('size', 'x512')
     dimensions = image_handler.get_dimensions(image_id, size)
     configurations = image_handler.get_configurations(image_id)
+#    print type(configurations[0])
     manifest = convert_manifest(image_id, image_handler.load_manifest(image_id))
     return render_template('render.html',
                             manifest=json.dumps(manifest), 
@@ -121,6 +122,20 @@ def configuration(image_id, config_id):
             to_return = { "saved" : True }
         else:
             to_return = { "saved" : False }
+
+    response = make_response()
+    response.data = json.dumps(to_return)
+    response.mimetype = 'application/json'
+
+    return response
+
+@app.route('/image/<image_id>/configuration/', methods=['POST'])
+def new_configuration(image_id):
+    configuration = request.args.get('config')
+    if image_handler.save_configuration(image_id, configuration):
+        to_return = { "saved" : True }
+    else:
+        to_return = { "saved" : False }
 
     response = make_response()
     response.data = json.dumps(to_return)
