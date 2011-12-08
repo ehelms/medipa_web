@@ -28,6 +28,7 @@ MW.init_configuration = function(){
 
     $('.config_link').click(function(){
         MW.configuration.load($(this).data('url'));
+        MW.hash_change();
     });
 
 };
