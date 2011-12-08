@@ -553,6 +553,18 @@ function handleMouseUp(event)
 	transferFunctionLastIndexGreen = -1;
 	transferFunctionLastIndexBlue = -1;
 	transferFunctionLastIndexAlpha = -1;
+
+    MW.saveRotation();
+
+}
+
+MW.saveRotation = function(){
+    $.bbq.pushState({rotation:JSON.stringify(rotationMatrix.$matrix)});    
+};
+
+MW.loadRotation = function(){
+    var obj = $.parseJSON($.bbq.getState("rotation"));
+    rotationMatrix.$matrix = obj;
 }
 
 function handleMouseMove(event)
@@ -601,67 +613,37 @@ function loadHead(num)
 
 }
 
-function loadChameleon()
-{
-	scaleX = 0.375;
-	scaleY = 1.0;
-	scaleZ = 1.0;
-
-	if (!volumeTexture)
-		start("/research/wp-content/uploads/chameleon.jpg", 128, 341.333333, 384, 32, 12);
-	else
-		setVolumeTexture(gl, volumeTexture, "/research/wp-content/uploads/chameleon.jpg", 128, 341.333333, 384, 32, 12);
-
-	if (rotationMatrix)
-	{
-		rotationMatrix.makeIdentity();
-		rotationMatrix.rotate(90.0, 0.0, 1.0, 0.0);
-	}
-}
-
-function decreaseOpacity()
-{
-	opacity = Math.max(1.0, opacity - 1.0);
-    setOpacity(opacity);
-}
-
-function increaseOpacity()
-{
-	opacity += 1.0;
-	setOpacity(opacity);
-}
 
 function setOpacity(op){
+   $.bbq.pushState({opacity:op});
    setVolumeTextureOpacity(gl, volumeTexture, op);
 }
 
-function decreaseBrightness()
-{
-	brightness = Math.max(1.0, brightness - 1.0);
-    setBrightness(brightness);
-}
-
-function increaseBrightness()
-{
-	brightness = Math.min(32.0, brightness + 1.0);
-	setBrightness(brightness);
-}
-
 function setBrightness(bright){
-    setVolumeTextureBrightness(gl, volumeTexture, bright);
+    $.bbq.pushState({brightness:brightness});
 
+    if (brightness !== bright){
+        setVolumeTextureBrightness(gl, volumeTexture, bright);
+    }
 }
 
-function decreaseSize()
-{
-	distance = Math.min(16.0, distance + 1.0);
-	resize(gl, true);
+function setSize(size){
+    if (size !== distance){
+        distance = size
+        resize(gl, size)
+    }
 }
 
-function increaseSize()
-{
-	distance = Math.max(3.0, distance - 1.0);
-	resize(gl, true);
+function decreaseSize(){
+    var size = Math.min(16.0, distance + 1.0);
+    setSize(size)
+	$.bbq.pushState({size:size});
+}
+
+function increaseSize(){   
+    var size =  Math.max(3.0, distance - 1.0);
+    setSize(size);
+	$.bbq.pushState({size:size});
 }
 
 function toggleLinearFiltering()

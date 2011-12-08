@@ -40,6 +40,18 @@ MW.renderer = (function(){
 
 })();
 
+
+
+MW.hash_change = function(){    
+    var state = $.deparam.fragment();
+    setSize(parseFloat(state.size));
+    setOpacity(parseFloat(state.opacity));
+    setBrightness(parseFloat(state.brightness));
+    MW.loadRotation();    
+    
+    
+};
+
 $(document).ready(function(){
 
     MW.renderer.init();
@@ -64,4 +76,6 @@ $(document).ready(function(){
         }
         $('#configurationContainer').slideToggle('fast');
     });
+    
+        
 });
