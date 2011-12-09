@@ -103,9 +103,14 @@ Eric D. Helms\\
 \section{3D Web Visualizations}
 
 \section{Related Works}
+The technique of volume rendering gained a lot of interest especially to investigate medical data. The process of volume rendering has several stages to produce the result image [Drebin et al. 1988]. First, the input volume data set is converted to a set of material percentage volumes. Each element in the volume is called a voxel (volume element) which the value represents the percentage of the material in a region of space. After classifying the dataset, a linear ramp called a transfer function assigns the opacity and color values to every voxel in the volume. It allows viewing a certain part of the volume by selecting a certain range of opacity and color. Next, the volume is projected to the image plane by compositing the opacity and colors of the voxels.
+Previous researches attempted multiple methods to visualize volumes. Marching cubes [Lorensen 1987] provided an algorithm that creates polygonal representation of iso-surfaces from a three dimensional array of data. It uses a table of possible edge intersections of a cube which describes how a surface cuts the surface. For realism, it calculates the normalized gradient from the original data which helps to create the desired surface model. However, the drawback of the algorithm is the speed regarding to the great number of triangles and overhead by rotation. The amount of memory needed for the surface result is another problem. Also, there is a ‘hole problem’ when at least one cube face has an intersection point in each of its four edges.
+[Levoy 1990] introduced an efficient way to use ray-tracing for volume rendering. It improves its performance by employing binary volumes of coherent regions and adaptively terminating ray-tracing at the user-selected opacity threshold. However, the method is not interactive.
+For interactivity, splatting provided a way to perform volume rendering in parallel. It is a technique that splats every voxel to the viewing surface in back-to-front order as if throwing a snow ball to a wall [Westover 1991]. This method runs in parallel, thus reduces the rendering time, but produces respectively lower image qualities. 
+
 
 \section{Concept}
-Rendering algorithm
+\subsection{Rendering algorithm}
 
 Volume rendering displays a 3D scalar field to a 3D image. The two traditional ways are slice-based rendering and volume ray tracing. Our algorith follows volume ray tracing that shoots rays through the volume and samples the along the path by equal intervals. As the rays are sampled through the volume, the scalar density values are integrated based on the opacity and RGB values from the transfer function. By the use of transfer function, it shows the corresponding emission and absorption of light for the sample point. The advantages of ray tracing are optimization from empty space skipping, independence of the projection view, and easiness of development.
 We refered to an interactive volume renderer using HTML5. The rendering algorithm bases on ray tracing and applies RGB and alpha input values 
