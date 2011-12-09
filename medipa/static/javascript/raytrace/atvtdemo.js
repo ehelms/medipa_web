@@ -613,6 +613,15 @@ function loadHead(num)
 
 }
 
+function execSlice() {
+	var v = new Float32Array(
+			[ 1.0, 1.0, 0.6,   0, 1.0, 0.6,   0, 0, 0.6,   1.0, 0, 0.6,
+			1.0, 0, 0,   1.0, 1.0, 0,   0, 1.0, 0,   0, 0, 0 ] 
+			); 
+	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	gl.bindBuffer(gl.ARRAY_BUFFER, null);
+}
 
 function setOpacity(op){
    $.bbq.pushState({opacity:op});
