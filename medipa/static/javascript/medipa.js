@@ -59,6 +59,7 @@ MW.colors = (function(){
     },
     set_current_color = function(color){
         current = color;
+        MW.highlight_list.set_current_color(current_color());
     };
 
 
@@ -73,12 +74,24 @@ MW.colors = (function(){
 MW.highlight_list = (function(){
    var list = [],
        current = undefined;
-   var set_current = function(from, to){
-     current = new_obj(MW.colors.current_color(), from, to);
-     MW.redraw_colors([current]);
+   var redraw = function(){
+       var array = [];
+       if(current){ array.push(current)};
+       MW.redraw_colors(array);
    },
+   set_current = function(from, to){
+     current = new_obj(MW.colors.current_color(), from, to);
+     redraw();
+   },
+   set_current_color = function(color){
+    if(current){
+        current.color = color;
+        redraw();
+    }       
+   }
    unset_current = function(){
-       MW.redraw_colors([]);
+       current = undefined;
+       redraw();
    }
    new_obj = function(color, from, to){
     return {color:color, to:to, from:from};
@@ -86,6 +99,7 @@ MW.highlight_list = (function(){
 
    return {
        set_current: set_current,
+       set_current_color: set_current_color,
        unset_current: unset_current
    }
 
