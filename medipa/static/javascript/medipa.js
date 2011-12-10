@@ -45,8 +45,11 @@ MW.renderer = (function(){
 MW.hash_change = function(){    
     var state = $.deparam.fragment();
     setSize(parseFloat(state.size));
-    setOpacity(parseFloat(state.opacity));
-    setBrightness(parseFloat(state.brightness));
+
+    $("#opacity-slider").slider("value", state.opacity);
+    $("#bright-slider").slider("value", state.brightness);
+
+    MW.highlight_list.load_list($.parseJSON(state.highlight) || []);
     MW.loadRotation();    
     
     
@@ -101,16 +104,17 @@ MW.highlight_list = (function(){
 
        MW.redraw_colors(array);
    },
-   make_list = function() {
+   make_list = function() {  //draws list on the screen
        var html = "";
        $.each(list, function(index, item){
            html += MW.templates.highlight_item(item);
        })
        $("#highlight_list").html(html);
        $("#highlight_list").sortable("refresh");
+       save_list();
 
    },
-   reset_list = function(){
+   reset_list = function(){ //reads list on the screen and saves it internally
       list = [];
       $("#highlight_list").find("li").each(function(index, item){
           var obj = $(item).data('obj');
@@ -118,6 +122,7 @@ MW.highlight_list = (function(){
             list.push(obj);
           }
       });
+      save_list();
       redraw();
    },
    set_current = function(from, to){
@@ -145,13 +150,21 @@ MW.highlight_list = (function(){
        list = new_list;
        make_list();
    }
-
+   save_list = function(){
+        $.bbq.pushState({highlight:JSON.stringify(list)});
+   }
+   load_list = function(list_in){
+       list = list_in;
+       make_list();
+       redraw();
+   };
    return {
        set_current: set_current,
        set_current_color: set_current_color,
        unset_current: unset_current,
        push_highlight: push_highlight,
-       reset_list: reset_list
+       reset_list: reset_list,
+       load_list: load_list
    }
 
 })();

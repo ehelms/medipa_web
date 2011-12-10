@@ -120,6 +120,7 @@ MW.initControls = function(){
         });
     }
 
+
     var bright_slider = $("#bright-slider");
     if (bright_slider.length > 0) {
         bright_slider.slider({
@@ -657,8 +658,8 @@ function setOpacity(op){
 
 function setBrightness(bright){
     $.bbq.pushState({brightness:brightness});
-
     if (brightness !== bright){
+        brightness = bright;
         setVolumeTextureBrightness(gl, volumeTexture, bright);
     }
 }

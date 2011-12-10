@@ -1,12 +1,30 @@
 var MW = MW || {};
 
+
+MW.defaults = {
+  opacity:opacity,
+  brightness: brightness,
+  highlight: "[]"
+
+};
+
 MW.configuration = (function(){
     var save = function(url){
             var to_send = {},
                 name = $('#configuration_name').val();
 
 
+
             close_alerts();
+
+            $.each(MW.defaults, function(key, value){
+               if($.bbq.getState(key) === undefined){
+                 var new_h = {};
+                 new_h[key] = value;
+                 $.bbq.pushState(new_h)
+               }
+            });
+
 
             to_send['config'] = $.param.fragment();
             to_send['name'] = name;
@@ -48,7 +66,7 @@ MW.configuration = (function(){
     return {
         save    : save,
         load    : load
-    };
+    }
 })(jQuery);
 
 
