@@ -118,6 +118,8 @@ We refered to an interactive volume renderer using HTML5. The rendering algorith
 from the transfer function to the texture images. A transfer function assigns RGBA values to each voxel in the volume. Its main purpose is to observe a specific part of the volume. We allowed visual controls of the transfer function to manipulate the RGB and alpha values. 
 
 The algorithm uses shaders to render the model and allows the number of samples of steps throughout the ray. The general approach of ray tracing on a volume is to apply bounding box or a cube to the volume since it is faster to render it with knowing a start and stop points for the rays. In order to provide faster performace, the algorithm renders the position of front and back facing triangles to the textures. The position of the triangles mapped to the texture coordinates easily gives the starting and finishing points of the ray. For each ray, since we know the starting position and the direction of the ray from the front and back textures, we accumulate the pixel color by compositing the collected samples in front-to-back direction. The process is applied to the shader as below.
+
+\begin{verbatim}
 vec3 raystart = v_PosLocal;
 vec2 texcoords = (v_Position.xy / v_Position.w + vec2(1.0, 1.0)) / 2.0;
 vec3 rayend = texture2D(backpos_tex, texcoords).xyz;
@@ -140,13 +142,19 @@ raypos += deltadir;
 lengthsum += deltadirlen;
 }
 gl_FragColor = mix(colorsum, vec4(colorsum.rgb * clamp(colorsum.a, 0.0, 1.0) * brightness, 1.0), finalstep);
-
+\end{verbatim}
 
 \section{Medipa}
+The Medipa system was designed in order to allow users to upload medical image scans in their native formats.
 
 \subsection{Architecture}
+The underlying system was designed as a web-based Model-View-Controller (MVC) pattern with a data processing layer server side and all rendering happening within the user's browser.  The architecture can be seen in Figure.
 
 \subsection{Data Processing}
+Most medical image scans come in a binary format that can not be directly ported to WebGL for rendering.  Given this limitation, a small data processing library was created taking advantage of SimpleITK.  SimpleITK is a library that can turn binary format medical scans into data representations that can be worked on within native code.  The layer would take in the binary medical scan format, process with SimpleITK and then turn the outputted pixel data array into a series of PNG's that represented each layer of the scan.  The subsequent PNG is saved down to the file system along with a JSON based file that contains metadata about the image.  This metadata included filenames, dimensions, configuration information and pixel histogram information.
+        Given that some systems may be limited in their graphical processing power, down sampling of the image resolution was added to the data processing layer.  Whenever an image is processed by the server, the data points are reduced 3 times and for each reduction a PNG is saved off and entry made into the manifest file.  The reductions occur by selecting an octet of the pixels and finding an average location and value.  This produces images that are 1/8, 1/64 and 1/512 the size and dimensions of the original image scan.
+        Down sampling the image provides two direct benefits.
+
 
 \subsection{Web Visualization}
 
