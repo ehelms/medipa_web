@@ -89,29 +89,35 @@
         <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="decreaseNumberOfSteps();">.</button>
         <button type="button" style="-moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" onclick="increaseNumberOfSteps();">&#8230;</button>
       </div>
-      <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Red</span> 
-      <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_red" width="522" height="42">
-      </canvas> 
-      <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(0);">Reset</button><br />
-      <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Green</span> 
-      <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_green" width="522" height="42">
-      </canvas>
-      <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(1);">Reset</button><br />
-      <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Blue</span> 
-      <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_blue" width="522" height="42">
-      </canvas> 
-      <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(2);">Reset</button><br />
-      <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Alpha
-      </span> 
-      <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_alpha" width="522" height="42">
-      </canvas> 
-      <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(3);">Reset
-      </button>
+      <div style="display:None;">
+          <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Red</span>
+          <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_red" width="522" height="42">
+          </canvas>
+          <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(0);">Reset</button><br />
+          <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Green</span>
+          <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_green" width="522" height="42">
+          </canvas>
+          <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(1);">Reset</button><br />
+          <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Blue</span>
+          <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_blue" width="522" height="42">
+          </canvas>
+          <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(2);">Reset</button><br />
+          <span style="display: inline-block; width: 33px; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;">Alpha
+          </span>
+          <canvas style="margin-top: 10px; border: 1px solid #202020; vertical-align: middle; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" id="canvas_alpha" width="522" height="42">
+          </canvas>
+          <button style="vertical-align: bottom; -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -webkit-user-select: none;" type="button" onclick="clear2D(3);">Reset
+          </button>
+      </div>
     <div id="fps"></div>
     <div id="graphsContainer">
       <div id="placeholder" data-url="/image/{{ image_name }}/histogram/" style="width:600px;height:400px;"></div>
       <button id="zoom_histogram" class="btn primary fl">Zoom to Selection</button>
+      <button id="highlight_selected" class="btn primary fl">Highlight Selected</button>
       <button id="zoom_reset" class="btn default fr">Reset Zoom</button>
+    </div>
+    <div id="picker">
+
     </div>
   </div>
 

@@ -1,10 +1,21 @@
 var MW = MW || {};
 
 MW.histogram = (function(){
-    var init = function(){
+    var plot = undefined,
+        init = function(){
             $.getJSON($('#placeholder').data('url'), function(data){
                 setup_graph([{ data : data }]);
             });
+        },
+        get_values = function(){
+           var obj = plot.getSelection();
+           if (obj) {
+               return [Math.floor(obj.xaxis.from), Math.ceil(obj.xaxis.to)];
+               //return obj;
+           }
+           else {
+               return undefined;
+           }
         },
         setup_graph = function(data){
             var options = {
@@ -21,13 +32,15 @@ MW.histogram = (function(){
 
             placeholder.bind("plotselected", function (event, ranges) {
                 $("#selection").text(ranges.xaxis.from.toFixed(1) + " to " + ranges.xaxis.to.toFixed(1));
+                MW.highlight_list.set_current(Math.floor(ranges.xaxis.from), Math.ceil(ranges.xaxis.to));
             });
 
             placeholder.bind("plotunselected", function (event) {
                 $("#selection").text("");
+                MW.highlight_list.unset_current();
             });
             
-            var plot = $.plot(placeholder, data, options);
+            plot = $.plot(placeholder, data, options);
 
             $("#clearSelection").click(function () {
                 plot.clearSelection();
@@ -63,7 +76,9 @@ MW.histogram = (function(){
         };
 
     return {
-        init : init
+        init : init,
+        get_values: get_values
+
     };
 
 })();

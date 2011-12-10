@@ -73,11 +73,13 @@ var height2DScale = 0.125;
 var border2D = 5;
 
 var transferFunction = new Uint8Array(1024);
+var originalTransferFunction = undefined;
 var transferFunctionChanged = false;
 var transferFunctionLastIndexRed = -1;
 var transferFunctionLastIndexGreen = -1;
 var transferFunctionLastIndexBlue = -1;
 var transferFunctionLastIndexAlpha = -1;
+
 
 
 $(document).ready(function(){
@@ -506,6 +508,14 @@ function start(texFile, texWidth, texHeight, texDepth, texCols, texRows, callbac
 		
 		if (transferFunctionChanged)
 		{
+
+		    if (originalTransferFunction === undefined){
+		      originalTransferFunction = new Uint8Array(1024);
+		      for(var i = 0; i < 256*4; i++){
+		          originalTransferFunction[i] = transferFunction[i];
+		      }
+		    };
+
 			drawVolumeTexture(gl, volumeTexture, gl.modelViewProjMatrix.getAsFloat32Array(), linearFiltering, transferFunction);
 			transferFunctionChanged = false;
 		}
@@ -519,6 +529,23 @@ function start(texFile, texWidth, texHeight, texDepth, texCols, texRows, callbac
 	f();
 	callback();
 	
+}
+
+MW.redraw_colors = function(list){
+    console.log("REDRAWING");
+    console.log(list);
+  //reset
+  for(var i = 0; i < 256*4; i++){
+      transferFunction[i] = originalTransferFunction[i];
+  }
+  $.each(list, function(index,item){
+     for (var i = item.from; i <= item.to; i++){
+       for (var slot = 0; slot < 4; slot++){
+          transferFunction[i*4+slot] = item.color[slot];
+       }
+     };
+  });
+  transferFunctionChanged = true;
 }
 
 function resize(gl, update)

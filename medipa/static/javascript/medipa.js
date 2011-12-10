@@ -52,6 +52,46 @@ MW.hash_change = function(){
     
 };
 
+MW.colors = (function(){
+    var current,
+    current_color = function(){
+        return [current.val("r"), current.val("g"), current.val("b"), current.val("a")]
+    },
+    set_current_color = function(color){
+        current = color;
+    };
+
+
+    return {
+        current_color: current_color,
+        set_current_color: set_current_color
+    }
+
+})();
+
+
+MW.highlight_list = (function(){
+   var list = [],
+       current = undefined;
+   var set_current = function(from, to){
+     current = new_obj(MW.colors.current_color(), from, to);
+     MW.redraw_colors([current]);
+   },
+   unset_current = function(){
+       MW.redraw_colors([]);
+   }
+   new_obj = function(color, from, to){
+    return {color:color, to:to, from:from};
+   }
+
+   return {
+       set_current: set_current,
+       unset_current: unset_current
+   }
+
+})();
+
+
 $(document).ready(function(){
 
     MW.renderer.init();
@@ -78,5 +118,20 @@ $(document).ready(function(){
         $('#configurationContainer').slideToggle('fast');
     });
     
+    var initial_color = new $.jPicker.Color({ ahex: '99330099' });
+
+    $("#picker").jPicker({
+        'images':{clientPath:"/static/images/"},
+        'window':{alphaSupport: true, expandable: true},
+        'color': {mode:"a", active: initial_color}},
+        function(color){
+            MW.colors.set_current_color(color);
+        });
+    MW.colors.set_current_color(initial_color);
+
+    $("#highlight_selected").click(function(){
+
+    });
+
         
 });
