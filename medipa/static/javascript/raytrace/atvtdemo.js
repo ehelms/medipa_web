@@ -551,17 +551,25 @@ MW.redraw_colors = function(list){
 
 function resize(gl, update)
 {
-	if (!canvas || canvas.width == width && canvas.height == height && !update)
+    
+    real_width = $(canvas).width();
+    real_height = $(canvas).height();
+    
+    fake_width = canvas.width;
+    fake_height = canvas.height;
+    
+	if (!canvas || (real_width == width && real_height == height && !update))
 		return;
 
-	width = canvas.width;
-	height = canvas.height;
+    width = real_width;
+    height = real_height;
 
-	gl.viewport(0, 0, width, height);
+	gl.viewport(0, 0, fake_width, fake_height);  //for some reason this needs the fake height
 	gl.perspectiveMatrix.makeIdentity();
-	gl.perspectiveMatrix.perspective(20, width / height, 1, 100);
+	gl.perspectiveMatrix.perspective(20, real_width / real_height, 1, 100);
 	gl.perspectiveMatrix.lookat(0, 0, distance, 0, 0, 0, 0, 1, 0);
 }
+
 
 function handleMouseDown(event)
 {
