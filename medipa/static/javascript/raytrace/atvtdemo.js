@@ -532,19 +532,19 @@ function start(texFile, texWidth, texHeight, texDepth, texCols, texRows, callbac
 }
 
 MW.redraw_colors = function(list){
-    console.log("REDRAWING");
-    console.log(list);
   //reset
   for(var i = 0; i < 256*4; i++){
       transferFunction[i] = originalTransferFunction[i];
   }
-  $.each(list, function(index,item){
+  //$.each(list, function(index,item){
+  for (var index = list.length -1; index >= 0; index--){
+     item = list[index];
      for (var i = item.from; i <= item.to; i++){
        for (var slot = 0; slot < 4; slot++){
           transferFunction[i*4+slot] = item.color[slot];
        }
      };
-  });
+  };
   transferFunctionChanged = true;
 }
 

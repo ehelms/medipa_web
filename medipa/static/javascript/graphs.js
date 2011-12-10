@@ -11,7 +11,6 @@ MW.histogram = (function(){
            var obj = plot.getSelection();
            if (obj) {
                return [Math.floor(obj.xaxis.from), Math.ceil(obj.xaxis.to)];
-               //return obj;
            }
            else {
                return undefined;
