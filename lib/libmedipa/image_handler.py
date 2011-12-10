@@ -90,9 +90,9 @@ def reduce(filename, manifest, times, image):
 
 def write(out_filename, manifest, name, array, size, rows, cols, histogram_data):
 
-    img = PilImage.new("L", (size[0]*cols, size[1]*rows))
+    img = PilImage.new("P", (size[0]*cols, size[1]*rows))
     img.putdata(array)
-    img.save(out_filename)    
+    img.save(out_filename, bits=16)    
 
     manifest['histogram_data'] = histogram_data
 

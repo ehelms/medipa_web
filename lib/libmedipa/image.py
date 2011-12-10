@@ -122,7 +122,7 @@ class Image:
                     curr_col = z%cols
                     curr_row = z/cols                           #render left to right
                     loc = cols*curr_row*area + y*cols*size[0] + (cols-1-curr_col)*size[0] + x
-                    list_a[loc] = round(array[x][y][z]/8.0)
+                    list_a[loc] = round(array[x][y][z])
         return (list_a, rows, cols)
 
 
