@@ -75,8 +75,11 @@ MW.templates = (function(){
    var highlight_item = function(obj){
        var str_obj = JSON.stringify(obj);
        var style = 'background: rgb(' + obj.color[0] + ',' + obj.color[1] + ',' + obj.color[2] + ')'
-       var html = '<li style="' + style + '" data-obj=' + str_obj + '>';
+       var html = '<li  data-obj=' + str_obj + '>';
        html += obj.from + "," + obj.to;
+
+       html += '<span class="bg_preview" style="' + style + '"> </span>'
+       html += '<a class="remove_highlight" href="#">-Remove</a>'
        return html + "</li>"
    };
 
@@ -202,5 +205,10 @@ $(document).ready(function(){
         };
     });
 
-        
+    $(".remove_highlight").live('click', function(){
+       $(this).parents("li").remove();
+       MW.highlight_list.reset_list();
+    });
+
+
 });
