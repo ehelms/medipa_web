@@ -154,12 +154,15 @@ MW.initControls = function(){
         e.stopPropagation && e.stopPropagation();
     
         var amount = e.wheelDelta || e.detail;
-        if (amount > 0){
+        if ((e.wheelDelta && amount < 0) || (!e.wheelDelta && amount > 0)){
             decreaseSize();
         }
         else {
             increaseSize();
         }
+        
+
+
         return false;
     }, false);    
 
