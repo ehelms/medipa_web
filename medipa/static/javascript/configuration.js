@@ -29,6 +29,7 @@ MW.configuration = (function(){
             $.get(url).success(function(data){
                 $.bbq.pushState(data);
                 $('#view_configurations').trigger('click');
+                MW.hash_change();
             });
         },
         close_alerts = function(){
@@ -56,7 +57,7 @@ MW.init_configuration = function(){
         MW.configuration.save($(this).data('url'));
     });
 
-    $('.config_link').click(function(){
+    $('.config_link').live('click', function(){
         MW.configuration.load($(this).data('url'));
         MW.hash_change();
     });
