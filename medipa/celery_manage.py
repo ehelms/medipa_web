@@ -12,8 +12,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(BASE_DIR)
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../lib/')
 
-os.environ['MEDIPA_CELERY_CONFIG'] = "celeryconfig.py"
-
 from medipa.views import create_app
 
 app = create_app()
