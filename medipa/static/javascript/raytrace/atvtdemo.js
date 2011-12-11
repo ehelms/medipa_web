@@ -85,7 +85,7 @@ var transferFunctionLastIndexBlue = -1;
 var transferFunctionLastIndexAlpha = -1;
 
 
-var v = new Float32Array(
+var cubeVector = new Float32Array(
 		[ 1.0, 1.0, 1.0,   0, 1.0, 1.0,   0, 0, 1.0,   1.0, 0, 1.0,
 		1.0, 0, 0,   1.0, 1.0, 0,   0, 1.0, 0,   0, 0, 0 ] 
 		); 
@@ -714,60 +714,57 @@ function execSlice() {
 */
 
 function execSliceX(val1, val2) {
-	v[7] = val1;
-	v[10] = val1;
-	v[13] = val1;
-	v[22] = val1;
+	cubeVector[7] = val1;
+	cubeVector[10] = val1;
+	cubeVector[13] = val1;
+	cubeVector[22] = val1;
 
-	v[1] = val2;
-	v[4] = val2;
-	v[16] = val2;
-	v[19] = val2;
-	console.log(v);
+	cubeVector[1] = val2;
+	cubeVector[4] = val2;
+	cubeVector[16] = val2;
+	cubeVector[19] = val2;
 	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	gl.bufferData(gl.ARRAY_BUFFER, cubeVector, gl.STATIC_DRAW);
 	gl.bindBuffer(gl.ARRAY_BUFFER, null);
 }
 
 function execSliceY(val1, val2) {
-	v[14] = val1;
-	v[17] = val1;
-	v[20] = val1;
-	v[23] = val1;
+	cubeVector[14] = val1;
+	cubeVector[17] = val1;
+	cubeVector[20] = val1;
+	cubeVector[23] = val1;
 
-	v[2] = val2;
-	v[5] = val2;
-	v[8] = val2;
-	v[11] = val2;
-	console.log(v);
+	cubeVector[2] = val2;
+	cubeVector[5] = val2;
+	cubeVector[8] = val2;
+	cubeVector[11] = val2;
 	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	gl.bufferData(gl.ARRAY_BUFFER, cubeVector, gl.STATIC_DRAW);
 	gl.bindBuffer(gl.ARRAY_BUFFER, null);
 }
 
 function execSliceZ(val1, val2) {
-	v[3] = val1;
-	v[6] = val1;
-	v[18] = val1;
-	v[21] = val1;
+	cubeVector[3] = val1;
+	cubeVector[6] = val1;
+	cubeVector[18] = val1;
+	cubeVector[21] = val1;
 
-	v[0] = val2;
-	v[9] = val2;
-	v[12] = val2;
-	v[15] = val2;
-	console.log(v);
+	cubeVector[0] = val2;
+	cubeVector[9] = val2;
+	cubeVector[12] = val2;
+	cubeVector[15] = val2;
 	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	gl.bufferData(gl.ARRAY_BUFFER, cubeVector, gl.STATIC_DRAW);
 	gl.bindBuffer(gl.ARRAY_BUFFER, null);
 }
 
 function resetSlice() {
-	v = new Float32Array(
+	cubeVector = new Float32Array(
 			[ 1.0, 1.0, 1.0,   0, 1.0, 1.0,   0, 0, 1.0,   1.0, 0, 1.0, 
 			1.0, 0, 0,   1.0, 1.0, 0,   0, 1.0, 0,   0, 0, 0 ] 
 			); 
 	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	gl.bufferData(gl.ARRAY_BUFFER, cubeVector, gl.STATIC_DRAW);
 	gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
 	// reset sliders
