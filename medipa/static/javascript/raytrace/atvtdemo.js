@@ -45,6 +45,10 @@ var hiqdisplay = null;
 var opacity = 4.0;
 var brightness = 5.0;
 
+var slice_x = 0.0;
+var slice_y = 0.0;
+var slice_z = 0.0;
+
 var rotationMatrix = null;
 var distance = 7.0;
 
@@ -81,6 +85,10 @@ var transferFunctionLastIndexBlue = -1;
 var transferFunctionLastIndexAlpha = -1;
 
 
+var v = new Float32Array(
+		[ 1.0, 1.0, 1.0,   0, 1.0, 1.0,   0, 0, 1.0,   1.0, 0, 1.0,
+		1.0, 0, 0,   1.0, 1.0, 0,   0, 1.0, 0,   0, 0, 0 ] 
+		); 
 
 $(document).ready(function(){
     MW.initControls();
@@ -134,6 +142,44 @@ MW.initControls = function(){
         });
     }
 
+    var slice_x_slider = $("#slice_x_slider");
+    if (slice_x_slider.length > 0) {
+        slice_x_slider.slider({
+			range: true,
+            min: 0,
+            max: 100,
+            values: [0, 100],
+            slide: function(event, ui){
+               execSliceX(ui.values[0]/100, ui.values[1]/100);
+            }
+        });
+    }
+
+    var slice_y_slider = $("#slice_y_slider");
+    if (slice_y_slider.length > 0) {
+        slice_y_slider.slider({
+			range: true,
+            min: 0,
+            max: 100,
+            values: [0, 100],
+            slide: function(event, ui){
+               execSliceY(ui.values[0]/100, ui.values[1]/100);
+            }
+        });
+    }
+
+    var slice_z_slider = $("#slice_z_slider");
+    if (slice_z_slider.length > 0) {
+        slice_z_slider.slider({
+			range: true,
+            min: 0,
+            max: 100,
+            values: [0, 100],
+            slide: function(event, ui){
+               execSliceZ(ui.values[0]/100, ui.values[1]/100);
+            }
+        });
+    }
 
     $("#auto_checkbox").change(function(){
        if($(this).attr("checked")){
@@ -652,14 +698,79 @@ function loadHead(num)
 
 }
 
+/*
 function execSlice() {
 	var v = new Float32Array(
-			[ 1.0, 1.0, 0.6,   0, 1.0, 0.6,   0, 0, 0.6,   1.0, 0, 0.6,
+			[ 1.0, 1.0, 1.0,   0, 1.0, 1.0,   0, 0, 1.0,   1.0, 0, 1.0,
 			1.0, 0, 0,   1.0, 1.0, 0,   0, 1.0, 0,   0, 0, 0 ] 
 			); 
 	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
 	gl.bindBuffer(gl.ARRAY_BUFFER, null);
+}
+*/
+
+function execSliceX(val1, val2) {
+	v[7] = val1;
+	v[10] = val1;
+	v[13] = val1;
+	v[22] = val1;
+
+	v[1] = val2;
+	v[4] = val2;
+	v[16] = val2;
+	v[19] = val2;
+	console.log(v);
+	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	gl.bindBuffer(gl.ARRAY_BUFFER, null);
+}
+
+function execSliceY(val1, val2) {
+	v[14] = val1;
+	v[17] = val1;
+	v[20] = val1;
+	v[23] = val1;
+
+	v[2] = val2;
+	v[5] = val2;
+	v[8] = val2;
+	v[11] = val2;
+	console.log(v);
+	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	gl.bindBuffer(gl.ARRAY_BUFFER, null);
+}
+
+function execSliceZ(val1, val2) {
+	v[3] = val1;
+	v[6] = val1;
+	v[18] = val1;
+	v[21] = val1;
+
+	v[0] = val2;
+	v[9] = val2;
+	v[12] = val2;
+	v[15] = val2;
+	console.log(v);
+	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	gl.bindBuffer(gl.ARRAY_BUFFER, null);
+}
+
+function resetSlice() {
+	v = new Float32Array(
+			[ 1.0, 1.0, 1.0,   0, 1.0, 1.0,   0, 0, 1.0,   1.0, 0, 1.0, 
+			1.0, 0, 0,   1.0, 1.0, 0,   0, 1.0, 0,   0, 0, 0 ] 
+			); 
+	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+	// reset sliders
+	$("#slice_x_slider").slider('option', 'values', [0, 100]);
+	$("#slice_y_slider").slider('option', 'values', [0, 100]);
+	$("#slice_z_slider").slider('option', 'values', [0, 100]);
 }
 
 function setOpacity(op){
