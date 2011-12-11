@@ -564,7 +564,7 @@ Framerate.prototype.updateFramerate = function()
     var framerate = tot / this.framerates.length;
     framerate = Math.round(framerate);
 
-    $("#fps").text("Framerate:"+framerate+" fps");
+    $("#fps").text(framerate+" fps");
     MW.current_framerate  = framerate;
 
 }

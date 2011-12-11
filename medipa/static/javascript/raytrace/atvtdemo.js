@@ -145,6 +145,7 @@ MW.initControls = function(){
     var slice_x_slider = $("#slice_x_slider");
     if (slice_x_slider.length > 0) {
         slice_x_slider.slider({
+            orientation: "vertical",
 			range: true,
             min: 0,
             max: 100,
@@ -158,6 +159,7 @@ MW.initControls = function(){
     var slice_y_slider = $("#slice_y_slider");
     if (slice_y_slider.length > 0) {
         slice_y_slider.slider({
+            orientation: "vertical",
 			range: true,
             min: 0,
             max: 100,
@@ -171,6 +173,7 @@ MW.initControls = function(){
     var slice_z_slider = $("#slice_z_slider");
     if (slice_z_slider.length > 0) {
         slice_z_slider.slider({
+            orientation: "vertical",
 			range: true,
             min: 0,
             max: 100,
