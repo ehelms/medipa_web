@@ -165,6 +165,14 @@ def save_configuration(image_id, configuration, name):
         save_manifest(image_id, manifest)
         return True, ""
 
+def delete_configuration(image_id, config_id):
+    manifest = load_manifest(image_id)
+    
+    manifest['configurations'].pop(config_id)
+    save_manifest(image_id, manifest)
+
+    return True
+
 def get_histogram_data(image_id):
     manifest = load_manifest(image_id)
     return manifest['histogram_data']

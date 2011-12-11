@@ -112,7 +112,7 @@ def render(image_id):
                             size=size,
                             configurations=configurations)
 
-@app.route('/image/<image_id>/configuration/<config_id>/', methods=['GET', 'POST'])
+@app.route('/image/<image_id>/configuration/<config_id>/', methods=['GET', 'POST', 'DELETE'])
 def configuration(image_id, config_id):
     if request.method == 'GET':
         to_return = image_handler.get_configuration(image_id, config_id)
@@ -122,7 +122,12 @@ def configuration(image_id, config_id):
             to_return = { "saved" : True }
         else:
             to_return = { "saved" : False }
-
+    elif request.method == 'DELETE':
+        if image_handler.delete_configuration(image_id, config_id):
+            to_return = { "deleted" : True, "config_id" : config_id }
+        else:
+            to_return = { "deleted" : False, 'message' : 'Delete of ' + config_id + ' failed.' }
+            
     response = make_response()
     response.data = json.dumps(to_return)
     response.mimetype = 'application/json'

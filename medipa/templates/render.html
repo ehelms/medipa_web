@@ -172,13 +172,15 @@
           <tr>
             <th>Configuration</th>
             <th>Select Configuration</th>
+            <th>Delete Configuration</th>
           </tr>
         </thead>
         <tbody id="configuration_table">
           {% for name, configuration in configurations.iteritems() %}
-          <tr>
+          <tr id="config_{{ name }}">
             <td>{{ name }}</td>
-            <td><button class="config_link btn" data-url="/image/{{ image_name }}/configuration/{{ name }}/" >Load Configuration</a></td>
+            <td><button class="config_link btn success" data-url="/image/{{ image_name }}/configuration/{{ name }}/">Load</a></td>
+            <td><button class="config_delete_link btn danger" data-url="/image/{{ image_name }}/configuration/{{ name }}/">Delete</a></td>
           </tr>
           {% endfor %}
         </tbody>

@@ -51,22 +51,45 @@ MW.configuration = (function(){
                 MW.hash_change();
             });
         },
+        delete_config = function(url){
+
+            $.ajax({
+                url     : url,
+                type  : 'delete'
+            }).success(function(data){
+                var image_id = $('#image_name').data('id');
+
+                close_alerts();
+
+                if( data['deleted'] === true ){
+                    $('#config_' + data['config_id']).remove();
+                } else {
+                    $('#configuration_alert_error_message').html(data.message);
+                    $('#configuration_alert_error').show();
+                }
+            });
+            
+        },
         close_alerts = function(){
             $('#configuration_alert_error').hide();
             $('#configuration_alert_success').hide();
         },
         config_row = function(name, image_name){
-            var html = '<tr><td>' + name + '</td>' +
+            var html = '<tr id="config_' + name  + '"><td>' + name + '</td>' +
                     '<td><button class="config_link btn" data-url="/image/' + 
                     image_name + '/configuration/' + name + 
-                    '/" >Load Configuration</a></td></tr>';
+                    '/" >Load Configuration</a></td>' + 
+                    '<td><button class="config_delete_link btn danger" data-url="/image/' + 
+                    image_name + '/configuration/' + 
+                    name + '/">Delete</a></td></tr>';
 
             return html;
         };
 
     return {
         save    : save,
-        load    : load
+        load    : load,
+        delete_config : delete_config
     }
 })(jQuery);
 
@@ -79,5 +102,9 @@ MW.init_configuration = function(){
     $('.config_link').live('click', function(){
         MW.configuration.load($(this).data('url'));
         MW.hash_change();
+    });
+    
+    $('.config_delete_link').live('click', function(){
+        MW.configuration.delete_config($(this).data('url'));
     });
 };
