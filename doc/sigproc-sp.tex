@@ -112,12 +112,10 @@ For interactivity, splatting provided a way to perform volume rendering in paral
 \section{Concept}
 \subsection{Rendering algorithm}
 
-Volume rendering displays a 3D scalar field to a 3D image. The two traditional ways are slice-based rendering and volume ray tracing. Our algorith follows volume ray tracing that shoots rays through the volume and samples the along the path by equal intervals. As the rays are sampled through the volume, the scalar density values are integrated based on the opacity and RGB values from the transfer function. By the use of transfer function, it shows the corresponding emission and absorption of light for the sample point. The advantages of ray tracing are optimization from empty space skipping, independence of the projection view, and easiness of development.
-We refered to an interactive volume renderer using HTML5. The rendering algorithm bases on ray tracing and applies RGB and alpha input values 
+Volume rendering displays a 3D scalar field to a 3D image. The two traditional ways are slice-based rendering and volume ray tracing. Our algorith follows volume ray tracing that shoots rays through the volume and samples along the path by equal intervals. As the rays are sampled through the volume, the scalar density values are integrated based on the opacity and RGB values from the transfer function. By the use of transfer function, it shows the corresponding emission and absorption of light for the sample point. The advantages of ray tracing are optimization from empty space skipping, independence of the projection view, and easiness of development.
+We refered to an interactive volume renderer using HTML5. The rendering algorithm bases on ray tracing and applies RGB and alpha input values from the transfer function to the texture images. A transfer function assigns RGBA values to each voxel in the volume. Its main purpose is to observe a specific part of the volume. We allowed visual controls of the transfer function to manipulate the RGB and alpha values. 
 
-from the transfer function to the texture images. A transfer function assigns RGBA values to each voxel in the volume. Its main purpose is to observe a specific part of the volume. We allowed visual controls of the transfer function to manipulate the RGB and alpha values. 
-
-The algorithm uses shaders to render the model and allows the number of samples of steps throughout the ray. The general approach of ray tracing on a volume is to apply bounding box or a cube to the volume since it is faster to render it with knowing a start and stop points for the rays. In order to provide faster performace, the algorithm renders the position of front and back facing triangles to the textures. The position of the triangles mapped to the texture coordinates easily gives the starting and finishing points of the ray. For each ray, since we know the starting position and the direction of the ray from the front and back textures, we accumulate the pixel color by compositing the collected samples in front-to-back direction. The process is applied to the shader as below.
+The algorithm uses shaders to render the model and allows the number of samples of steps throughout the ray. The general approach of ray tracing on a volume is to apply bounding box or a cube to the volume since it is faster to render it with knowing a start and stop points for the rays. In order to provide faster performace, the algorithm renders the position of front and back facing triangles to the textures. The position of the triangles mapped to the texture coordinates from the front and back face triangles easily gives the starting and finishing points of the ray. Then, starting from the start point of each ray, we accumulate the color and opacity by compositing the collected samples in front-to-back direction. The process is applied to the shader as below.
 
 \begin{verbatim}
 vec3 raystart = v_PosLocal;
@@ -134,7 +132,7 @@ vec4 colorsample;
 for (float i = 0.0; i < steps; i += 1.0)
 {
 if (lengthsum >= len || colorsum.a >= 1.0) break;
-colorsample = tex3D(raypos); //texture3D(volume_tex, raypos);
+colorsample = tex3D(raypos);
 colorsample.a *= stepsize * opacity;
 colorsum.rgb += colorsample.rgb * colorsample.a * (1.0 - colorsum.a);
 colorsum.a += colorsample.a * (1.0 - colorsum.a);
