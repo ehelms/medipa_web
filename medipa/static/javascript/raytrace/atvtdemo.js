@@ -713,6 +713,45 @@ function execSlice() {
 }
 */
 
+function saveCubeVector() {
+    gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, cubeVector, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    $.bbq.pushState({cut:JSON.stringify(cubeVector)});
+}
+
+
+function cubeVectorToArray(){
+    var to_ret = [];
+    $.each(cubeVector, function(index, item){
+       to_ret[index] = item;
+    });
+    return to_ret;
+}
+
+function resetCut(vector){
+
+
+    $.each(vector, function(index, item){
+       cubeVector[index] = item;
+    });
+
+
+    var x_min = parseInt(vector[7]*100);
+    var x_max = parseInt(vector[1]*100);
+    var y_min = parseInt(vector[14]*100);
+    var y_max = parseInt(vector[2]*100);
+    var z_min = parseInt(vector[3]*100);
+    var z_max = parseInt(vector[0]*100);
+
+
+    $("#slice_x_slider").slider('option', 'values', [x_min, x_max]);
+    $("#slice_y_slider").slider('option', 'values', [y_min, y_max]);
+    $("#slice_z_slider").slider('option', 'values', [z_min, z_max]);
+
+    saveCubeVector(0);
+}
+
 function execSliceX(val1, val2) {
 	cubeVector[7] = val1;
 	cubeVector[10] = val1;
@@ -723,9 +762,8 @@ function execSliceX(val1, val2) {
 	cubeVector[4] = val2;
 	cubeVector[16] = val2;
 	cubeVector[19] = val2;
-	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, cubeVector, gl.STATIC_DRAW);
-	gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+	saveCubeVector();
 }
 
 function execSliceY(val1, val2) {
@@ -738,9 +776,8 @@ function execSliceY(val1, val2) {
 	cubeVector[5] = val2;
 	cubeVector[8] = val2;
 	cubeVector[11] = val2;
-	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, cubeVector, gl.STATIC_DRAW);
-	gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+	saveCubeVector();
 }
 
 function execSliceZ(val1, val2) {
@@ -753,9 +790,8 @@ function execSliceZ(val1, val2) {
 	cubeVector[9] = val2;
 	cubeVector[12] = val2;
 	cubeVector[15] = val2;
-	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, cubeVector, gl.STATIC_DRAW);
-	gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+	saveCubeVector();
 }
 
 function resetSlice() {
@@ -763,10 +799,8 @@ function resetSlice() {
 			[ 1.0, 1.0, 1.0,   0, 1.0, 1.0,   0, 0, 1.0,   1.0, 0, 1.0, 
 			1.0, 0, 0,   1.0, 1.0, 0,   0, 1.0, 0,   0, 0, 0 ] 
 			); 
-	gl.bindBuffer(gl.ARRAY_BUFFER, volumeTexture.cube.vertexPositionBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, cubeVector, gl.STATIC_DRAW);
-	gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
+    saveCubeVector();
 	// reset sliders
 	$("#slice_x_slider").slider('option', 'values', [0, 100]);
 	$("#slice_y_slider").slider('option', 'values', [0, 100]);

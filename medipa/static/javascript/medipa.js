@@ -49,6 +49,9 @@ MW.hash_change = function(){
     $("#opacity-slider").slider("value", state.opacity);
     $("#bright-slider").slider("value", state.brightness);
 
+
+    resetCut($.parseJSON(state.cut));
+
     MW.highlight_list.load_list($.parseJSON(state.highlight) || []);
     MW.loadRotation();    
     
