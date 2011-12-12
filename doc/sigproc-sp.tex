@@ -98,13 +98,17 @@ Eric D. Helms\\
 \terms{WebGL, Medical}
 
 \section{Introduction}
+The current state of the art for viewing medical image scans involves using a desktop application that is typically built on top of a proprietary software stack.  This means having the software installed on every computer a medical health practitioner wishes to view the scans on as well as ensuring that computer runs the required operating system and has the required packages installed.
 
+As web browser technology has evolved, access to the underlying GPU and APIs that follow the GL standard have been added for doing complex 2D and 3D rendering.  This allows for the creation of complex applications that used to require a full desktop application.  The web provides a platform that is cross-operating system and allows users to use their favorite browser for interaction.  Further, by serving the content up from a central location, users can go anywhere in the world and still have access to viewing the scans.  This opens up a world where scans can be viewed by a variety of people and crowd-sourcing of ideas can be shared.
 
 \section{3D Web Visualizations}
 
 \section{Related Works}
 The technique of volume rendering gained a lot of interest especially to investigate medical data. The process of volume rendering has several stages to produce the result image ~\cite{drebin:1988}. First, the input volume data set is converted to a set of material percentage volumes. Each element in the volume is called a voxel (volume element) which the value represents the percentage of the material in a region of space. After classifying the dataset, a linear ramp called a transfer function assigns the opacity and color values to every voxel in the volume. It allows viewing a certain part of the volume by selecting a certain range of opacity and color. Next, the volume is projected to the image plane by compositing the opacity and colors of the voxels. 
+
 Previous researches attempted multiple methods to visualize volumes. Marching cubes ~\cite{lorensen:1987} provided an algorithm that creates polygonal representation of iso-surfaces from a three dimensional array of data. It uses a table of possible edge intersections of a cube which describes how a surface cuts the surface. For realism, it calculates the normalized gradient from the original data which helps to create the desired surface model. However, the drawback of the algorithm is the speed regarding to the great number of triangles and overhead by rotation. The amount of memory needed for the surface result is another problem. Also, there is a ‘hole problem’ when at least one cube face has an intersection point in each of its four edges.
+
 Levoy~\cite{levoy:1990} introduced an efficient way to use ray-tracing for volume rendering. It improves its performance by employing binary volumes of coherent regions and adaptively terminating ray-tracing at the user-selected opacity threshold. However, the method is not interactive.
 For interactivity, splatting provided a way to perform volume rendering in parallel. It is a technique that splats every voxel to the viewing surface in back-to-front order as if throwing a snow ball to a wall ~\cite{westover:1991}. This method runs in parallel, thus reduces the rendering time, but produces respectively lower image qualities. 
 
@@ -113,7 +117,8 @@ For interactivity, splatting provided a way to perform volume rendering in paral
 \subsection{Rendering algorithm}
 
 Volume rendering displays a 3D scalar field to a 3D image. The two traditional ways are slice-based rendering and volume ray tracing. Our algorith follows volume ray tracing that shoots rays through the volume and samples along the path by equal intervals. As the rays are sampled through the volume, the scalar density values are integrated based on the opacity and RGB values from the transfer function. By the use of transfer function, it shows the corresponding emission and absorption of light for the sample point. The advantages of ray tracing are optimization from empty space skipping, independence of the projection view, and easiness of development.
-We refered to an interactive volume renderer using HTML5. The rendering algorithm bases on ray tracing and applies RGB and alpha input values from the transfer function to the texture images. A transfer function assigns RGBA values to each voxel in the volume. Its main purpose is to observe a specific part of the volume. We allowed visual controls of the transfer function to manipulate the RGB and alpha values. 
+
+We referred to an interactive volume renderer using HTML5. The rendering algorithm bases on ray tracing and applies RGB and alpha input values from the transfer function to the texture images. A transfer function assigns RGBA values to each voxel in the volume. Its main purpose is to observe a specific part of the volume. We allowed visual controls of the transfer function to manipulate the RGB and alpha values. 
 
 The general approach of ray tracing on a volume is to apply bounding box or a cube to the volume since it is faster to render it with knowing a start and stop points for the rays. In order to provide faster performace, the algorithm renders the position of front and back facing triangles to the textures. The position of the triangles mapped to the texture coordinates from the front and back face triangles easily gives the starting and finishing points of the ray. Then, starting from the start point of each ray, we accumulate the color and opacity by compositing the collected samples in front-to-back direction. The process is applied to the shader as below.
 
@@ -143,20 +148,30 @@ gl_FragColor = mix(colorsum, vec4(colorsum.rgb * clamp(colorsum.a, 0.0, 1.0) * b
 \end{verbatim}
 
 \section{Medipa}
-The Medipa system was designed in order to allow users to upload medical image scans in their native formats.
+The Medipa system was designed in order to allow users to upload medical image scans in their native formats, have them processed by an asynchronous task queue and an interactive rendering page for viewing the image scans as volume data.  Further, the rendering interaction provides users with tools to examine, modify and save user defined configurations of the rendered data.
 
 \subsection{Architecture}
 The underlying system was designed as a web-based Model-View-Controller (MVC) pattern with a data processing layer server side and all rendering happening within the user's browser.  The architecture can be seen in Figure.
 
+\subsubsection{Server Side}
+	The server uses the Python micro web-framework Flask to create a set of urls and handling code for each to act as the controller layer.  Using the Jinja2 templating language, a series of templated HTML files that act as the views are associated with each controller action.  The model layer is handled by an image processing library that stores files to disk and uses a JSON formatted manifest file to store relevant data and references to files stored on disk.  Any call to retrieve or store data is processed through this library.
+
+\subsubsection{Client Side}
+
 \subsection{Data Processing}
 Most medical image scans come in a binary format that can not be directly ported to WebGL for rendering.  Given this limitation, a small data processing library was created taking advantage of SimpleITK.  SimpleITK is a library that can turn binary format medical scans into data representations that can be worked on within native code.  The layer would take in the binary medical scan format, process with SimpleITK and then turn the outputted pixel data array into a series of PNG's that represented each layer of the scan.  The subsequent PNG is saved down to the file system along with a JSON based file that contains metadata about the image.  This metadata included filenames, dimensions, configuration information and pixel histogram information.
-        Given that some systems may be limited in their graphical processing power, down sampling of the image resolution was added to the data processing layer.  Whenever an image is processed by the server, the data points are reduced 3 times and for each reduction a PNG is saved off and entry made into the manifest file.  The reductions occur by selecting an octet of the pixels and finding an average location and value.  This produces images that are 1/8, 1/64 and 1/512 the size and dimensions of the original image scan.
-        Down sampling the image provides two direct benefits.
+
+Given that some systems may be limited in their graphical processing power, down sampling of the image resolution was added to the data processing layer.  Whenever an image is processed by the server, the data points are reduced 3 times and for each reduction a PNG is saved off and entry made into the manifest file.  The reductions occur by selecting an octet of the pixels and finding an average location and value.  This produces images that are 1/8, 1/64 and 1/512 the size and dimensions of the original image scan.
+
+Down sampling the image provides two direct benefits that are related to the reliance on the client to handle rendering of the data.  The first benefit comes from being able to reduce the size of the image bundle being sent across the wire.  Low resolution images translate to small file sizes.  This in turn means that when the user first accesses the render page a small image can be sent quickly across for the user to start viewing and interacting automatically.  As time progresses, the system can fetch higher resolution images and swap them in behind the scenes for the user to allow continued interaction without interruption.  
+
+The second benefit comes from the variability in client computer graphics processing power.  Attempting to render high resolution images on an under powered machine can not only place the application into an unusable state but also render the entire client machine unusable by the user as the CPU and GPU attempt to handle the large resolution.  Thus, having lower resolution images helps to allow users with under powered machines to still interact with the system.  Further, the client code monitors the frames-per-second (FPS) as each data resolution is brought in and will halt the quality increases if the code determines that the system would enter an unusable state.
 
 
 \subsection{Web Visualization}
 
 \section{Conclusions}
+The Medipa system aims to provide an interactive visualization of 3D volume rendering of medical image scans using a browser based solution with WebGL.
 
 %
 % The following two commands are all you need in the
