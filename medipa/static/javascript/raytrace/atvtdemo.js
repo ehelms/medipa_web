@@ -779,10 +779,10 @@ function setOpacity(op){
 }
 
 function setBrightness(bright){
-    $.bbq.pushState({brightness:brightness});
     if (brightness !== bright){
         brightness = bright;
-        setVolumeTextureBrightness(gl, volumeTexture, bright);
+        $.bbq.pushState({brightness:brightness});
+        setVolumeTextureBrightness(gl, volumeTexture, brightness);
     }
 }
 
@@ -790,19 +790,19 @@ function setSize(size){
     if (size !== distance){
         distance = size
         resize(gl, size)
+        $.bbq.pushState({size:size});
+
     }
 }
 
 function decreaseSize(){
     var size = Math.min(16.0, distance + 1.0);
     setSize(size)
-	$.bbq.pushState({size:size});
 }
 
 function increaseSize(){   
     var size =  Math.max(3.0, distance - 1.0);
     setSize(size);
-	$.bbq.pushState({size:size});
 }
 
 function toggleLinearFiltering()

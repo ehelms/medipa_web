@@ -5,6 +5,7 @@ MW.defaults = {
   opacity:opacity,
   brightness: brightness,
   highlight: "[]",
+  size: distance,
   cut : JSON.stringify({x_min: 0, x_max: 1, y_min:0, y_max:1, z_min:0, z_max:1})
 
 };
