@@ -153,15 +153,15 @@ def get_configurations(image_id):
 
 def get_configuration(image_id, config_id):
     manifest = load_manifest(image_id)
-    return manifest['configurations'][config_id]
+    return manifest['configurations'][config_id]["config"]
 
-def save_configuration(image_id, configuration, name):
+def save_configuration(image_id, configuration, name, comment):
     manifest = load_manifest(image_id)
 
     if name in manifest['configurations']:
         return False, "Configuration with that name already exists"
     else:
-        manifest['configurations'][name] = configuration
+        manifest['configurations'][name] = {"config": configuration, "comment":comment}
         save_manifest(image_id, manifest)
         return True, ""
 

@@ -162,23 +162,29 @@
           </p>
         </div>
         <span class="clearfix">
-          <label>Name: </label>
+          Name: 
           <input type='text' name='configuration_name' id='configuration_name' class="xlarge">
         </span>
-        <button id="save_configuration" class="btn primary" data-url="/image/{{ image_name }}/configuration/">Save Current Configuration</button>
+        <span class="clearfix">        
+          Comment: 
+          <textarea name='configuration_comment' id='configuration_comment'  cols="20" rows="2"></textarea>
+         </span>
+         <button id="save_configuration" class="btn primary" data-url="/image/{{ image_name }}/configuration/">Save Current Configuration</button>
       </div>
       <table class="zebra-striped">
         <thead>
           <tr>
             <th>Configuration</th>
+            <th>Comment</th>
             <th>Select Configuration</th>
             <th>Delete Configuration</th>
           </tr>
         </thead>
         <tbody id="configuration_table">
-          {% for name, configuration in configurations.iteritems() %}
+          {% for name, data in configurations.iteritems() %}
           <tr id="config_{{ name }}">
             <td>{{ name }}</td>
+            <td> {{ data["comment"] }}</td>
             <td><button class="config_link btn success" data-url="/image/{{ image_name }}/configuration/{{ name }}/">Load</a></td>
             <td><button class="config_delete_link btn danger" data-url="/image/{{ image_name }}/configuration/{{ name }}/">Delete</a></td>
           </tr>

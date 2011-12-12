@@ -12,7 +12,8 @@ MW.defaults = {
 MW.configuration = (function(){
     var save = function(url){
             var to_send = {},
-                name = $('#configuration_name').val();
+                name = $('#configuration_name').val(),
+                comment = $('#configuration_comment').val();
 
 
 
@@ -29,13 +30,16 @@ MW.configuration = (function(){
 
             to_send['config'] = $.param.fragment();
             to_send['name'] = name;
+            to_send['comment'] = comment;
 
             $.post(url, to_send).success(function(data){
                 var image_id = $('#image_name').data('id');
 
                 if( data['saved'] === true ){
                     $('#configuration_alert_success').show();
-                    $('#configuration_table').prepend(config_row(name, image_id));
+                    $('#configuration_table').prepend(config_row(name, comment, image_id));
+                    $('#configuration_name').val("");
+                    $('#configuration_comment').val("");                                        
                 } else {
                     $('#configuration_alert_error_message').html(data.message);
                     $('#configuration_alert_error').show();
@@ -74,8 +78,9 @@ MW.configuration = (function(){
             $('#configuration_alert_error').hide();
             $('#configuration_alert_success').hide();
         },
-        config_row = function(name, image_name){
+        config_row = function(name, comment, image_name){
             var html = '<tr id="config_' + name  + '"><td>' + name + '</td>' +
+                    '<td>' + comment + '</td>' +
                     '<td><button class="config_link btn" data-url="/image/' + 
                     image_name + '/configuration/' + name + 
                     '/" >Load Configuration</a></td>' + 

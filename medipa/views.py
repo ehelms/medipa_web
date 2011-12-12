@@ -118,7 +118,8 @@ def configuration(image_id, config_id):
         to_return = image_handler.get_configuration(image_id, config_id)
     elif request.method == 'POST':
         configuration = request.args.get('config')
-        if image_handler.save_configuration(image_id, configuration):
+        comment = request.args.gt("comment")
+        if image_handler.save_configuration(image_id, configuration, comment):
             to_return = { "saved" : True }
         else:
             to_return = { "saved" : False }
@@ -138,8 +139,10 @@ def configuration(image_id, config_id):
 def new_configuration(image_id):
     config = request.form['config']
     name = request.form['name']
+    comment = request.form['comment']
+
     
-    saved, message = image_handler.save_configuration(image_id, config, name)
+    saved, message = image_handler.save_configuration(image_id, config, name, comment)
 
     if saved:
         to_return = { "saved" : True }
