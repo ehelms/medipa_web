@@ -84,7 +84,7 @@ MW.configuration = (function(){
                     '<td>' + comment + '</td>' +
                     '<td><button class="config_link btn success" data-url="/image/' + 
                     image_name + '/configuration/' + name + 
-                    '/" >Load Configuration</a></td>' + 
+                    '/" >Load</a></td>' + 
                     '<td><button class="config_delete_link btn danger" data-url="/image/' + 
                     image_name + '/configuration/' + 
                     name + '/">Delete</a></td></tr>';
