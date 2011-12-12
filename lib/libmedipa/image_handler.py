@@ -60,6 +60,7 @@ def process_file(filename):
 
     manifest = reduce(filename, manifest, 3, image)
 
+    print("Writing manifest to disk...")
     save_manifest(filename, manifest)
     
     return True
@@ -73,8 +74,12 @@ def reduce(filename, manifest, times, image):
     histogram_data = generate_histogram_data(image_array)
     print("Writing to manifest...")
     manifest = write(complete_filename, manifest, "complete", image_array, image.size, rows, cols, histogram_data)
+    print("Writing manifest to disk...")
+    save_manifest(filename, manifest)
 
     for i in  range(times):
+        manifest = {}
+        manifest = load_manifest(filename.split('.mha')[0])
         name = "x%s" % ( int(math.pow(8, i+1)) )
         out_filename = ''.join([UPLOAD_FOLDER, filename.split('.mha')[0], "_",  name, '.png'])
         print("Processing: " + out_filename)
@@ -85,6 +90,8 @@ def reduce(filename, manifest, times, image):
         print("Writing to manifest...")
         manifest = write(out_filename, manifest, name, image_array, image.size, rows, cols, histogram_data)
         print("Finished: " + out_filename)
+        print("Writing manifest to disk...")
+        save_manifest(filename, manifest)
 
     return manifest     
 
