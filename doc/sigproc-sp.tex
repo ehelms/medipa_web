@@ -104,6 +104,11 @@ As web browser technology has evolved, access to the underlying GPU and APIs tha
 
 The rest of the paper is organized as follows: Section 2 provides a look at related works in the area of volume rendering, Section 3 talks about the concept, Section 4 covers details of the implementation, Section 5 discusses limitations and Section 6 finishes with conclusions and possible future work directions.
 
+\begin{figure*}[htb]
+\includegraphics[scale=0.5]{head.png}
+\label{Medipa System Architecture}
+\end{figure*}
+
 \section{Related Works}
 The technique of volume rendering gained a lot of interest especially to investigate medical data. The process of volume rendering has several stages to produce the result image ~\cite{drebin:1988}. First, the input volume data set is converted to a set of material percentage volumes. Each element in the volume is called a voxel (volume element) which the value represents the percentage of the material in a region of space. After classifying the dataset, a linear ramp called a transfer function assigns the opacity and color values to every voxel in the volume. It allows viewing a certain part of the volume by selecting a certain range of opacity and color. Next, the volume is projected to the image plane by compositing the opacity and colors of the voxels. 
 
@@ -142,24 +147,31 @@ for (float i = 0.0; i < steps; i += 1.0) \{ \\
 gl_FragColor = mix(colorsum, vec4(colorsum.rgb * clamp(colorsum.a, 0.0, 1.0) * \\ brightness, 1.0), finalstep); $\\
 \end{figure*}
 
-Volume rendering displays a 3D scalar field to a 3D image. The two traditional ways are slice-based rendering and volume ray tracing. Our algorith follows volume ray tracing that shoots rays through the volume and samples along the path by equal intervals. As the rays are sampled through the volume, the scalar density values are integrated based on the opacity and RGB values from the transfer function. By the use of transfer function, it shows the corresponding emission and absorption of light for the sample point. The advantages of ray tracing are optimization from empty space skipping, independence of the projection view, and easiness of development.
+Volume rendering displays a 3D scalar field to a 3D image. The two traditional ways are slice-based rendering and volume ray tracing. Our algorithm follows volume ray tracing that shoots rays through the volume and samples along the path by equal intervals. As the rays are sampled through the volume, the scalar density values are integrated based on the opacity and RGB values from the transfer function. By the use of transfer function, it shows the corresponding emission and absorption of light for the sample point. The advantages of ray tracing are optimization from empty space skipping, independence of the projection view, and easiness of development.
 
 We referred to an interactive volume renderer using HTML5. The rendering algorithm bases on ray tracing and applies RGB and alpha input values from the transfer function to the texture images. A transfer function assigns RGBA values to each voxel in the volume. Its main purpose is to observe a specific part of the volume. We allowed visual controls of the transfer function to manipulate the RGB and alpha values. 
 
 The general approach of ray tracing on a volume is to apply bounding box or a cube to the volume since it is faster to render it with knowing a start and stop points for the rays. In order to provide faster performance, the algorithm renders the position of front and back facing triangles to the textures. The position of the triangles mapped to the texture coordinates from the front and back face triangles easily gives the starting and finishing points of the ray. Then, starting from the start point of each ray, we accumulate the color and opacity by compositing the collected samples in front-to-back direction. The process is applied to the shader as below.
 
+\begin{figure*}[htb]
+\includegraphics[scale=0.5]{clean_interface.png}
+\label{Medipa System Architecture}
+\end{figure*}
+
 \section{Medipa}
 The Medipa system was designed in order to allow users to upload or post URLs to medical image scans in their native formats, have them processed by an asynchronous task queue and provide an interactive rendering page for viewing the image scans as volume data.  Further, the rendering interaction provides users with tools to examine, modify and save user defined configurations of the rendered data.
 
 \subsection{Architecture}
-The underlying system was designed as a web-based Model-View-Controller (MVC) pattern with a data processing layer server side, asynchronous task queue and all rendering happening within the user's browser.  The architecture can be seen in Figure.
+The underlying system was designed as a web-based Model-View-Controller (MVC) pattern with a data processing layer server side, asynchronous task queue and all rendering happening within the user's browser.  The architecture can be seen in Figure 2.
 
 \begin{figure*}[htb]
 \includegraphics[scale=0.5]{architecture.png}
+\label{Medipa System Architecture}
 \end{figure*}
 
-\subsubsection{Server Side}
-	The server uses the Python micro web-framework Flask to create a set of urls and handling code for each to act as the controller layer.  Using the Jinja2 templating language, a series of templated HTML files that act as the views are associated with each controller action.  The model layer is handled by an image processing library that stores files to disk and uses a JSON formatted manifest file to store relevant data and references to files stored on disk.  Any call to retrieve or store data is processed through this library.
+\subsubsection{Server}
+	The server uses the Python micro web-framework Flask to create a set of urls and associate controllers for each.  Using the Jinja2 templating language, a series of templated HTML files that act as the views are associated with each controller action.  The model layer is handled by an image processing library that stores files to disk and uses a JSON formatted manifest file to store relevant data and references to files stored on disk.  Any call to retrieve or store data is processed through this library.
+	The model layer is represented by a simple NoSQL JSON schema that is stored directly to the file system and processed by the code.
 
 \subsubsection{Client Side}
 
@@ -174,16 +186,26 @@ Down sampling the image provides two direct benefits that are related to the rel
 
 The second benefit comes from the variability in client computer graphics processing power.  Attempting to render high resolution images on an under powered machine can not only place the application into an unusable state but also render the entire client machine unusable by the user as the CPU and GPU attempt to handle the large resolution.  Thus, having lower resolution images helps to allow users with under powered machines to still interact with the system.  Further, the client code monitors the frames-per-second (FPS) as each data resolution is brought in and will halt the quality increases if the code determines that the system would enter an unusable state.
 
-
-\subsection{Web Visualization}
+\begin{figure*}[htb]
+\includegraphics[scale=0.5]{kidneys.png}
+\label{Medipa System Architecture}
+\end{figure*}
 
 \section{Limitations}
 Given that typical medical image scans consist of multiple high resolution slices, processing of the image data is resource intensive task.  While the system takes measures to balance the performance on the users browser, the server side processing still requires a particular level of system performance in order to process images and serve data up in a reasonably performant amount of time.
 
 A limitation of the worked perform thus far is the lack of direct input from medical professionals using the system.  Medical professionals would be the ultimate authority in providing feedback on both the interaction mechanisms as well as the extra visualization information such as pixel histogram designed to enhance the visual.		
 
-\section{Future Work and Conclusions}
+\section{Future Work} 
+The current model layer uses a JSON file saved to and accessed directly to the file system to store properties for each uploaded image.  This method does not provide the most robust solution for persistent data or any benefits of modern database systems.  Future work could include a transition to storing data within a NoSQL database.
+
+The current system allows for users to define and store configurations of visualization properties for a given image file and include a comment related to the configuration.  Future work could include a more social or crowd-sourced annotation set by allowing a comment thread to be attached to each configuration.  Further, users could be allowed to create derivative visual configurations in response to an original in order to display what they find to other users.
+
+\section{Conclusions}
+
 The Medipa system aims to provide an interactive visualization of 3D volume rendering of medical image scans using a browser based solution with WebGL.
+
+
 
 %
 % The following two commands are all you need in the
@@ -202,7 +224,6 @@ The Medipa system aims to provide an interactive visualization of 3D volume rend
 %\balancecolumns
 \appendix
 %Appendix A
-\section{}
 
 % This next section command marks the start of
 % Appendix B, and does not continue the present hierarchy
