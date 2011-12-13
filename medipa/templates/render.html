@@ -73,12 +73,12 @@
             <div id="size-slider" class="slider_small"></div>
         </div>
         <div class="slider_wrapper">
-            Opacity:
-            <div id="opacity-slider"  class="slider"></div>
+            Op:
+            <div id="opacity-slider"  class="slider" title="opacity"></div>
         </div>
         <div class="slider_wrapper">
-            Brightness:
-            <div id="bright-slider" class="slider"></div>
+            Bright:
+            <div id="bright-slider" class="slider"  title="Brightness"></div>
         </div>
         <div id="highlight_list_wrapper">
             Highlight list:
@@ -132,10 +132,10 @@
           </button>
       </div>
     <div id="graphsContainer">
-      <div id="placeholder" data-url="/image/{{ image_name }}/histogram/" style="width:600px;height:300px;"></div>
-      <button id="zoom_histogram" class="btn fl">Zoom to Selection</button>
+      <div id="placeholder" data-url="/image/{{ image_name }}/histogram/" style="width:400px;height:300px;"></div>
+      <button id="zoom_histogram" class="btn fl">Zoom Selection</button>
       <button id="zoom_reset" class="btn default fl">Reset Zoom</button>
-      <button id="highlight_selected" class="btn fl">Save Selected Highlight</button>
+      <button id="highlight_selected" class="btn fl">Save Highlight</button>
     </div>
     <div id="picker">
 
@@ -169,7 +169,7 @@
           Comment: 
           <textarea name='configuration_comment' id='configuration_comment'  cols="20" rows="2"></textarea>
          </span>
-         <button id="save_configuration" class="btn primary" data-url="/image/{{ image_name }}/configuration/">Save Current Configuration</button>
+         <button id="save_configuration" class="btn primary" data-url="/image/{{ image_name }}/configuration/">Save Configuration</button>
       </div>
       <table class="zebra-striped">
         <thead>
