@@ -1,110 +1,151 @@
-% THIS IS SIGPROC-SP.TEX - VERSION 3.1
-% WORKS WITH V3.2SP OF ACM_PROC_ARTICLE-SP.CLS
-% APRIL 2009
-%
-% It is an example file showing how to use the 'acm_proc_article-sp.cls' V3.2SP
-% LaTeX2e document class file for Conference Proceedings submissions.
-% ----------------------------------------------------------------------------------------------------------------
-% This .tex file (and associated .cls V3.2SP) *DOES NOT* produce:
-%       1) The Permission Statement
-%       2) The Conference (location) Info information
-%       3) The Copyright Line with ACM data
-%       4) Page numbering
-% ---------------------------------------------------------------------------------------------------------------
-% It is an example which *does* use the .bib file (from which the .bbl file
-% is produced).
-% REMEMBER HOWEVER: After having produced the .bbl file,
-% and prior to final submission,
-% you need to 'insert'  your .bbl file into your source .tex file so as to provide
-% ONE 'self-contained' source file.
-%
-% Questions regarding SIGS should be sent to
-% Adrienne Griscti ---> griscti@acm.org
-%
-% Questions/suggestions regarding the guidelines, .tex and .cls files, etc. to
-% Gerald Murray ---> murray@hq.acm.org
-%
-% For tracking purposes - this is V3.1SP - APRIL 2009
-\documentclass{acmsiggraph}
+%%% The ``\documentclass'' command has one parameter, based on the kind of
+%%% document you are preparing.
+%%%
+%%% [annual] - Technical paper accepted for presentation at the ACM SIGGRAPH 
+%%%   or SIGGRAPH Asia annual conference.
+%%% [sponsored] - Short or full-length technical paper accepted for 
+%%%   presentation at an event sponsored by ACM SIGGRAPH
+%%%   (but not the annual conference Technical Papers program).
+%%% [abstract] - A one-page abstract of your accepted content
+%%%   (Technical Sketches, Posters, Emerging Technologies, etc.). 
+%%%   Content greater than one page in length should use the "[sponsored]"
+%%%   parameter.
+%%% [preprint] - A preprint version of your final content.
+%%% [review] - A technical paper submitted for review. Includes line
+%%%   numbers and anonymization of author and affiliation information.
 
-\usepackage{url}
+\documentclass[annual]{acmsiggraph}
+
+%%% If you are submitting your paper to one of our annual conferences - the 
+%%% ACM SIGGRAPH conference held in North America, or the SIGGRAPH Asia 
+%%% conference held in Southeast Asia - there are several commands you should 
+%%% consider using in the preparation of your document.
+
+%%% 1. ``\TOGonlineID''
+%%% When you submit your paper for review, please use the ``\TOGonlineID''
+%%% command to include the online ID value assigned to your paper by the
+%%% submission management system. Replace '45678' with the value you were
+%%% assigned.
+
+\TOGonlineid{}
+
+%%% 2. ``\TOGvolume'' and ``\TOGnumber''
+%%% If you are preparing a preprint of your accepted paper, and your paper
+%%% will be published in an issue of the ACM ``Transactions on Graphics''
+%%% journal, replace the ``0'' values in the commands below with the correct
+%%% volume and number values for that issue - you'll get them before your
+%%% final paper is due.
+
+\TOGvolume{0}
+\TOGnumber{0}
+
+%%% 3. ``TOGarticleDOI''
+%%% The ``TOGarticleDOI'' command accepts the DOI information provided to you
+%%% during production, and which makes up the URLs which identifies the ACM
+%%% article page and direct PDF link in the ACM Digital Library.
+%%% Replace ``1111111.2222222'' with the values you are given.
+
+\TOGarticleDOI{1111111.2222222}
+
+%%% 4. ``\TOGprojectURL'', ``\TOGvideoURL'', ``\TOGdataURL'', ``\TOGcodeURL''
+%%% If you would like to include links to personal repositories for auxiliary
+%%% material related your research contribution, you may use one or more of
+%%% these commands to define an appropriate URL. The ``\TOGlinkslist'' command
+%%% found just before the first section of your document will add hyperlinked
+%%% icons to your document, in addition to hyperlinked icons which point to
+%%% the ACM Digital Library article page and the ACM Digital Library-held PDF.
+
+\TOGprojectURL{}
+\TOGvideoURL{}
+\TOGdataURL{}
+\TOGcodeURL{}
+
+%%% Replace ``PAPER TEMPLATE TITLE'' with the title of your paper or abstract.
+
+\title{Medipa: Visualizing Medical Scans in 3D on the Web}
+
+%%% The ``\author{}'' command takes the names and affiliations of each of the
+%%% authors of your paper or abstract. The ``\thanks{}'' command takes the
+%%% contact information for each author.
+%%% For multiple authors, separate each author's information by the ``\and''
+%%% command.
+
+\author{Juhee Bae\thanks{e-mail: jbae3@ncsu.edu}\\ North Carolina State University %
+\and Eric D. Helms\thanks{e-mail: edhelms@ncsu.edu}\\North Carolina State University}
+
+%%% The ``pdfauthor'' command accepts the authors of the work,
+%%% comma-delimited, and adds this information to the PDF metadata.
+
+\pdfauthor{Juhee Bae, Eric D. Helms}
+
+%%% Keywords that describe your work. The ``\keywordlist'' command will print
+%%% them out.
+
+\keywords{Volume Rendering, WebGL, Medical Images}
+
+%%% The ``\begin{document}'' command is the start of the document.
+
+%%% If you have user-defined macros, you may include them here.
+
+% example of a user-defined macro called ``remark.''
+% \newcommand{\remark}[1]{\textcolor{red}{#1}}
 
 \begin{document}
 
-\title{Medipa: Visualizing Medical Scans in 3D on the Web}
-%
-% You need the command \numberofauthors to handle the 'placement
-% and alignment' of the authors beneath the title.
-%
-% For aesthetic reasons, we recommend 'three authors at a time'
-% i.e. three 'name/affiliation blocks' be placed beneath the title.
-%
-% NOTE: You are NOT restricted in how many 'rows' of
-% "name/affiliations" may appear. We just ask that you restrict
-% the number of 'columns' to three.
-%
-% Because of the available 'opening page real-estate'
-% we ask you to refrain from putting more than six authors
-% (two rows with three columns) beneath the article title.
-% More than six makes the first-page appear very cluttered indeed.
-%
-% Use the \alignauthor commands to handle the names
-% and affiliations for an 'aesthetic maximum' of six authors.
-% Add names, affiliations, addresses for
-% the seventh etc. author(s) as the argument for the
-% \additionalauthors command.
-% These 'additional authors' will be output/set for you
-% without further effort on your part as the last section in
-% the body of your article BEFORE References or any Appendices.
+%%% A ``teaser'' image appears under the title and affiliation information,
+%%% horizontally centered, and above the two columns of text. This is OPTIONAL.
+%%% If you choose to have a ``teaser'' image, it needs to be placed between
+%%% ``\begin{document}'' and ``\maketitle.''
 
-\numberofauthors{2} %  in this sample file, there are a *total*
-% of EIGHT authors. SIX appear on the 'first-page' (for formatting
-% reasons) and the remaining two appear in the \additionalauthors section.
-%
-\author{
-% You can go ahead and credit any number of authors here,
-% e.g. one 'row of three' or two rows (consisting of one row of three
-% and a second row of one, two or three).
-%
-% The command \alignauthor (no curly braces needed) should
-% precede each author name, affiliation/snail-mail address and
-% e-mail address. Additionally, tag each line of
-% affiliation/address with \affaddr, and tag the
-% e-mail address with \email.
-%
-% 1st. author
-\alignauthor
-Juhee Bae\\
-       \affaddr{North Carolina State University}\\
-       \email{jbae3@ncsu.edu}
-% 2nd. author
-\alignauthor
-Eric D. Helms\\
-       \affaddr{North Carolina State University}\\
-       \email{edhelms@ncsu.edu}
+%\teaser{
+%   \includegraphics[height=1.5in]{images/sampleteaser}
+%   \caption{Spring Training 2009, Peoria, AZ.}
+%}
+
+%%% The ``\maketitle'' command must appear after ``\begin{document}'' and,
+%%% if you have one, after the definition of your ``teaser'' image, and
+%%% before the first ``\section'' command.
+
+%%% Your paper's abstract goes in its own section.
+
+\teaser{
+	\includegraphics[scale=0.45]{head.png}
+	\caption{\label{fig:head}Brain rendered with Medipa}
 }
-% There's nothing stopping you putting the seventh, eighth, etc.
-% author on the opening page (as the 'third row') but we ask,
-% for aesthetic reasons that you place these 'additional authors'
-% in the \additional authors block, viz.
-\date{12 December 2011}
-% Just remember to make sure that the TOTAL number of authors
-% is the number that will appear on the first page PLUS the
-% number that will appear in the \additionalauthors section.
 
 \maketitle
+
 \begin{abstract}
 We introduce Medipa, an open-source system to display medical images on the web that allows to share investigation from multiple medical representatives. It allows to upload the medical images, save configurations and comments, zoom-in and zoom-out, highlight, and slice the volume. The rendering algorithm is based on volume ray-tracing using shaders implemented in WebGL, javascript, and HTML5.
 \end{abstract}
+%%% ACM Computing Review (CR) categories.
+%%% See <http://www.acm.org/class/1998/> for details.
+%%% The ``\CRcat'' command takes four arguments.
 
-\begin{figure*}[htb]
-\begin{center}
-\includegraphics[scale=0.45]{head.png}
-\caption{\label{fig:head}Brain rendered with Medipa}
-\end{center}
-\end{figure*}
+\begin{CRcatlist}
+  \CRcat{I.3.7}{Computer Graphics}{Three-Dimensional Graphics and Realism}{Radiosity};
+\end{CRcatlist}
 
-\terms{Volume rendering, WebGL, Medical images}
+%%% The ``\keywordlist'' command prints out the keywords.
+
+\keywordlist
+
+%%% The ``\TOGlinkslist'' command will insert hyperlinked icon(s) to your
+%%% paper. This includes, at a minimum, hyperlinked icons to the ACM article
+%%% page and the ACM Digital Library-held PDF. If you added URLs to
+%%% ``\TOGprojectURL'' or the other, similar commands, they will be added to
+%%% the list of icons.
+%%% Note: this functionality only works for annual-conference papers.
+
+\TOGlinkslist
+
+%%% The ``\copyrightspace'' command 
+%%% Do not remove this command.
+
+\copyrightspace
+
+%%% This is the first section of the body of your paper.
+
 \section{Introduction}
 The current state of the art for viewing medical image scans requires using a desktop application.  This means having the software installed on every computer a medical health practitioner wishes to view the scans on as well as ensuring that computer runs the required operating system and has the required packages installed. 
 
@@ -221,28 +262,9 @@ As a result of the resource intensive image processing, if the system was to be 
 The Medipa system aims to provide an interactive visualization of 3D volume rendering of medical image scans using a browser based solution with WebGL.
 
 
+\section*{Acknowledgements}
 
-%
-% The following two commands are all you need in the
-% initial runs of your .tex file to
-% produce the bibliography for the citations in your paper.
-\bibliographystyle{abbrv}
-\bibliography{sigproc}  % sigproc.bib is the name of the Bibliography in this case
-% You must have a proper ".bib" file
-%  and remember to run:
-% latex bibtex latex latex
-% to resolve all references
-%
-% ACM needs 'a single self-contained file'!
-%
-%APPENDICES are optional
-%\balancecolumns
-\appendix
-%Appendix A
 
-% This next section command marks the start of
-% Appendix B, and does not continue the present hierarchy
-
-\balancecolumns
-% That's all folks!
+\bibliographystyle{acmsiggraph}
+\bibliography{sigproc}
 \end{document}
