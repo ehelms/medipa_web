@@ -1,6 +1,6 @@
-===
+======
 Requirements
-===
+======
 
 The following are required to be installed on the system prior to the installation steps.
 
@@ -10,9 +10,9 @@ The following are required to be installed on the system prior to the installati
 - Python Virtualenv
 - libzip, libzip-devel, libjpeg-devel, libjpeg, gcc
 
-===
+======
 Development Setup
-===
+======
 
 1. Clone the MedIPA repository
 2. From the base directory run: ./scripts/create-virtualenv.py
