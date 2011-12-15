@@ -200,7 +200,7 @@ gl_FragColor = mix(colorsum, vec4(colorsum.rgb * \\clamp(colorsum.a, 0.0, 1.0) *
 We used WebGL, javascript, and HTML5 for implementing volume ray tracing. We also refered to previous work performed on volume rendering with WebGL \cite{anatomical:2011}. The details are described in the following section about the system. 
 
 \begin{figure*}[htb]
-\includegraphics[scale=0.5]{clean_interface.png}
+\includegraphics[scale=0.475]{clean_interface.png}
 \label{Medipa System Architecture}
 \end{figure*}
 
@@ -219,7 +219,7 @@ The second benefit comes from the variability in client computer graphics proces
 The underlying system was designed as a web-based Model-View-Controller (MVC) pattern with a data processing layer server side, asynchronous task queue and all rendering happening within the user's browser.  The architecture can be seen in Figure 2.
 
 \begin{figure*}[htb]
-\includegraphics[scale=0.5]{architecture.png}
+\includegraphics[scale=0.475]{architecture.png}
 \label{Medipa System Architecture}
 \end{figure*}
 
@@ -239,7 +239,7 @@ The underlying system was designed as a web-based Model-View-Controller (MVC) pa
 We allow uploading custom image files (e.g., CT, MRI) or from urls. We provide interactive tools to zoom-in, zoom-out, highlight, and slice the volume. Zooming int and out the volume is enabled by manipulating the wheel control of a mouse. In order to select a specific range of the dataset, we display a histogram of the distribution of the density values of the dataset. The user can select a range by drag-and-drop interaction on the histogram and specify a point-of-interest of the volume data. The reason we use a histogram visualization is to see highly concentrated ranges that can be considered interesting regions of the data. It also ables to zoom in and out of the histogram by the x-axis to micro-select the range of the user's point of interest given the distributed values of the data. After the range selection, the user may choose a color to highlight the interested part on the image. The highlighted colors are listed and can be reordered by drag-and-drop interaction. In order to view inside the volume, the interface provides slider widgets to slice the volume on x, y, z axis, independently. In addition, since the tool is expected to share images, to be examined by multiple medical representatives, and commented when necessary, we provide a feature to save the current configuration and comments. The saved configurations can be loaded any time if a particular rendered image needs to be reviewd again. For performance adaptivity on different devices, we allow auto adjustment of image quality. The user can also control the opacity and brightness of the image when needed. The client is accessible online \footnote{available at \url{http://ec2-50-17-138-152.compute-1.amazonaws.com/image/}}.
 
 \begin{figure*}[htb]
-\includegraphics[scale=0.5]{kidneys.png}
+\includegraphics[scale=0.475]{kidneys.png}
 \label{Medipa System Architecture}
 \end{figure*}
 
