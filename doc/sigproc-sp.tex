@@ -93,10 +93,10 @@ Eric D. Helms\\
 
 \maketitle
 \begin{abstract}
+We introduce Medipa, an open-source system to display medical images on the web that allows to share investigation from multiple medical representatives. It allows to upload the medical images, save configurations and comments, zoom-in and zoom-out, highlight, and slice the volume. The rendering algorithm is based on volume ray-tracing using shaders implemented in WebGL, javascript, and HTML5.
 \end{abstract}
 
-\terms{WebGL, Medical}
-
+\terms{Volume rendering, WebGL, Medical images}
 \section{Introduction}
 The current state of the art for viewing medical image scans requires using a desktop application.  This means having the software installed on every computer a medical health practitioner wishes to view the scans on as well as ensuring that computer runs the required operating system and has the required packages installed. 
 
@@ -104,24 +104,25 @@ As web browser technology has evolved, access to the underlying GPU and APIs tha
 
 The rest of the paper is organized as follows: Section 2 provides a look at related works in the area of volume rendering, Section 3 talks about the concept, Section 4 covers details of the implementation, Section 5 discusses limitations and Section 6 finishes with conclusions and possible future work directions.
 
-\begin{figure*}[htb]
-\includegraphics[scale=0.5]{head.png}
-\label{Medipa System Architecture}
-\end{figure*}
 
 \section{Related Works}
-The technique of volume rendering gained a lot of interest especially to investigate medical data. The process of volume rendering has several stages to produce the result image ~\cite{drebin:1988}. First, the input volume data set is converted to a set of material percentage volumes. Each element in the volume is called a voxel (volume element) which the value represents the percentage of the material in a region of space. After classifying the dataset, a linear ramp called a transfer function assigns the opacity and color values to every voxel in the volume. It allows viewing a certain part of the volume by selecting a certain range of opacity and color. Next, the volume is projected to the image plane by compositing the opacity and colors of the voxels. 
+The technique of volume rendering gained a lot of interest especially to investigate medical data. The process of volume rendering has several stages to produce the result image \cite{drebin:1988}. First, the input volume data set is converted to a set of material percentage volumes. Each element in the volume is called a voxel (volume element) which the value represents the percentage of the material in a region of space. After classifying the dataset, a linear ramp called a transfer function assigns the opacity and color values to every voxel in the volume. It allows viewing a certain part of the volume by selecting a certain range of opacity and color. Next, the volume is projected to the image plane by compositing the opacity and colors of the voxels. 
 
-Previous researches attempted multiple methods to visualize volumes. Marching cubes ~\cite{lorensen:1987} provided an algorithm that creates polygonal representation of iso-surfaces from a three dimensional array of data. It uses a table of possible edge intersections of a cube which describes how a surface cuts the surface. For realism, it calculates the normalized gradient from the original data which helps to create the desired surface model. However, the drawback of the algorithm is the speed regarding to the great number of triangles and overhead by rotation. The amount of memory needed for the surface result is another problem. Also, there is a ‘hole problem’ when at least one cube face has an intersection point in each of its four edges.
+Previous researches attempted multiple methods to visualize volumes. Marching cubes \cite{lorensen:1987} provided an algorithm that creates polygonal representation of iso-surfaces from a three dimensional array of data. It uses a table of possible edge intersections of a cube which describes how a surface cuts the surface. For realism, it calculates the normalized gradient from the original data which helps to create the desired surface model. However, the drawback of the algorithm is the speed regarding to the great number of triangles and overhead by rotation. The amount of memory needed for the surface result is another problem. Also, there exists a hole problem which you see a hole of the result image when at least one cube face has an intersection point in each of its four edges.
 
-Levoy~\cite{levoy:1990} introduced an efficient way to use ray-tracing for volume rendering. It improves its performance by employing binary volumes of coherent regions and adaptively terminating ray-tracing at the user-selected opacity threshold. However, the method is not interactive.
-For interactivity, splatting provided a way to perform volume rendering in parallel. It is a technique that splats every voxel to the viewing surface in back-to-front order as if throwing a snow ball to a wall ~\cite{westover:1991}. This method runs in parallel, thus reduces the rendering time, but produces respectively lower image qualities. 
+Levoy\cite{levoy:1990} introduced an efficient way to use ray-tracing for volume rendering. It improves its performance by employing binary volumes of coherent regions and adaptively terminating ray-tracing at the user-selected opacity threshold. However, the method is not interactive.
+For interactivity, splatting provided a way to perform volume rendering in parallel. It is a technique that splats every voxel to the viewing surface in back-to-front order as if throwing a snow ball to a wall \cite{westover:1991}. This method runs in parallel, thus reduces the rendering time, but produces respectively lower image qualities. 
+Recently, interesting work on WebGL have been conducted with volume rendering \cite{anatomical:2011}. 
 
 
 \section{Concept}
 \subsection{Rendering algorithm}
 
-\begin{figure*}
+Volume rendering displays 3D scalar field dataset to a 2D image. The two traditional ways are slice-based rendering and volume ray tracing. Our algorithm follows volume ray tracing that shoots rays through the volume and samples along the path by equal intervals. As the sampling points are advanced along the ray, it accumulates the opacity and RGB values of the sampling points. By the use of transfer function, it assigns the color and opacity values to each voxel in the volume and shows the corresponding emission and absorption of light for the sample point. The transfer function enables to observe a specific part of the volume given the range of the density value in the dataset. We allowed easier interaction with the visual controls to manipulate the range of the dataset as well as the color and opacity values on the client side. 
+The advantages of ray tracing are optimization from empty space skipping, independence of the projection view, and easiness of development. In order to improve performance, the algorithm renders the position of front and back facing triangles to the textures instead of calculating the intersection between the ray and the bounding box around the volume. The front face texture provides the start position of the ray and the result of subtracting from back to front face texture provides the direction of the ray. Then, starting from the start position of each ray, the algorithm accumulates the color and opacity value of the sampling point in front-to-back direction in parallel. In addition, the process is optimized to stop earlier when the accumulated opacity reaches to the maximum value (i.e.,1.0) or when the advance of ray tracing reached the length of the ray. It is possible by the back face texture which contains the end position of the ray for each pixel. The code is shown below.
+
+
+
 $vec3 raystart = v_PosLocal; \\
 vec2 texcoords = (v_Position.xy / v_Position.w + vec2(1.0, 1.0)) / 2.0; \\
 vec3 rayend = texture2D(backpos_tex, texcoords).xyz; \\
@@ -131,7 +132,7 @@ float len = length(raydir); \\
 float deltadirlen = length(deltadir); \\
 vec3 raypos = raystart + steps * interstep * deltadir; \\
 float lengthsum = steps * interstep * deltadirlen; \\
-vec4 colorsum = mix(vec4(0.0, 0.0, 0.0, 0.0), texture2D(intermediate_tex, \\ texcoords), clamp(interstep, 0.0, 1.0)); \\
+vec4 colorsum = mix(vec4(0.0, 0.0, 0.0, 0.0), texture2D\\(intermediate_tex, texcoords), clamp(interstep, 0.0, 1.0)); \\
 vec4 colorsample; \\
 \\
 for (float i = 0.0; i < steps; i += 1.0) \{ \\
@@ -144,14 +145,18 @@ for (float i = 0.0; i < steps; i += 1.0) \{ \\
 	lengthsum += deltadirlen; \\
 \} \\
 \\
-gl_FragColor = mix(colorsum, vec4(colorsum.rgb * clamp(colorsum.a, 0.0, 1.0) * \\ brightness, 1.0), finalstep); $\\
+gl_FragColor = mix(colorsum, vec4(colorsum.rgb * \\clamp(colorsum.a, 0.0, 1.0) *  brightness, 1.0), finalstep); $\\
+
+
+We used WebGL, javascript, and HTML5 for implementing volume ray tracing. We also refered to previous work performed on volume rendering with WebGL \cite{anatomical:2011}. The details are described in the following section about the system. 
+
+\begin{figure*}[htb]
+\begin{center}
+\includegraphics[scale=0.45]{head.png}
+\caption{\label{fig:head}Brain rendered with Medipa}
+\end{center}
 \end{figure*}
 
-Volume rendering displays a 3D scalar field to a 3D image. The two traditional ways are slice-based rendering and volume ray tracing. Our algorithm follows volume ray tracing that shoots rays through the volume and samples along the path by equal intervals. As the rays are sampled through the volume, the scalar density values are integrated based on the opacity and RGB values from the transfer function. By the use of transfer function, it shows the corresponding emission and absorption of light for the sample point. The advantages of ray tracing are optimization from empty space skipping, independence of the projection view, and easiness of development.
-
-We referred to an interactive volume renderer using HTML5. The rendering algorithm bases on ray tracing and applies RGB and alpha input values from the transfer function to the texture images. A transfer function assigns RGBA values to each voxel in the volume. Its main purpose is to observe a specific part of the volume. We allowed visual controls of the transfer function to manipulate the RGB and alpha values. 
-
-The general approach of ray tracing on a volume is to apply bounding box or a cube to the volume since it is faster to render it with knowing a start and stop points for the rays. In order to provide faster performance, the algorithm renders the position of front and back facing triangles to the textures. The position of the triangles mapped to the texture coordinates from the front and back face triangles easily gives the starting and finishing points of the ray. Then, starting from the start point of each ray, we accumulate the color and opacity by compositing the collected samples in front-to-back direction. The process is applied to the shader as below.
 
 \begin{figure*}[htb]
 \includegraphics[scale=0.5]{clean_interface.png}
@@ -174,6 +179,7 @@ The underlying system was designed as a web-based Model-View-Controller (MVC) pa
 	The model layer is represented by a simple NoSQL JSON schema that is stored directly to the file system and processed by the code.
 
 \subsubsection{Client Side}
+We allow uploading custom image files (e.g., CT, MRI) or from urls. We provide interactive tools to zoom-in, zoom-out, highlight, and slice the volume. Zooming int and out the volume is enabled by manipulating the wheel control of a mouse. In order to select a specific range of the dataset, we display a histogram of the distribution of the density values of the dataset. The user can select a range by drag-and-drop interaction on the histogram and specify a point-of-interest of the volume data. The reason we use a histogram visualization is to see highly concentrated ranges that can be considered interesting regions of the data. It also ables to zoom in and out of the histogram by the x-axis to micro-select the range of the user's point of interest given the distributed values of the data. After the range selection, the user may choose a color to highlight the interested part on the image. The highlighted colors are listed and can be reordered by drag-and-drop interaction. In order to view inside the volume, the interface provides slider widgets to slice the volume on x, y, z axis, independently. In addition, since the tool is expected to share images, to be examined by multiple medical representatives, and commented when necessary, we provide a feature to save the current configuration and comments. The saved configurations can be loaded any time if a particular rendered image needs to be reviewd again. For performance adaptivity on different devices, we allow auto adjustment of image quality. The user can also control the opacity and brightness of the image when needed. The client is accessible online \footnote{ available at \url{http://ec2-50-17-138-152.compute-1.amazonaws.com/image/}}.
 
 \subsection{Data Processing}
 
