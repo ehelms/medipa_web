@@ -116,7 +116,7 @@
 \maketitle
 
 \begin{abstract}
-We introduce Medipa, an open-source system to render medical images on the web in 3D that allow multiple medical representatives to investigate, analyze and annotate a single image.  A user can  upload the medical images, save configurations and comments, zoom-in and zoom-out, highlight, and slice the volume. The rendering algorithm is based on volume ray-tracing using shaders implemented in WebGL, javascript, and HTML5.
+We introduce Medipa, an open-source system to render medical images on the web in 3D that allow multiple medical representatives to investigate, analyze and annotate a single image.  A user can  upload medical image scans, adjust the zoom level, select pixels and highlight them, slice the volume.  Further, to harness the distributed nature of the web and provide a tool for collaboration users can save configurations that consist of the aforementioned adjustable properties and add comments. The rendering algorithm is based on volume ray-tracing using shaders implemented in WebGL, Javascript, and HTML5.
 \end{abstract}
 %%% ACM Computing Review (CR) categories.
 %%% See <http://www.acm.org/class/1998/> for details.
@@ -147,9 +147,11 @@ We introduce Medipa, an open-source system to render medical images on the web i
 %%% This is the first section of the body of your paper.
 
 \section{Introduction}
-The current state of the art for viewing medical image scans requires using a desktop application.  This means having the software installed on every computer a medical health practitioner wishes to view the scans on as well as ensuring that computer runs the required operating system and has the required packages installed. 
+The current state of the art for viewing medical image scans requires using a desktop application.  This means having the software installed on every computer a medical health practitioner wishes to view the scans on as well as ensuring that computer runs the required operating system and has the required packages installed.  Further, these systems are geared towards viewing and recording information based on scan analysis not on collaborative efforts.
 
 As web browser technology has evolved, access to the underlying GPU and APIs that follow the OpenGL standard have been added for doing complex 2D and 3D rendering.  This allows for the creation of complex applications using the browser as a platform that used to require a full desktop application.  The web provides a platform that is operating-system agnostic and allows users to use their favorite browser for interaction.  Further, by serving the content up from a central location, users can go anywhere in the world and still have access to viewing the scans.  This opens up a world where scans can be viewed by a variety of people and crowd-sourcing of ideas can be shared.
+
+The rise of social media interaction, and distributed interaction of users has begun to spill over in to every field.  Further, as the availability of information increases and more and more users take responsibility of their personal data, the desire for people to want to see their medically relevant health information will rise.  By harnessing the web, data that has never been available at a personal level or able to be collaborated on can begin to flourish.  The MedIPA system aims to take a first step in this direction by providing volume rendered medical scans uploaded by users that can be manipulated, saved and commented on in order to procure a dialog.  In this way, users can view their own medical scans, share it with others, or seek further opinions on aspects of the images.  The same goes for medical professionals.
 
 The rest of the paper is organized as follows: Section 2 provides a look at related works in the area of volume rendering, Section 3 talks about the concept, Section 4 covers details of the implementation, Section 5 discusses limitations and Section 6 finishes with conclusions and possible future work directions.
 
@@ -165,6 +167,8 @@ Recently, interesting work on WebGL have been conducted with volume rendering \c
 
 
 \section{Concept}
+
+
 \subsection{Rendering algorithm}
 
 Volume rendering displays 3D scalar field dataset to a 2D image. The two traditional ways are slice-based rendering and volume ray tracing. Our algorithm follows volume ray tracing that shoots rays through the volume and samples along the path by equal intervals. As the sampling points are advanced along the ray, it accumulates the opacity and RGB values of the sampling points. By the use of transfer function, it assigns the color and opacity values to each voxel in the volume and shows the corresponding emission and absorption of light for the sample point. The transfer function enables to observe a specific part of the volume given the range of the density value in the dataset. We allowed easier interaction with the visual controls to manipulate the range of the dataset as well as the color and opacity values on the client side. 
@@ -215,8 +219,7 @@ Down sampling the image provides two direct benefits that are related to the rel
 The second benefit comes from the variability in client computer graphics processing power.  Attempting to render high resolution images on an under powered machine can not only place the application into an unusable state but also render the entire client machine unusable by the user as the CPU and GPU attempt to handle the large resolution.  Thus, having lower resolution images helps to allow users with under powered machines to still interact with the system.  Further, the client code monitors the frames-per-second (FPS) as each data resolution is brought in and will halt the quality increases if the code determines that the system would enter an unusable state.
 
 \section{Architecture}
-	The Medipa system was designed in order to allow users to upload or post URLs of medical image scans in their native formats, have them processed by an asynchronous task queue and provide an interactive rendering page for viewing the image scans as volume data.  Further, the rendering interaction provides users with tools to examine, modify and save user defined configurations of the rendered data.
-The underlying system was designed as a web-based Model-View-Controller (MVC) pattern with a data processing layer server side, asynchronous task queue and all rendering happening within the user's browser.  The architecture can be seen in Figure 2.
+	The Medipa system was designed in order to allow users to upload or post URLs of medical image scans in their native formats, have them processed by an asynchronous task queue and provide an interactive rendering page for viewing the image scans as volume data.  Further, the rendering interaction provides users with tools to examine, modify and save user defined configurations of the rendered data.  The underlying system was designed as a web-based Model-View-Controller (MVC) pattern with a data processing layer server side, asynchronous task queue and all rendering happening within the user's browser.  The architecture can be seen in Figure 3.
 
 \begin{figure*}[htb]
 	\includegraphics[scale=0.475]{architecture.png}
@@ -243,16 +246,18 @@ We allow uploading custom image files (e.g., CT, MRI) or from urls. We provide i
 	Discussions with practitioners indicated that seeing these values in a graph format would allow them to look for abnormalities which could then be singled out via highlighting for closer investigation.  By providing a robust color picker, indicated by the color square below the graph, users can even hide portions of the image by selecting a region and setting the alpha channel to zero.  This in turn could allow certain portions, such as a kidney to be highlighted while hiding the rest of the torso similar to Figure 4.
 	
 \subsubsection{Quality Adjustment}
-
+	As previously discussed, when an image is uploaded and processed the underlying image library generates reduced datasets.  As the page is loaded the image is loaded and processed starting with the low quality image for speed of rendering and user experience.  The quality adjustment tool will, by default, automatically control this interaction by requesting the next dataset size and swapping out the rendering once loaded.  The user is given the option to turn the auto-quality scale off and choose the image quality they desire.  This is done for two reasons.  
+	First, the quality of the image loaded is based off the calculated framerate.  In other words, if the framerate drops below a certain threshold (~10 frames-per-second) the image loader will halt and leave the user in a state that is considered usable.  This is done to prevent the users system from becoming unusable by an image quality that would tax the system resources and to allow the user to be able to interact with the system.
+	Secondly the user may decide that they desire a higher quality image despite how it may impact their ability to interact.  Thus, the user is presented with the ability to turn off auto-quality adjustments and interact with a slider that will let them select an image quality.
 
 \subsubsection{Zooming}
-Zooming is a widely used technique in visualization ~\cite{shneiderman:1996, cockburn:2008}. It enables a user to magnify (zoom-in to the point of interest) or demagnify (zoom out to have a brief overview). With the mouse wheel control, we provide smooth zoom-in and zoom-out interaction of the image on the interface. As mentioned in the highlighting section, we also applied zooming to interact with the histogram in order to select a range of interesting greyscale value. It solves the problem of the confliction between the large scaled dataset and the limited space. We also have a button to reset the zooming effect since previous survey has found that zoom-in technique needs to be used in caution when performing region selection. This is because there is no equivalent action for zooming out ~\cite{cockburn:2008}.
+	Zooming is a widely used technique in visualization ~\cite{shneiderman:1996, cockburn:2008}.  Zooming enables a user to magnify (zoom-in to the point of interest) or de-magnify (zoom out to have a brief overview).  With the mouse wheel control, users are presented with a smooth zoom-in and zoom-out interaction of the image on the interface. As mentioned in the highlighting section, zooming was also applied to interact with the histogram in order to select a range of interesting greyscale value. Using the zoom technique in the histogram helps to solve the conflict between the large scaled dataset and the limited space. A button to reset the zooming effect is provided since a previous survey has found that the zoom-in technique needs to be used with caution when performing region selection. This is because there is no equivalent action for zooming out ~\cite{cockburn:2008}.
 
 \subsubsection{Slicing}
-In order to probe the volume data set better, we provide controls to slice the volume. By slicing the volume, it filters out uninteresting part of the volume and reveals the point of interest. We allow users to slice the volume perpendicular to the three dimensions of x, y, and z axis. The slider controller enables the slicing action and resets to the original view by clicking on the reset button. The corresponding interaction technique for slicing is filtering ~\cite{shneiderman:1996, yi:2007}. Filtering changes the set of data to be presented based on user-specified conditions. 
+	In order to probe the volume data set better, controls are provided in order to slice the volume along the three major axes.  By slicing the volume, the user can filter out uninteresting parts of the volume and reveal the point of interest. Users are able to slice the volume perpendicular to the three dimensions of x, y, and z axis. The slider controller enables the slicing action and resets to the original view by clicking on the reset button. The corresponding interaction technique for slicing is filtering ~\cite{shneiderman:1996, yi:2007}. Filtering changes the set of data to be presented based on user-specified conditions.
 
 \subsubsection{Rotation}
-Rotating an object is now a generally common interaction technique in visualization. It is one of the methods to explore the data ~\cite{yi:2007}. Explore enables the users to examine a different subset of the data that is hidden or not displayed at the moment. Rotation allows to easily manipulate which volume data to be presented.
+	Rotating an object is now a generally common interaction technique in visualization. It is one of the methods to explore the data ~\cite{yi:2007}. Explore enables the users to examine a different subset of the data that is hidden or not displayed at the moment. Rotation allows to easily manipulate which volume data to be presented.
 
 \begin{figure*}[htb]
 \includegraphics[scale=0.475]{kidneys.png}
@@ -262,7 +267,7 @@ Rotating an object is now a generally common interaction technique in visualizat
 \section{Limitations}
 Given that typical medical image scans consist of multiple high resolution slices, processing of the image data is resource intensive task.  While the system takes measures to balance the performance on the users browser, the server side processing still requires a particular level of system performance in order to process images and serve data up in a reasonable amount of time.
 
-A limitation of the system in the current state is the lack of direct input from medical professionals using the system.  Medical professionals would be the ultimate authority in providing feedback on both the interaction mechanisms as well as the extra visualization information such as the pixel-histogram designed to enhance the visual.		
+A limitation of the system in the current state is the lack of direct input from medical professionals using the system.  Medical professionals would be the ultimate authority in providing feedback on both the interaction mechanisms as well as the extra visualization information such as the pixel-histogram designed to enhance the visual.
 
 \section{Future Work} 
 The current model layer uses a JSON file saved to and accessed directly to the file system to store properties for each uploaded image.  This method does not provide the most robust solution for persistent data or any benefits of modern database systems.  Future work could include a transition to storing data within a NoSQL database.
@@ -275,8 +280,8 @@ As a result of the resource intensive image processing, if the system was to be 
 
 \section{Conclusions}
 
-The Medipa system aims to provide an interactive visualization of 3D volume rendering of medical image scans using a browser based solution with WebGL.
-
+	The MedIPA system aims to provide an interactive visualization of 3D volume rendering of medical image scans using a browser based solution with WebGL.  The system is provided as an open source project to allow open collaboration and gather input from a variety of sources.  By creating a web-based solution with collaborative tools, the MedIPA system aims to provide crowd-sourcing and collaboration.  This required providing tools for users to intelligently and in an open-ended way interact with and adjust the images while also providing ways for users to save persistent data.  BY allowing the saving of persistent data, MedIPA provides a vehicle for users to express their findings in a way that is consumable by others.  Thus, MedIPA does not only provide an initial solution to the problem of 3D volume rendering of medical image data but provides the first steps towards a collaborative environment where users from around the world can contribute to the knowledge base of a growing field.
+	The MedIPA system takes a first step towards 3D rendering of medical scans and providing a social vehicle for collaboration.  The system does not address the concerns of medical regulations such as the Health Insurance Portability and Accountability Act (HIPAA) that aim to protect patients and their medical data.  Further, MedIPA can be thought of as an evolving tool that could be integrated as part of a system that provides web-based medical data services for patients and medical professionals alike. 
 
 \section*{Acknowledgements}
 
